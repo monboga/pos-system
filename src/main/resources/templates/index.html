@@ -25,42 +25,66 @@
                 <span class="logo-text">Mi POS</span>
             </div>
 
-            <ul class="list-unstyled sidebar-nav">
+            <ul class="list-unstyled sidebar-nav" id="sidebar-nav">
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link active">
                         <i class="bi bi-speedometer2 sidebar-icon"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
+
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
+                    <a href="#admin-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false">
                         <i class="bi bi-people sidebar-icon"></i>
                         <span>Administración</span>
+                        <i class="bi bi-chevron-down arrow ms-auto"></i>
                     </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-box-seam sidebar-icon"></i>
-                        <span>Inventario</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-cart3 sidebar-icon"></i>
-                        <span>Ventas</span>
-                    </a>
+                    <ul id="admin-submenu" class="collapse list-unstyled sidebar-dropdown"
+                        data-bs-parent="#sidebar-nav">
+                        <li><a href="#" class="sidebar-link">Usuarios</a></li>
+                        <li><a href="#" class="sidebar-link">Negocio</a></li>
+                    </ul>
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="#reportsSubmenu" data-bs-toggle="collapse" class="sidebar-link" aria-expanded="false">
+                    <a href="#inventory-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false">
+                        <i class="bi bi-box-seam sidebar-icon"></i>
+                        <span>Inventario</span>
+                        <i class="bi bi-chevron-down arrow ms-auto"></i>
+                    </a>
+                    <ul id="inventory-submenu" class="collapse list-unstyled sidebar-dropdown"
+                        data-bs-parent="#sidebar-nav">
+                        <li><a href="#" class="sidebar-link">Categorías</a></li>
+                        <li><a href="#" class="sidebar-link">Producto</a></li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="#sales-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false">
+                        <i class="bi bi-cart3 sidebar-icon"></i>
+                        <span>Ventas</span>
+                        <i class="bi bi-chevron-down arrow ms-auto"></i>
+                    </a>
+                    <ul id="sales-submenu" class="collapse list-unstyled sidebar-dropdown"
+                        data-bs-parent="#sidebar-nav">
+                        <li><a href="#" class="sidebar-link">Nueva Venta</a></li>
+                        <li><a href="#" class="sidebar-link">Historial de Ventas</a></li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="#reports-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false">
                         <i class="bi bi-file-earmark-bar-graph sidebar-icon"></i>
                         <span>Reportes</span>
                         <i class="bi bi-chevron-down arrow ms-auto"></i>
                     </a>
-                    <ul class="collapse list-unstyled sidebar-dropdown" id="reportsSubmenu">
-                        <li><a href="#" class="sidebar-link">Ventas Diarias</a></li>
-                        <li><a href="#" class="sidebar-link">Inventario Actual</a></li>
-                        <li><a href="#" class="sidebar-link">Análisis</a></li>
+                    <ul id="reports-submenu" class="collapse list-unstyled sidebar-dropdown"
+                        data-bs-parent="#sidebar-nav">
+                        <li><a href="#" class="sidebar-link">Reporte de Ventas</a></li>
                     </ul>
                 </li>
             </ul>
@@ -85,7 +109,9 @@
                     <li><a class="dropdown-item" href="/login">Cerrar Sesión</a></li>
                 </ul>
             </div>
-        </nav> <button class="btn" type="button" id="sidebar-toggle">
+        </nav>
+
+        <button class="btn" type="button" id="sidebar-toggle">
             <i class="bi bi-chevron-left"></i>
         </button>
 

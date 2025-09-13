@@ -1,6 +1,5 @@
 :root {
     --primary-color: #4A148C;
-    /* Un morado oscuro similar al de la imagen */
     --sidebar-bg: #1E0A3C;
     --sidebar-text-color: #E0E0E0;
     --sidebar-text-hover: #FFFFFF;
@@ -10,7 +9,6 @@
 body {
     background-color: #f4f7fa;
     font-family: 'Inter', sans-serif;
-    /* Una fuente más moderna, opcional */
 }
 
 .wrapper {
@@ -52,7 +50,6 @@ body {
 
 .sidebar-nav {
     flex-grow: 1;
-    /* Esto hace que la lista de navegación crezca y empuje el footer */
     padding: 20px 0;
 }
 
@@ -95,12 +92,6 @@ body {
     padding: 15px 20px;
 }
 
-.user-profile {
-    display: flex;
-    align-items: center;
-    color: var(--sidebar-text-hover);
-}
-
 .user-avatar {
     width: 40px;
     height: 40px;
@@ -139,14 +130,19 @@ body {
     display: none;
 }
 
-
 /* --- Contenido Principal --- */
 .main-content {
     flex-grow: 1;
     transition: margin-left 0.3s;
     margin-left: 260px;
-    /* Mismo ancho que el sidebar */
+    /* Margen para el sidebar expandido */
     padding: 2rem;
+}
+
+/* (NUEVA REGLA AÑADIDA) */
+.main-content.expanded {
+    margin-left: 80px;
+    /* Margen para el sidebar contraído */
 }
 
 /* --- ESTADO COLAPSADO --- */
@@ -178,41 +174,57 @@ body {
     margin-right: 0;
 }
 
-.main-content.expanded {
-    margin-left: 80px;
-    /* Mismo ancho que el sidebar colapsado */
-}
-
-/* --- Estilos para el nuevo botón --- */
+/* --- Botón Toggle --- */
 #sidebar-toggle {
     position: fixed;
     left: 260px;
-    /* Ancho del sidebar */
     top: 50%;
     transform: translate(-50%, -50%);
-    /* Centra el botón perfectamente en la línea */
     z-index: 1001;
-    /* Por encima del sidebar */
-
     background-color: var(--primary-color);
     color: white;
     border: 2px solid #f4f7fa;
-    /* Borde del color del fondo para efecto de "flotación" */
     width: 40px;
     height: 40px;
     border-radius: 50%;
-
     transition: all 0.3s ease;
 }
 
 #sidebar-toggle:hover {
     background-color: #310e5f;
-    /* Un morado un poco más oscuro */
     transform: translate(-50%, -50%) scale(1.1);
-    /* Efecto de zoom */
 }
 
 .sidebar.collapsed+#sidebar-toggle {
     left: 80px;
-    /* Ancho del sidebar colapsado */
+}
+
+/* --- Estilos para el Popover de Submenús --- */
+.sidebar-popover .popover-body {
+    padding: 0.5rem;
+}
+
+.sidebar-popover {
+    background-color: var(--sidebar-bg);
+    border: 1px solid var(--primary-color);
+    border-radius: 0.75rem;
+}
+
+.sidebar-popover .popover-arrow::before,
+.sidebar-popover .popover-arrow::after {
+    border-right-color: var(--sidebar-bg) !important;
+}
+
+.sidebar-popover .popover-body a {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--sidebar-text-color);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+}
+
+.sidebar-popover .popover-body a:hover {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-text-hover);
 }

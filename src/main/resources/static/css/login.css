@@ -1,6 +1,8 @@
 /* static/css/login.css */
 body {
-    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    background-color: #e9ecef;
+    /* Un gris muy claro para el fondo */
 }
 
 .login-container {
@@ -8,11 +10,65 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 2rem;
 }
 
-.login-card {
-    max-width: 450px;
+.login-box {
     width: 100%;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    /* Ancho máximo de la ventana de login */
+    background-color: #fff;
+    border-radius: 1.5rem;
+    /* Bordes más redondeados */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    /* Importante para que las columnas respeten el borde redondeado */
+}
+
+/* Estilos para la columna de la imagen */
+.login-image-section {
+    background: linear-gradient(45deg, #4A148C, #7C4DFF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+}
+
+/* Estilos para la columna del formulario */
+.login-form-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Ajustes finos al formulario */
+.form-control-lg {
+    padding: 0.9rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.btn-primary {
+    background-color: #673AB7;
+    border-color: #673AB7;
+    padding: 0.9rem;
+    border-radius: 0.5rem;
+}
+
+.btn-primary:hover {
+    background-color: #512DA8;
+    border-color: #512DA8;
+}
+
+a {
+    color: #673AB7;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.form-check-input:checked {
+    background-color: #673AB7;
+    border-color: #673AB7;
 }

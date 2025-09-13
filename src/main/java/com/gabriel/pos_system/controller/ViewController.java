@@ -20,4 +20,9 @@ public class ViewController {
     public String showHome() {
         return "index";
     }
+
+    @GetMapping("/users")
+    public String showUserPage() {
+        return "users";
+    }
 }

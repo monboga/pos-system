@@ -228,3 +228,16 @@ body {
     background-color: var(--sidebar-active-bg);
     color: var(--sidebar-text-hover);
 }
+
+/* Estilo para los avatares pequeños en la tabla de usuarios */
+.user-avatar-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.9rem;
+}

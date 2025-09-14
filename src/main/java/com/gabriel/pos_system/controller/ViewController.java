@@ -21,6 +21,11 @@ public class ViewController {
         return "index";
     }
 
+    @GetMapping("/dashboard")
+    public String showDashboardPage() {
+        return "dashboard";
+    }
+
     @GetMapping("/users")
     public String showUserPage() {
         return "users";

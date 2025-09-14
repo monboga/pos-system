@@ -34,7 +34,7 @@
 
             <ul class="list-unstyled sidebar-nav" id="sidebar-nav">
                 <li class="sidebar-item">
-                    <a th:href="@{/index}" class="sidebar-link">
+                    <a th:href="@{/dashboard}" class="sidebar-link">
                         <i class="bi bi-speedometer2 sidebar-icon"></i>
                         <span>Dashboard</span>
                     </a>
@@ -142,7 +142,7 @@
                                     <th>Foto</th>
                                     <th>Nombre</th>
                                     <th>Correo Electrónico</th>
-                                    <th>Rol</th>
+                                    <th>Activo</th>
                                     <th>Fecha de Creación</th>
                                     <th>Operaciones</th>
                                 </tr>
@@ -153,7 +153,7 @@
                                             alt="Foto de Usuario"></td>
                                     <td>Juan Pérez</td>
                                     <td>juan.perez@example.com</td>
-                                    <td><span class="badge bg-primary">Administrador</span></td>
+                                    <td><span class="badge bg-success">Activo</span></td>
                                     <td>2025-09-12</td>
                                     <td><button class="btn btn-sm btn-outline-secondary"><i
                                                 class="bi bi-pencil"></i></button> <button
@@ -165,7 +165,7 @@
                                             alt="Foto de Usuario"></td>
                                     <td>Ana Gómez</td>
                                     <td>ana.gomez@example.com</td>
-                                    <td><span class="badge bg-secondary">Vendedor</span></td>
+                                    <td><span class="badge bg-danger">No Activo</span></td>
                                     <td>2025-09-10</td>
                                     <td><button class="btn btn-sm btn-outline-secondary"><i
                                                 class="bi bi-pencil"></i></button> <button

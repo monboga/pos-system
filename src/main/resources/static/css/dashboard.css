@@ -305,3 +305,32 @@ body {
     background-color: var(--primary-color);
     color: white;
 }
+
+/* --- (NUEVO) ESTILOS GLOBALES PARA ESTADOS --- */
+[data-bs-theme="light"] .status-active {
+    background-color: #d1e7dd !important;
+    /* Verde claro */
+    color: #0f5132 !important;
+    /* Verde oscuro */
+}
+
+[data-bs-theme="light"] .status-inactive {
+    background-color: #f8d7da !important;
+    /* Rojo claro */
+    color: #842029 !important;
+    /* Rojo oscuro */
+}
+
+[data-bs-theme="dark"] .status-active {
+    background-color: #0f5132 !important;
+    /* Verde oscuro */
+    color: #d1e7dd !important;
+    /* Verde claro */
+}
+
+[data-bs-theme="dark"] .status-inactive {
+    background-color: #842029 !important;
+    /* Rojo oscuro */
+    color: #f8d7da !important;
+    /* Rojo claro */
+}

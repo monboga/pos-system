@@ -60,7 +60,7 @@ public class ViewController {
     public String showSalesHistoryPage() {
         return "sales-history";
     }
-
+  
     @GetMapping("sales-report")
     public String showSalesReportPage() {
         return "sales-report";

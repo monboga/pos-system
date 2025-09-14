@@ -233,6 +233,10 @@ body {
     height: 40px;
     border-radius: 50%;
     transition: all 0.3s ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #sidebar-toggle:hover {

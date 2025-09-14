@@ -42,45 +42,36 @@
                     <ul id="admin-submenu" class="collapse list-unstyled sidebar-dropdown"
                         data-bs-parent="#sidebar-nav">
                         <li><a th:href="@{/users}" class="sidebar-link">Usuarios</a></li>
-                        <li><a href="#" class="sidebar-link">Negocio</a></li>
+                        <li><a th:href="@{/business}" class="sidebar-link">Negocio</a></li>
+                        <li><a href="#" class="sidebar-link">Clientes</a></li>
                     </ul>
                 </li>
 
                 <li class="sidebar-item">
                     <a href="#inventory-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
-                        aria-expanded="false">
-                        <i class="bi bi-box-seam sidebar-icon"></i>
-                        <span>Inventario</span>
-                        <i class="bi bi-chevron-down arrow ms-auto"></i>
-                    </a>
+                        aria-expanded="false"><i class="bi bi-box-seam sidebar-icon"></i><span>Inventario</span><i
+                            class="bi bi-chevron-down arrow ms-auto"></i></a>
                     <ul id="inventory-submenu" class="collapse list-unstyled sidebar-dropdown"
                         data-bs-parent="#sidebar-nav">
                         <li><a href="#" class="sidebar-link">Categorías</a></li>
                         <li><a href="#" class="sidebar-link">Producto</a></li>
                     </ul>
                 </li>
-
                 <li class="sidebar-item">
                     <a href="#sales-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
-                        aria-expanded="false">
-                        <i class="bi bi-cart3 sidebar-icon"></i>
-                        <span>Ventas</span>
-                        <i class="bi bi-chevron-down arrow ms-auto"></i>
-                    </a>
+                        aria-expanded="false"><i class="bi bi-cart3 sidebar-icon"></i><span>Ventas</span><i
+                            class="bi bi-chevron-down arrow ms-auto"></i></a>
                     <ul id="sales-submenu" class="collapse list-unstyled sidebar-dropdown"
                         data-bs-parent="#sidebar-nav">
                         <li><a href="#" class="sidebar-link">Nueva Venta</a></li>
                         <li><a href="#" class="sidebar-link">Historial de Ventas</a></li>
                     </ul>
                 </li>
-
                 <li class="sidebar-item">
                     <a href="#reports-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
-                        aria-expanded="false">
-                        <i class="bi bi-file-earmark-bar-graph sidebar-icon"></i>
-                        <span>Reportes</span>
-                        <i class="bi bi-chevron-down arrow ms-auto"></i>
-                    </a>
+                        aria-expanded="false"><i
+                            class="bi bi-file-earmark-bar-graph sidebar-icon"></i><span>Reportes</span><i
+                            class="bi bi-chevron-down arrow ms-auto"></i></a>
                     <ul id="reports-submenu" class="collapse list-unstyled sidebar-dropdown"
                         data-bs-parent="#sidebar-nav">
                         <li><a href="#" class="sidebar-link">Reporte de Ventas</a></li>
@@ -114,6 +105,14 @@
                     <h5 class="card-title">¡Bienvenido de nuevo!</h5>
                     <p class="card-text">Desde aquí podrás gestionar todas las operaciones de tu punto de venta.
                         Selecciona una opción del menú lateral para comenzar.</p>
+                    <hr>
+                    <h6 class="card-subtitle mb-2 text-muted">Equipo de Desarrollo</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-person-check-fill text-primary"></i> [Nombre del Integrante 1] - [Rol del
+                            Integrante 1]</li>
+                        <li><i class="bi bi-person-check-fill text-primary"></i> [Nombre del Integrante 2] - [Rol del
+                            Integrante 2]</li>
+                    </ul>
                 </div>
             </div>
         </div>

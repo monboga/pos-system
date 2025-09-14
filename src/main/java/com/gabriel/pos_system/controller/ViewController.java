@@ -45,4 +45,9 @@ public class ViewController {
     public String showCategoriesPage() {
         return "categories";
     }
+
+    @GetMapping("/products")
+    public String showProductsPage() {
+        return "products";
+    }
 }

@@ -1,0 +1,19 @@
+/* Menú de configuración lateral */
+.settings-sidebar .nav-link {
+    color: var(--bs-body-color);
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+}
+
+.settings-sidebar .nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 0.5rem;
+}
+
+/* Tarjetas de sección de perfil */
+.profile-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

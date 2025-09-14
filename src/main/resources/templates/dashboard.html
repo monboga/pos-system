@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard - POS</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+    <div class="wrapper">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <i class="bi bi-shop logo-icon"></i>
+                    <span class="logo-text">Mi POS</span>
+                </div>
+                <div class="form-check form-switch theme-switcher">
+                    <input class="form-check-input" type="checkbox" role="switch" id="themeSwitch">
+                    <label class="form-check-label" for="themeSwitch"><i class="bi bi-sun-fill"></i></label>
+                    <label class="form-check-label" for="themeSwitch"><i class="bi bi-moon-fill"></i></label>
+                </div>
+            </div>
+            <ul class="list-unstyled sidebar-nav" id="sidebar-nav">
+                <li class="sidebar-item">
+                    <a th:href="@{/dashboard}" class="sidebar-link active">
+                        <i class="bi bi-speedometer2 sidebar-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#admin-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false"><i class="bi bi-people sidebar-icon"></i><span>Administración</span><i
+                            class="bi bi-chevron-down arrow ms-auto"></i></a>
+                    <ul id="admin-submenu" class="collapse list-unstyled sidebar-dropdown"
+                        data-bs-parent="#sidebar-nav">
+                        <li><a th:href="@{/users}" class="sidebar-link">Usuarios</a></li>
+                        <li><a th:href="@{/business}" class="sidebar-link">Negocio</a></li>
+                        <li><a href="#" class="sidebar-link">Clientes</a></li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#inventory-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false"><i class="bi bi-box-seam sidebar-icon"></i><span>Inventario</span><i
+                            class="bi bi-chevron-down arrow ms-auto"></i></a>
+                    <ul id="inventory-submenu" class="collapse list-unstyled sidebar-dropdown"
+                        data-bs-parent="#sidebar-nav">
+                        <li><a href="#" class="sidebar-link">Categorías</a></li>
+                        <li><a href="#" class="sidebar-link">Producto</a></li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#sales-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false"><i class="bi bi-cart3 sidebar-icon"></i><span>Ventas</span><i
+                            class="bi bi-chevron-down arrow ms-auto"></i></a>
+                    <ul id="sales-submenu" class="collapse list-unstyled sidebar-dropdown"
+                        data-bs-parent="#sidebar-nav">
+                        <li><a href="#" class="sidebar-link">Nueva Venta</a></li>
+                        <li><a href="#" class="sidebar-link">Historial de Ventas</a></li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#reports-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false"><i
+                            class="bi bi-file-earmark-bar-graph sidebar-icon"></i><span>Reportes</span><i
+                            class="bi bi-chevron-down arrow ms-auto"></i></a>
+                    <ul id="reports-submenu" class="collapse list-unstyled sidebar-dropdown"
+                        data-bs-parent="#sidebar-nav">
+                        <li><a href="#" class="sidebar-link">Reporte de Ventas</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="sidebar-footer dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                    id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="user-avatar"><span>AU</span></div>
+                    <div class="user-info"><span>Admin Usuario</span><span class="text-muted">admin@pos.com</span></div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
+                    <li><a class="dropdown-item" href="#">Configuración</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="/login">Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </nav>
+        <button class="btn" type="button" id="sidebar-toggle"><i class="bi bi-chevron-left"></i></button>
+
+        <div id="main-content" class="main-content">
+            <h1 class="h3 mb-4">Dashboard</h1>
+
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <i class="bi bi-cart-check-fill text-primary fs-1 me-3"></i>
+                            <div>
+                                <h6 class="card-subtitle text-muted">Total de Ventas</h6>
+                                <h2 class="card-title fw-bold">1,250</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <i class="bi bi-cash-coin text-success fs-1 me-3"></i>
+                            <div>
+                                <h6 class="card-subtitle text-muted">Total de Ingresos</h6>
+                                <h2 class="card-title fw-bold">$84,320</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <i class="bi bi-box-seam-fill text-warning fs-1 me-3"></i>
+                            <div>
+                                <h6 class="card-subtitle text-muted">Total de Productos</h6>
+                                <h2 class="card-title fw-bold">315</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <i class="bi bi-tags-fill text-info fs-1 me-3"></i>
+                            <div>
+                                <h6 class="card-subtitle text-muted">Total de Categorías</h6>
+                                <h2 class="card-title fw-bold">25</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Ventas de los últimos 7 días</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Productos más vendidos</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="productsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- Gráfica de Barras: Ventas de los últimos 7 días ---
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            const salesChart = new Chart(salesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+                    datasets: [{
+                        label: 'Ventas ($)',
+                        data: [1200, 1900, 3000, 5000, 2300, 4200, 3500],
+                        backgroundColor: 'rgba(74, 20, 140, 0.6)', // Morado de nuestro tema
+                        borderColor: 'rgba(74, 20, 140, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // --- Gráfica de Pastel: Productos más vendidos ---
+            const productsCtx = document.getElementById('productsChart').getContext('2d');
+            const productsChart = new Chart(productsCtx, {
+                type: 'doughnut', // 'pie' o 'doughnut' para pastel
+                data: {
+                    labels: ['Producto A', 'Producto B', 'Producto C', 'Producto D'],
+                    datasets: [{
+                        label: 'Cantidad Vendida',
+                        data: [300, 150, 100, 50],
+                        backgroundColor: [
+                            'rgba(74, 20, 140, 0.7)',
+                            'rgba(124, 77, 255, 0.7)',
+                            'rgba(179, 157, 219, 0.7)',
+                            'rgba(237, 231, 246, 0.7)'
+                        ],
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

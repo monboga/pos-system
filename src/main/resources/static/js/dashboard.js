@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // --- LÓGICA DEL SIDEBAR (SIN CAMBIOS) ---
     const sidebar = document.getElementById('sidebar');
     const toggleButton = document.getElementById('sidebar-toggle');
     const toggleIcon = toggleButton.querySelector('i');
@@ -16,9 +15,40 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // --- (NUEVA FUNCIÓN) PARA APLICAR EL ESTADO INICIAL DEL SIDEBAR ---
+    function applyInitialSidebarState() {
+        const savedState = localStorage.getItem('sidebarState');
+        if (savedState === 'collapsed') {
+            sidebar.classList.add('collapsed');
+            content.classList.add('expanded');
+
+            // Forzamos el cierre de submenús que puedan estar abiertos por defecto en la plantilla
+            document.querySelectorAll('.sidebar-dropdown.collapse.show').forEach(submenu => {
+                submenu.classList.remove('show');
+                const parentLink = document.querySelector(`a[href="#${submenu.id}"]`);
+                if (parentLink) {
+                    parentLink.setAttribute('aria-expanded', 'false');
+                    parentLink.classList.add('collapsed');
+                }
+            });
+
+            toggleIcon.classList.remove('bi-chevron-left');
+            toggleIcon.classList.add('bi-chevron-right');
+        }
+        // Llamamos a manageSubmenuAttributes al final para asegurar el estado correcto de los enlaces
+        manageSubmenuAttributes();
+    }
+
     toggleButton.addEventListener('click', function () {
         sidebar.classList.toggle('collapsed');
         content.classList.toggle('expanded');
+
+        // --- (LÍNEAS AÑADIDAS) GUARDAR EL NUEVO ESTADO ---
+        if (sidebar.classList.contains('collapsed')) {
+            localStorage.setItem('sidebarState', 'collapsed');
+        } else {
+            localStorage.setItem('sidebarState', 'expanded');
+        }
 
         if (activePopover) {
             activePopover.dispose();
@@ -45,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     submenuLinks.forEach(link => {
+        // ... (esta sección de popovers se mantiene sin cambios) ...
         link.addEventListener('click', function (event) {
             if (sidebar.classList.contains('collapsed')) {
                 event.preventDefault(); event.stopPropagation();
@@ -57,10 +88,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     Array.from(targetSubmenu.children).forEach(child => popoverContent.appendChild(child.cloneNode(true)));
                     const popover = new bootstrap.Popover(this, { container: 'body', placement: 'right', trigger: 'manual', html: true, content: popoverContent, customClass: 'sidebar-popover' });
                     popover.show(); activePopover = popover;
-                    document.body.addEventListener('click', function hide(e) {
+                    document.body.addEventListener('click', function hidePopoverOnClickOutside(e) {
                         if (!link.contains(e.target) && !document.querySelector('.popover')?.contains(e.target)) {
                             if (activePopover) { activePopover.dispose(); activePopover = null; }
-                            document.body.removeEventListener('click', hide);
+                            document.body.removeEventListener('click', hidePopoverOnClickOutside);
                         }
                     }, { once: true });
                 }
@@ -68,22 +99,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    manageSubmenuAttributes();
-
-    // --- (NUEVO) LÓGICA PARA EL THEME SWITCHER ---
+    // --- LÓGICA DEL THEME SWITCHER (SIN CAMBIOS) ---
     const themeSwitch = document.getElementById('themeSwitch');
     const htmlElement = document.documentElement;
 
-    // Función para aplicar el tema guardado al cargar la página
     function applyInitialTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light'; // 'light' por defecto
+        const savedTheme = localStorage.getItem('theme') || 'light';
         htmlElement.setAttribute('data-bs-theme', savedTheme);
         if (themeSwitch) {
             themeSwitch.checked = (savedTheme === 'dark');
         }
     }
 
-    // Listener para cambiar el tema cuando se hace clic en el switch
     if (themeSwitch) {
         themeSwitch.addEventListener('change', function () {
             if (this.checked) {
@@ -96,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Aplicar el tema al cargar el script
+    // --- (LLAMADAS INICIALES) APLICAR ESTADOS AL CARGAR LA PÁGINA ---
     applyInitialTheme();
+    applyInitialSidebarState(); // <-- LLAMADA A LA NUEVA FUNCIÓN
 });

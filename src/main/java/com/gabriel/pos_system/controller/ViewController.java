@@ -50,4 +50,9 @@ public class ViewController {
     public String showProductsPage() {
         return "products";
     }
+
+    @GetMapping("/pos")
+    public String showPosPage() {
+        return "pos";
+    }
 }

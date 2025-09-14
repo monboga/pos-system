@@ -55,15 +55,9 @@ body.d-flex {
 }
 
 
-/* --- (NUEVO DISEÑO) Tarjeta de Producto con Layout Específico --- */
+/* --- (DISEÑO FINAL HORIZONTAL) Tarjeta de Producto --- */
 .product-card {
-    display: flex;
-    padding: 1rem;
-    border: 1px solid var(--bs-border-color, #dee2e6);
-    border-radius: 0.75rem;
     transition: all 0.2s ease-in-out;
-    gap: 1rem;
-    /* Espacio entre imagen y contenido */
 }
 
 .product-card:hover {
@@ -71,7 +65,14 @@ body.d-flex {
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
 }
 
-/* Sección Amarilla: Imagen */
+/* Usamos flexbox en el card-body para el layout horizontal */
+.product-card .card-body {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Imagen a la izquierda */
 .product-card .product-image {
     width: 90px;
     height: 90px;
@@ -80,20 +81,19 @@ body.d-flex {
     flex-shrink: 0;
 }
 
-/* Contenedor para todo el contenido a la derecha de la imagen */
+/* Contenido a la derecha */
 .product-card .product-content {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    /* Previene desbordamiento de texto */
 }
 
-/* Sección Celeste: Título y Descripción */
 .product-card .product-info {
     flex-grow: 1;
-    /* Empuja el footer hacia abajo */
 }
 
-/* Contenedor para la fila inferior (Precio y Botones) */
 .product-card .product-footer {
     display: flex;
     align-items: center;
@@ -101,13 +101,11 @@ body.d-flex {
     margin-top: 0.5rem;
 }
 
-/* Sección Roja: Precio */
 .product-card .product-price {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
-/* Sección Verde/Negro: Controles de Cantidad */
 .product-card .quantity-controls {
     display: flex;
     align-items: center;
@@ -122,12 +120,8 @@ body.d-flex {
     align-items: center;
     justify-content: center;
     padding: 0;
-    border: 1px solid #ddd;
+    border: 1px solid var(--bs-border-color, #dee2e6);
     background-color: transparent;
-}
-
-[data-bs-theme="dark"] .product-card .quantity-controls button {
-    border-color: #444;
 }
 
 .product-card .quantity-controls .btn-increase {
@@ -142,7 +136,6 @@ body.d-flex {
     text-align: center;
 }
 
-/* Ocultamos los controles de menos y la cantidad si no está en el carrito */
 .product-card .quantity-controls .btn-decrease,
 .product-card .quantity-controls .quantity-value {
     visibility: hidden;
@@ -155,7 +148,6 @@ body.d-flex {
     visibility: visible;
     opacity: 1;
 }
-
 
 /* --- Estilos de la Factura (Invoice) --- */
 .invoice-items {
@@ -185,6 +177,10 @@ body.d-flex {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.25rem;
+    background-color: var(--bs-secondary-bg, #e9ecef);
+    border-radius: 15px;
+    padding: 0.25rem 0.5rem;
 }
 
 .invoice-item .quantity-controls-vertical button {
@@ -192,13 +188,13 @@ body.d-flex {
     background: none;
     padding: 0;
     line-height: 1;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: var(--bs-body-color);
 }
 
 .invoice-item .quantity-controls-vertical .quantity-value {
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .payment-summary {

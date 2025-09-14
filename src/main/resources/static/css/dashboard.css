@@ -252,6 +252,17 @@ body {
     padding: 0.5rem;
 }
 
+.sidebar-popover ul,
+.sidebar-popover li {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.sidebar-popover li::before {
+    display: none !important;
+}
+
 .sidebar-popover {
     background-color: var(--sidebar-bg);
     border: 1px solid var(--primary-color);

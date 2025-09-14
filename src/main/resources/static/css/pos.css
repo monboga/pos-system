@@ -1,0 +1,210 @@
+/* Corrección de Layout: Asegura que el contenedor principal ocupe toda la altura */
+html,
+body {
+    height: 100%;
+}
+
+body.d-flex {
+    overflow: hidden;
+    /* Evita el scroll en el body */
+}
+
+/* Contenedor principal del POS (Catálogo + Factura) */
+.pos-wrapper {
+    display: flex;
+    flex-grow: 1;
+    height: 100vh;
+    transition: margin-left 0.3s;
+    margin-left: 260px;
+}
+
+.pos-wrapper.expanded {
+    margin-left: 80px;
+}
+
+/* Columna del Catálogo */
+.pos-catalog {
+    flex-grow: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Columna de la Factura (Invoice) */
+.pos-invoice {
+    width: 380px;
+    flex-shrink: 0;
+    background-color: var(--bs-tertiary-bg, #f8f9fa);
+    border-left: 1px solid var(--bs-border-color, #dee2e6);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos de las tarjetas de categoría */
+.category-card {
+    transition: all 0.2s ease-in-out;
+}
+
+.category-card:hover,
+.category-card.active {
+    transform: translateY(-5px);
+    background-color: var(--primary-color) !important;
+    color: white;
+}
+
+
+/* --- (DISEÑO FINAL HORIZONTAL) Tarjeta de Producto --- */
+.product-card {
+    transition: all 0.2s ease-in-out;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+}
+
+/* Usamos flexbox en el card-body para el layout horizontal */
+.product-card .card-body {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Imagen a la izquierda */
+.product-card .product-image {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* Contenido a la derecha */
+.product-card .product-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    /* Previene desbordamiento de texto */
+}
+
+.product-card .product-info {
+    flex-grow: 1;
+}
+
+.product-card .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
+
+.product-card .product-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.product-card .quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.product-card .quantity-controls button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    background-color: transparent;
+}
+
+.product-card .quantity-controls .btn-increase {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.product-card .quantity-controls .quantity-value {
+    font-weight: bold;
+    min-width: 1rem;
+    text-align: center;
+}
+
+.product-card .quantity-controls .btn-decrease,
+.product-card .quantity-controls .quantity-value {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+.product-card.in-cart .quantity-controls .btn-decrease,
+.product-card.in-cart .quantity-controls .quantity-value {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* --- Estilos de la Factura (Invoice) --- */
+.invoice-items {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.invoice-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.invoice-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.invoice-item .item-details {
+    flex-grow: 1;
+}
+
+.invoice-item .quantity-controls-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    background-color: var(--bs-secondary-bg, #e9ecef);
+    border-radius: 15px;
+    padding: 0.25rem 0.5rem;
+}
+
+.invoice-item .quantity-controls-vertical button {
+    border: none;
+    background: none;
+    padding: 0;
+    line-height: 1;
+    font-size: 1rem;
+    color: var(--bs-body-color);
+}
+
+.invoice-item .quantity-controls-vertical .quantity-value {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.payment-summary {
+    background-color: var(--bs-secondary-bg, #e9ecef);
+    padding: 1rem;
+    border-radius: 0.75rem;
+}
+
+.payment-summary .summary-divider {
+    border-top: 2px dotted var(--bs-border-color, #ced4da);
+    margin-top: 1rem;
+    padding-top: 1rem;
+}

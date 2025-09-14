@@ -1,0 +1,8 @@
+.business-logo-preview {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    /* Usa 'contain' para que el logo no se corte */
+    background-color: #f8f9fa;
+    border: 1px dashed #ccc;
+}

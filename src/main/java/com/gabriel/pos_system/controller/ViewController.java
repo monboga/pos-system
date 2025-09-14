@@ -25,4 +25,9 @@ public class ViewController {
     public String showUserPage() {
         return "users";
     }
+
+    @GetMapping("/business")
+    public String showBusinessPage() {
+        return "business";
+    }
 }

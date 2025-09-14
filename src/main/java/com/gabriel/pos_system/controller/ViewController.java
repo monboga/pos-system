@@ -55,4 +55,9 @@ public class ViewController {
     public String showPosPage() {
         return "pos";
     }
+
+    @GetMapping("/sales-history")
+    public String showSalesHistoryPage() {
+        return "sales-history";
+    }
 }

@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Punto de Venta - POS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/pos.css}">
+</head>
+
+<body class="d-flex">
+
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container"><i class="bi bi-shop logo-icon"></i><span class="logo-text">Mi POS</span></div>
+            <div class="form-check form-switch theme-switcher"><input class="form-check-input" type="checkbox"
+                    role="switch" id="themeSwitch"><label class="form-check-label" for="themeSwitch"><i
+                        class="bi bi-sun-fill"></i></label><label class="form-check-label" for="themeSwitch"><i
+                        class="bi bi-moon-fill"></i></label></div>
+        </div>
+        <ul class="list-unstyled sidebar-nav" id="sidebar-nav">
+            <li class="sidebar-item"><a th:href="@{/dashboard}" class="sidebar-link"><i
+                        class="bi bi-speedometer2 sidebar-icon"></i><span>Dashboard</span></a></li>
+            <li class="sidebar-item"><a href="#admin-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                    aria-expanded="false"><i class="bi bi-people sidebar-icon"></i><span>Administración</span><i
+                        class="bi bi-chevron-down arrow ms-auto"></i></a>
+                <ul id="admin-submenu" class="collapse list-unstyled sidebar-dropdown" data-bs-parent="#sidebar-nav">
+                    <li><a th:href="@{/users}" class="sidebar-link">Usuarios</a></li>
+                    <li><a th:href="@{/business}" class="sidebar-link">Negocio</a></li>
+                    <li><a th:href="@{/clients}" class="sidebar-link">Clientes</a></li>
+                </ul>
+            </li>
+            <li class="sidebar-item"><a href="#inventory-submenu" data-bs-toggle="collapse"
+                    class="sidebar-link collapsed" aria-expanded="false"><i
+                        class="bi bi-box-seam sidebar-icon"></i><span>Inventario</span><i
+                        class="bi bi-chevron-down arrow ms-auto"></i></a>
+                <ul id="inventory-submenu" class="collapse list-unstyled sidebar-dropdown"
+                    data-bs-parent="#sidebar-nav">
+                    <li><a th:href="@{/categories}" class="sidebar-link">Categorías</a></li>
+                    <li><a th:href="@{/products}" class="sidebar-link">Producto</a></li>
+                </ul>
+            </li>
+            <li class="sidebar-item">
+                <a href="#sales-submenu" data-bs-toggle="collapse" class="sidebar-link" aria-expanded="true"><i
+                        class="bi bi-cart3 sidebar-icon"></i><span>Ventas</span><i
+                        class="bi bi-chevron-down arrow ms-auto"></i></a>
+                <ul id="sales-submenu" class="collapse list-unstyled sidebar-dropdown show"
+                    data-bs-parent="#sidebar-nav">
+                    <li><a th:href="@{/pos}" class="sidebar-link active">Nueva Venta</a></li>
+                    <li><a href="#" class="sidebar-link">Historial de Ventas</a></li>
+                </ul>
+            </li>
+            <li class="sidebar-item"><a href="#reports-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                    aria-expanded="false"><i
+                        class="bi bi-file-earmark-bar-graph sidebar-icon"></i><span>Reportes</span><i
+                        class="bi bi-chevron-down arrow ms-auto"></i></a>
+                <ul id="reports-submenu" class="collapse list-unstyled sidebar-dropdown" data-bs-parent="#sidebar-nav">
+                    <li><a href="#" class="sidebar-link">Reporte de Ventas</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="sidebar-footer dropdown"><a href="#"
+                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="user-avatar"><span>AU</span></div>
+                <div class="user-info"><span>Admin Usuario</span><span class="text-muted">admin@pos.com</span></div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
+                <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
+                <li><a class="dropdown-item" href="#">Configuración</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="/login">Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <button class="btn" type="button" id="sidebar-toggle"><i class="bi bi-chevron-left"></i></button>
+
+    <div class="pos-wrapper" id="main-content">
+        <main class="pos-catalog">
+            <div class="mb-4"><label for="client-select" class="form-label fw-bold">Selección de Cliente</label><select
+                    class="form-select" id="client-select">
+                    <option selected>Seleccionar cliente por RFC...</option>
+                    <option value="1">XAXX010101000 - Público en General</option>
+                    <option value="2">PAGJ880101XXX - Juan Pérez</option>
+                </select></div>
+            <h2 class="h4 mb-3">Categorías</h2>
+            <div class="row g-3 mb-4">
+                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none active"><i
+                            class="bi bi-stars fs-4"></i>
+                        <div>Pestañas</div>
+                    </a></div>
+                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none"><i
+                            class="bi bi-eyedropper fs-4"></i>
+                        <div>Adhesivos</div>
+                    </a></div>
+                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none"><i
+                            class="bi bi-magic fs-4"></i>
+                        <div>Pinzas</div>
+                    </a></div>
+                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none"><i
+                            class="bi bi-brush fs-4"></i>
+                        <div>Accesorios</div>
+                    </a></div>
+                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none"><i
+                            class="bi bi-capsule fs-4"></i>
+                        <div>Removedores</div>
+                    </a></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h4">Catálogo de Productos</h2><input type="search" class="form-control"
+                    style="max-width: 250px;" placeholder="Filtrar por nombre...">
+            </div>
+
+            <div class="row g-3" id="product-grid">
+                <div class="col-lg-4 col-md-6 product-container" data-id="1" data-name="Pestañas Nagaraku"
+                    data-description="Curva D, 0.07mm" data-price="150.50"
+                    data-image="https://images.unsplash.com/photo-1599351432899-6893a9914c67?q=80&w=400&auto=format&fit=crop">
+                    <div class="card product-card h-100">
+                        <div class="card-body">
+                            <img src="https://images.unsplash.com/photo-1599351432899-6893a9914c67?q=80&w=400&auto=format&fit=crop"
+                                class="product-image" alt="Pestañas Nagaraku">
+                            <div class="product-content">
+                                <div class="product-info">
+                                    <h6 class="fw-bold">Pestañas Nagaraku</h6>
+                                    <p class="text-muted small mb-0">Curva D, 0.07mm</p>
+                                </div>
+                                <div class="product-footer"><span class="product-price">$150.50</span>
+                                    <div class="quantity-controls"><button class="btn-decrease"
+                                            data-action="decrease">-</button><span
+                                            class="quantity-value">0</span><button class="btn-increase"
+                                            data-action="increase">+</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 product-container" data-id="2" data-name="Adhesivo Sky Glue"
+                    data-description="Tapa Roja, 5ml" data-price="250.00"
+                    data-image="https://images.unsplash.com/photo-1620916298379-2475a2a22534?q=80&w=400&auto=format&fit=crop">
+                    <div class="card product-card h-100">
+                        <div class="card-body">
+                            <img src="https://images.unsplash.com/photo-1620916298379-2475a2a22534?q=80&w=400&auto=format&fit=crop"
+                                class="product-image" alt="Adhesivo Sky Glue">
+                            <div class="product-content">
+                                <div class="product-info">
+                                    <h6 class="fw-bold">Adhesivo Sky Glue</h6>
+                                    <p class="text-muted small mb-0">Tapa Roja, 5ml</p>
+                                </div>
+                                <div class="product-footer"><span class="product-price">$250.00</span>
+                                    <div class="quantity-controls"><button class="btn-decrease"
+                                            data-action="decrease">-</button><span
+                                            class="quantity-value">0</span><button class="btn-increase"
+                                            data-action="increase">+</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 product-container" data-id="3" data-name="Pinza Curva Vetus"
+                    data-description="Acero inoxidable" data-price="120.00"
+                    data-image="https://images.unsplash.com/photo-1596704922459-74e279144300?q=80&w=400&auto=format&fit=crop">
+                    <div class="card product-card h-100">
+                        <div class="card-body">
+                            <img src="https://images.unsplash.com/photo-1596704922459-74e279144300?q=80&w=400&auto=format&fit=crop"
+                                class="product-image" alt="Pinza Curva Vetus">
+                            <div class="product-content">
+                                <div class="product-info">
+                                    <h6 class="fw-bold">Pinza Curva Vetus</h6>
+                                    <p class="text-muted small mb-0">Acero inoxidable</p>
+                                </div>
+                                <div class="product-footer"><span class="product-price">$120.00</span>
+                                    <div class="quantity-controls"><button class="btn-decrease"
+                                            data-action="decrease">-</button><span
+                                            class="quantity-value">0</span><button class="btn-increase"
+                                            data-action="increase">+</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <aside class="pos-invoice">
+            <h2 class="h4 mb-4">Pedido</h2>
+            <div class="invoice-items" id="invoice-items"></div>
+            <div class="mt-auto">
+                <div class="payment-summary">
+                    <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><span
+                            id="subtotal">$0.00</span></div>
+                    <div class="d-flex justify-content-between"><span>IVA (16%)</span><span id="iva">$0.00</span></div>
+                    <div class="d-flex justify-content-between fw-bold fs-5 summary-divider"><span>Total</span><span
+                            id="total">$0.00</span></div>
+                </div>
+                <div class="d-grid mt-3"><button class="btn btn-primary btn-lg" data-bs-toggle="modal"
+                        data-bs-target="#confirmSaleModal">Confirmar Venta</button></div>
+            </div>
+        </aside>
+    </div>
+    <div class="modal fade" id="confirmSaleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Venta</h5><button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Deseas facturar?</p>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">No</button><button type="button" class="btn btn-primary">Sí</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/pos.js}"></script>
+</body>
+
+</html>

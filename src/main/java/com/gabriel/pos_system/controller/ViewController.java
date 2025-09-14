@@ -40,4 +40,9 @@ public class ViewController {
     public String showClientsPage() {
         return "clients";
     }
+
+    @GetMapping("/categories")
+    public String showCategoriesPage() {
+        return "categories";
+    }
 }

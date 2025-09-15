@@ -62,6 +62,13 @@ body {
     flex-direction: column;
 }
 
+.sidebar .sidebar-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
 .sidebar .sidebar-header {
     padding: 20px;
     background: var(--sidebar-bg);
@@ -348,4 +355,16 @@ body {
     /* Rojo oscuro */
     color: #f8d7da !important;
     /* Rojo claro */
+}
+
+.user-avatar-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
 }

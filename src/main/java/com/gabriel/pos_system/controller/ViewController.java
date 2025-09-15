@@ -34,12 +34,6 @@ public class ViewController {
         return "dashboard";
     }
 
-    @GetMapping("/users")
-    public String showUserPage(Model model) {
-        model.addAttribute("users", userRepository.findAll());
-        return "users";
-    }
-
     @GetMapping("/business")
     public String showBusinessPage() {
         return "business";

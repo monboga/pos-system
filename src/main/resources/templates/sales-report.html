@@ -74,13 +74,19 @@
                     id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                     <div
                         style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; background-color: var(--primary-color);">
-                        <img src="" alt="Avatar" id="sidebar-avatar-img" class="d-none"
+
+                        <img th:if="${loggedInUser != null && loggedInUser.photo != null}"
+                            th:src="${loggedInUser.photo}" alt="Avatar" id="sidebar-avatar-img"
                             style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                        <span id="sidebar-avatar-initials" class="fw-bold"></span>
+                        <span th:if="${loggedInUser != null && loggedInUser.photo == null}" id="sidebar-avatar-initials"
+                            class="fw-bold"
+                            th:text="${#strings.substring(loggedInUser.firstName, 0, 1) + #strings.substring(loggedInUser.lastName, 0, 1)}"></span>
                     </div>
                     <div class="user-info">
-                        <span id="sidebar-user-name"></span>
-                        <span id="sidebar-user-email" class="text-muted"></span>
+                        <span id="sidebar-user-name"
+                            th:text="${loggedInUser != null ? loggedInUser.firstName + ' ' + loggedInUser.lastName : 'Usuario'}"></span>
+                        <span id="sidebar-user-email" class="text-muted"
+                            th:text="${loggedInUser != null ? loggedInUser.email : ''}"></span>
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
@@ -89,7 +95,11 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#" id="logout-button">Cerrar Sesión</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;"></form>
+                        <a class="dropdown-item" href="#"
+                            onclick="document.getElementById('logoutForm').submit(); return false;">Cerrar Sesión</a>
+                    </li>
                 </ul>
             </div>
         </nav>

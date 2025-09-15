@@ -1,12 +1,20 @@
 package com.gabriel.pos_system.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.gabriel.pos_system.repository.UserRepository;
 
 @Controller
 public class ViewController {
 
-    @GetMapping({ "/login", "/" })
+    // Inyectamos el repositorio para poder acceder a los datos de los usuarios.
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping("/login")
     public String showLogin() {
         return "login";
     }
@@ -16,7 +24,7 @@ public class ViewController {
         return "forgot-password";
     }
 
-    @GetMapping("/index")
+    @GetMapping({ "/", "/index" })
     public String showHome() {
         return "index";
     }
@@ -27,7 +35,8 @@ public class ViewController {
     }
 
     @GetMapping("/users")
-    public String showUserPage() {
+    public String showUserPage(Model model) {
+        model.addAttribute("users", userRepository.findAll());
         return "users";
     }
 

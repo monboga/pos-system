@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,7 +80,20 @@ public class UserServiceImpl implements UserService {
             // --- FIN DE LA CORRECCIÓN ---
         }
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // --- INICIO DE LA CORRECCIÓN ---
+        // Verificamos si el usuario actualizado es el mismo que está actualmente
+        // logueado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getName().equals(savedUser.getEmail())) {
+            // Si es así, creamos una nueva autenticación con los datos actualizados
+            // y la establecemos en el contexto de seguridad para refrescar la sesión.
+            User updatedPrincipal = userRepository.findByEmail(savedUser.getEmail()).orElseThrow();
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedPrincipal,
+                    authentication.getCredentials(), authentication.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        }
     }
 
     @Override
@@ -88,5 +104,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public void updatePassword(User user, String newPassword) {
+        // Encriptamos la nueva contraseña y la guardamos
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        // Refrescamos la sesión de seguridad con los nuevos datos
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(user, user.getPassword(),
+                user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 }

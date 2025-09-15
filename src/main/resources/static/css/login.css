@@ -1,74 +1,83 @@
-/* static/css/login.css */
+:root {
+    --primary-color: #4A148C;
+    /* Morado que hemos usado */
+    --primary-color-hover: #310e5f;
+}
+
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #e9ecef;
-    /* Un gris muy claro para el fondo */
-}
-
-.login-container {
+    background-color: #f8f9fe;
+    /* Un fondo casi blanco con un toque azulado */
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
+    padding: 1rem;
 }
 
-.login-box {
+.login-wrapper {
     width: 100%;
-    max-width: 1000px;
-    /* Ancho máximo de la ventana de login */
-    background-color: #fff;
-    border-radius: 1.5rem;
-    /* Bordes más redondeados */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    /* Importante para que las columnas respeten el borde redondeado */
+    max-width: 450px;
+    text-align: center;
 }
 
-/* Estilos para la columna de la imagen */
-.login-image-section {
-    background: linear-gradient(45deg, #4A148C, #7C4DFF);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem;
+.login-logo {
+    margin-bottom: 2rem;
+    max-width: 80px;
+    /* Aumentado de 60px a 80px */
+    border-radius: 0.75rem;
+    /* Bordes redondeados añadidos */
 }
 
-/* Estilos para la columna del formulario */
-.login-form-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.login-card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 1rem;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
 }
 
-/* Ajustes finos al formulario */
-.form-control-lg {
-    padding: 0.9rem 1rem;
+.login-card .form-control {
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    /* Espacio a la izquierda para el ícono */
     border-radius: 0.5rem;
+    border: 1px solid #e0e0e0;
+}
+
+.input-group-icon {
+    position: relative;
+}
+
+.input-group-icon .icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-color);
 }
 
 .btn-primary {
-    background-color: #673AB7;
-    border-color: #673AB7;
-    padding: 0.9rem;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 0.75rem;
     border-radius: 0.5rem;
+    font-weight: 500;
 }
 
 .btn-primary:hover {
-    background-color: #512DA8;
-    border-color: #512DA8;
+    background-color: var(--primary-color-hover);
+    border-color: var(--primary-color-hover);
 }
 
-a {
-    color: #673AB7;
+.forgot-password-link {
+    margin-top: 1.5rem;
+    display: inline-block;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.forgot-password-link a {
+    color: var(--primary-color);
     text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-.form-check-input:checked {
-    background-color: #673AB7;
-    border-color: #673AB7;
+    font-weight: 500;
 }

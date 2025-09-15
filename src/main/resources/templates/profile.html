@@ -76,8 +76,7 @@
                         style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; background-color: var(--primary-color);">
                         <img src="" alt="Avatar" id="sidebar-avatar-img" class="d-none"
                             style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"><span
-                            id="sidebar-avatar-initials" class="fw-bold"></span>
-                    </div>
+                            id="sidebar-avatar-initials" class="fw-bold"></span></div>
                     <div class="user-info"><span id="sidebar-user-name"></span><span id="sidebar-user-email"
                             class="text-muted"></span></div>
                 </a>
@@ -87,7 +86,7 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#" id="logout-button">Cerrar Sesión</a></li>
+                    <li><a class="dropdown-item" href="/login" id="logout-button">Cerrar Sesión</a></li>
                 </ul>
             </div>
         </nav>
@@ -161,9 +160,13 @@
                     <h5 class="modal-title">Editar Perfil</h5><button type="button" class="btn-close"
                         data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body text-center"><img src="https://via.placeholder.com/150"
-                        class="img-thumbnail mb-3" alt="..."><input type="file" class="form-control mb-3"
-                        id="profile-photo-upload">
+                <div class="modal-body text-center">
+                    <div class="user-avatar mx-auto mb-3" style="width: 150px; height: 150px; font-size: 4rem;">
+                        <img src="" alt="Avatar" id="modal-avatar-img" class="d-none img-thumbnail"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                        <span id="modal-avatar-initials" class="fw-bold"></span>
+                    </div>
+                    <input type="file" class="form-control mb-3" id="profile-photo-upload">
                     <div class="form-floating mb-3"><input type="text" class="form-control" id="profileNameModal"
                             value=""><label for="profileNameModal">Nombre Completo</label></div>
                 </div>
@@ -173,6 +176,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="editInfoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">

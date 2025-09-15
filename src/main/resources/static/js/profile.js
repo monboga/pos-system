@@ -3,54 +3,42 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!loggedInUser) return;
 
     // --- SELECTORES DEL DOM ---
-    // Avatares
     const profileAvatarImg = document.getElementById('profile-avatar-img');
     const profileAvatarInitials = document.getElementById('profile-avatar-initials');
-
-    // Campos de texto en la vista principal
     const profileFullName = document.getElementById('profile-full-name');
     const profileRole = document.getElementById('profile-role');
     const profileFirstName = document.getElementById('profile-first-name');
     const profileLastName = document.getElementById('profile-last-name');
     const profileEmail = document.getElementById('profile-email');
     const profilePhone = document.getElementById('profile-phone');
-
-    // Campos del modal de edición
     const photoUploadInput = document.getElementById('profile-photo-upload');
+    const editProfileModalEl = document.getElementById('editProfileModal'); // Selector del modal
 
     /**
      * Rellena la página con los datos del usuario.
      */
     function renderProfile() {
-        const user = getLoggedInUser(); // Obtenemos los datos más frescos
+        const user = getLoggedInUser();
 
-        // Lógica de avatar/foto
         if (user.photo) {
-            if (profileAvatarImg) {
-                profileAvatarImg.src = user.photo;
-                profileAvatarImg.classList.remove('d-none');
-            }
+            if (profileAvatarImg) { profileAvatarImg.src = user.photo; profileAvatarImg.classList.remove('d-none'); }
             if (profileAvatarInitials) profileAvatarInitials.classList.add('d-none');
         } else {
             if (profileAvatarImg) profileAvatarImg.classList.add('d-none');
-            if (profileAvatarInitials) {
-                profileAvatarInitials.textContent = getInitials(user.firstName, user.lastName);
-                profileAvatarInitials.classList.remove('d-none');
-            }
+            if (profileAvatarInitials) { profileAvatarInitials.textContent = getInitials(user.firstName, user.lastName); profileAvatarInitials.classList.remove('d-none'); }
         }
 
-        // --- LÓGICA AÑADIDA PARA CORREGIR EL BUG ---
-        // Rellenamos los campos de texto con los datos del usuario.
         if (profileFullName) profileFullName.textContent = `${user.firstName} ${user.lastName}`;
         if (profileRole) profileRole.textContent = user.role;
         if (profileFirstName) profileFirstName.textContent = user.firstName;
         if (profileLastName) profileLastName.textContent = user.lastName;
         if (profileEmail) profileEmail.textContent = user.email;
         if (profilePhone) profilePhone.textContent = user.phone;
-        // --- FIN DE LA CORRECCIÓN ---
     }
 
-    // Lógica para el modal de edición de foto
+    /**
+     * Lógica para el modal de edición de foto
+     */
     if (photoUploadInput) {
         photoUploadInput.addEventListener('change', function (event) {
             const file = event.target.files[0];
@@ -58,9 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const imageUrl = e.target.result;
-                    // Actualizamos el usuario en nuestra "DB" simulada
                     updateUser(loggedInUser.id, { photo: imageUrl });
-                    // Re-renderizamos el perfil y el sidebar para reflejar el cambio al instante
                     renderProfile();
                     loadSidebarUser();
                 };
@@ -68,6 +54,32 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    // --- LÓGICA AÑADIDA PARA CORREGIR EL BUG ---
+    // Evento que se dispara cuando el modal de editar perfil está a punto de mostrarse
+    if (editProfileModalEl) {
+        editProfileModalEl.addEventListener('show.bs.modal', function () {
+            const user = getLoggedInUser();
+            const modalAvatarImg = document.getElementById('modal-avatar-img');
+            const modalAvatarInitials = document.getElementById('modal-avatar-initials');
+            const profileNameModalInput = document.getElementById('profileNameModal');
+
+            // Llenar el nombre
+            profileNameModalInput.value = `${user.firstName} ${user.lastName}`;
+
+            // Llenar la imagen o las iniciales
+            if (user.photo) {
+                modalAvatarImg.src = user.photo;
+                modalAvatarImg.classList.remove('d-none');
+                modalAvatarInitials.classList.add('d-none');
+            } else {
+                modalAvatarImg.classList.add('d-none');
+                modalAvatarInitials.textContent = getInitials(user.firstName, user.lastName);
+                modalAvatarInitials.classList.remove('d-none');
+            }
+        });
+    }
+    // --- FIN DE LA CORRECCIÓN ---
 
     // Renderizado inicial al cargar la página
     renderProfile();

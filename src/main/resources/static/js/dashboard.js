@@ -7,6 +7,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let activePopover = null;
 
+    function loadBusinessLogo() {
+        const LOGO_STORAGE_KEY = 'businessLogo';
+        const DEFAULT_LOGO_ICON_CLASS = 'bi-shop'; // Clase del ícono por defecto
+
+        const savedLogoUrl = localStorage.getItem(LOGO_STORAGE_KEY);
+        const sidebarLogoImg = document.getElementById('sidebar-logo');
+        const sidebarLogoIcon = document.getElementById('sidebar-logo-icon');
+
+        if (sidebarLogoImg && sidebarLogoIcon) {
+            if (savedLogoUrl) {
+                // Si hay un logo guardado, mostramos la imagen y ocultamos el ícono
+                sidebarLogoImg.src = savedLogoUrl;
+                sidebarLogoImg.classList.remove('d-none');
+                sidebarLogoIcon.classList.add('d-none');
+            } else {
+                // Si no hay logo, ocultamos la imagen y mostramos el ícono
+                sidebarLogoImg.classList.add('d-none');
+                sidebarLogoIcon.classList.remove('d-none');
+            }
+        }
+    }
+
     function manageSubmenuAttributes() {
         if (sidebar.classList.contains('collapsed')) {
             submenuLinks.forEach(link => link.removeAttribute('data-bs-toggle'));
@@ -125,5 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --- (LLAMADAS INICIALES) APLICAR ESTADOS AL CARGAR LA PÁGINA ---
     applyInitialTheme();
+    loadBusinessLogo();
     applyInitialSidebarState(); // <-- LLAMADA A LA NUEVA FUNCIÓN
 });

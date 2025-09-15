@@ -92,6 +92,7 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
+
                     <li>
                         <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;"></form><a
                             class="dropdown-item" href="#"
@@ -120,6 +121,7 @@
                         <div class="card-body p-4 profile-section">
                             <div class="d-flex align-items-center">
                                 <div class="user-avatar me-3" style="width: 80px; height: 80px; font-size: 2rem;">
+
                                     <img th:if="${loggedInUser.photo != null}" th:src="${loggedInUser.photo}"
                                         alt="Avatar" id="profile-avatar-img"
                                         style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
@@ -148,6 +150,7 @@
                         <div class="card-body p-4">
                             <div class="row">
                                 <div class="col-md-6 mb-3"><strong>Nombre:</strong>
+
                                     <p th:text="${loggedInUser.firstName}"></p>
                                 </div>
                                 <div class="col-md-6 mb-3"><strong>Apellido:</strong>
@@ -177,6 +180,7 @@
                         data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center">
+
                     <div class="user-avatar mx-auto mb-3" style="width: 150px; height: 150px; font-size: 4rem;"><img
                             src="" alt="Avatar" id="modal-avatar-img" class="d-none img-thumbnail"
                             style="width: 100%; height: 100%; object-fit: cover;"><span id="modal-avatar-initials"
@@ -191,6 +195,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="editInfoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">

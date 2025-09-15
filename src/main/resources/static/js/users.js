@@ -32,13 +32,14 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('userStatus').value = user.status;
         document.getElementById('userPassword').value = '';
 
+
         if (user.photo && user.photo !== 'null') {
             photoPreview.src = user.photo;
         } else {
             photoPreview.src = 'https://via.placeholder.com/150';
         }
     }
-
+  
     function prepareAddModal() {
         userModalLabel.textContent = 'Agregar Nuevo Usuario';
         userForm.reset();
@@ -46,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
         photoPreview.src = 'https://via.placeholder.com/150';
     }
 
-    // Listener para los botones de la tabla
     if (usersTableBody) {
         usersTableBody.addEventListener('click', function (event) {
             const editButton = event.target.closest('.edit-user-btn');
@@ -61,4 +61,5 @@ document.addEventListener("DOMContentLoaded", function () {
             prepareAddModal();
         });
     }
+
 });

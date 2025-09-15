@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
+
     // --- CONSTANTES GLOBALES ---
     const sidebar = document.getElementById('sidebar');
     const toggleButton = document.getElementById('sidebar-toggle');
     const toggleIcon = toggleButton.querySelector('i');
     const submenuLinks = document.querySelectorAll('.sidebar-link[data-bs-toggle="collapse"]');
     const content = document.querySelectorAll('.main-content, .pos-wrapper'); // Apunta a ambos tipos de layout
+
 
     let activePopover = null;
 

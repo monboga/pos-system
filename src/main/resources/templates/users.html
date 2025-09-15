@@ -16,6 +16,7 @@
     <div class="wrapper">
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
+
                 <div class="logo-container">
                     <i class="bi bi-shop logo-icon" id="sidebar-logo-icon"></i>
                     <img src="" alt="Logo" class="sidebar-logo d-none" id="sidebar-logo">
@@ -137,6 +138,7 @@
                                     <th>Operaciones</th>
                                 </tr>
                             </thead>
+
                             <tbody id="users-table-body">
                                 <tr th:each="user : ${users}" th:data-id="${user.id}"
                                     th:data-first-name="${user.firstName}" th:data-last-name="${user.lastName}"
@@ -182,6 +184,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
+
                     <h5 class="modal-title" id="userModalLabel">Agregar Nuevo Usuario</h5><button type="button"
                         class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -210,8 +213,10 @@
                                     <div class="col-md-6 mb-3"><label for="userRole"
                                             class="form-label">Rol</label><select class="form-select" id="userRole">
                                             <option selected>Seleccionar rol...</option>
+
                                             <option value="ROLE_ADMIN">Administrador</option>
                                             <option value="ROLE_USER">Vendedor</option>
+
                                         </select></div>
                                     <div class="col-md-6 mb-3"><label for="userStatus"
                                             class="form-label">Estado</label><select class="form-select"

@@ -29,6 +29,35 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function loadSidebarUser() {
+        const loggedInUser = getLoggedInUser();
+        if (!loggedInUser) return;
+
+        const sidebarAvatarImg = document.getElementById('sidebar-avatar-img');
+        const sidebarAvatarInitials = document.getElementById('sidebar-avatar-initials');
+        const sidebarUserName = document.getElementById('sidebar-user-name');
+        const sidebarUserEmail = document.getElementById('sidebar-user-email');
+
+        // Actualizar nombre y email
+        if (sidebarUserName) sidebarUserName.textContent = `${loggedInUser.firstName} ${loggedInUser.lastName}`;
+        if (sidebarUserEmail) sidebarUserEmail.textContent = loggedInUser.email;
+
+        // Lógica para mostrar foto o iniciales
+        if (loggedInUser.photo) {
+            if (sidebarAvatarImg) {
+                sidebarAvatarImg.src = loggedInUser.photo;
+                sidebarAvatarImg.classList.remove('d-none');
+            }
+            if (sidebarAvatarInitials) sidebarAvatarInitials.classList.add('d-none');
+        } else {
+            if (sidebarAvatarImg) sidebarAvatarImg.classList.add('d-none');
+            if (sidebarAvatarInitials) {
+                sidebarAvatarInitials.textContent = getInitials(loggedInUser.firstName, loggedInUser.lastName);
+                sidebarAvatarInitials.classList.remove('d-none');
+            }
+        }
+    }
+
     function manageSubmenuAttributes() {
         if (sidebar.classList.contains('collapsed')) {
             submenuLinks.forEach(link => link.removeAttribute('data-bs-toggle'));
@@ -149,4 +178,5 @@ document.addEventListener("DOMContentLoaded", function () {
     applyInitialTheme();
     loadBusinessLogo();
     applyInitialSidebarState(); // <-- LLAMADA A LA NUEVA FUNCIÓN
+    loadSidebarUser();
 });

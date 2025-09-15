@@ -1,5 +1,5 @@
-// Clave para guardar los datos en localStorage
 const USER_DATA_KEY = 'posUsersData';
+const LOGGED_IN_USER_ID_KEY = 'loggedInUserId'; // Usaremos sessionStorage
 
 /**
  * Inicializa los datos de usuario con valores por defecto si no existen.
@@ -17,7 +17,6 @@ function initializeUsers() {
 
 /**
  * Obtiene todos los usuarios.
- * @returns {Array} Array de objetos de usuario.
  */
 function getUsers() {
     return JSON.parse(localStorage.getItem(USER_DATA_KEY)) || [];
@@ -25,8 +24,6 @@ function getUsers() {
 
 /**
  * Obtiene un usuario por su ID.
- * @param {number} userId - El ID del usuario.
- * @returns {object|null} El objeto de usuario o null si no se encuentra.
  */
 function getUserById(userId) {
     const users = getUsers();
@@ -34,39 +31,41 @@ function getUserById(userId) {
 }
 
 /**
+ * (NUEVO) Busca un usuario por su correo electrónico.
+ * @param {string} email - El correo a buscar.
+ * @returns {object|null} El objeto de usuario o null.
+ */
+function findUserByEmail(email) {
+    const users = getUsers();
+    return users.find(user => user.email.toLowerCase() === email.toLowerCase()) || null;
+}
+
+
+/**
  * Actualiza los datos de un usuario.
- * @param {number} userId - El ID del usuario a actualizar.
- * @param {object} updatedData - Un objeto con los campos a actualizar.
  */
 function updateUser(userId, updatedData) {
     let users = getUsers();
-    users = users.map(user => {
-        if (user.id === parseInt(userId)) {
-            return { ...user, ...updatedData };
-        }
-        return user;
-    });
+    users = users.map(user => (user.id === parseInt(userId)) ? { ...user, ...updatedData } : user);
     localStorage.setItem(USER_DATA_KEY, JSON.stringify(users));
 }
 
 /**
- * Simula obtener el usuario que ha iniciado sesión (para este proyecto, siempre el ID 1).
- * @returns {object|null} El objeto del usuario logueado.
+ * (MODIFICADO) Obtiene el usuario que ha iniciado sesión leyendo desde sessionStorage.
  */
 function getLoggedInUser() {
-    return getUserById(1);
+    const loggedInUserId = sessionStorage.getItem(LOGGED_IN_USER_ID_KEY);
+    if (!loggedInUserId) {
+        return null; // Nadie ha iniciado sesión
+    }
+    return getUserById(loggedInUserId);
 }
 
 /**
  * Genera las iniciales a partir de un nombre y apellido.
- * @param {string} firstName - El primer nombre.
- * @param {string} lastName - El apellido.
- * @returns {string} Las iniciales (ej. "AU").
  */
 function getInitials(firstName, lastName) {
     return `${firstName ? firstName[0] : ''}${lastName ? lastName[0] : ''}`.toUpperCase();
 }
 
-
-// Inicializamos los datos al cargar el script por primera vez
 initializeUsers();

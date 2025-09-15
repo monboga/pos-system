@@ -1,9 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Si no hay un usuario logueado, redirigir al login.
+    // Excluimos esta lógica de las propias páginas de login/forgot-password que no cargan este script.
+    if (!getLoggedInUser()) {
+        window.location.href = '/login';
+        return; // Detenemos la ejecución del resto del script
+    }
+
     const sidebar = document.getElementById('sidebar');
     const toggleButton = document.getElementById('sidebar-toggle');
     const toggleIcon = toggleButton.querySelector('i');
     const submenuLinks = document.querySelectorAll('.sidebar-link[data-bs-toggle="collapse"]');
     const content = document.getElementById('main-content');
+
 
     let activePopover = null;
 
@@ -171,6 +179,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 htmlElement.setAttribute('data-bs-theme', 'light');
                 localStorage.setItem('theme', 'light');
             }
+        });
+    }
+
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            // Limpiamos el ID del usuario de la sesión
+            sessionStorage.removeItem('loggedInUserId');
+            // Redirigimos a la página de login
+            window.location.href = '/login';
         });
     }
 

@@ -21,7 +21,8 @@
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
                 <div class="logo-container">
-                    <i class="bi bi-shop logo-icon"></i>
+                    <i class="bi bi-shop logo-icon" id="sidebar-logo-icon"></i>
+                    <img src="" alt="Logo" class="sidebar-logo d-none" id="sidebar-logo">
                     <span class="logo-text">Mi POS</span>
                 </div>
                 <div class="form-check form-switch theme-switcher">
@@ -89,8 +90,16 @@
             <div class="sidebar-footer dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="user-avatar"><span>AU</span></div>
-                    <div class="user-info"><span>Admin Usuario</span><span class="text-muted">admin@pos.com</span></div>
+                    <div
+                        style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; background-color: var(--primary-color);">
+                        <img src="" alt="Avatar" id="sidebar-avatar-img" class="d-none"
+                            style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        <span id="sidebar-avatar-initials" class="fw-bold"></span>
+                    </div>
+                    <div class="user-info">
+                        <span id="sidebar-user-name"></span>
+                        <span id="sidebar-user-email" class="text-muted"></span>
+                    </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
                     <li><a class="dropdown-item" th:href="@{/profile}">Mi Perfil</a></li>
@@ -98,7 +107,7 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="/login">Cerrar Sesión</a></li>
+                    <li><a class="dropdown-item" href="#" id="logout-button">Cerrar Sesión</a></li>
                 </ul>
             </div>
         </nav>
@@ -126,6 +135,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/userService.js}"></script>
     <script th:src="@{/js/dashboard.js}"></script>
 </body>
 

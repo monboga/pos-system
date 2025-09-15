@@ -3,48 +3,71 @@ document.addEventListener("DOMContentLoaded", function () {
     const userModalLabel = document.getElementById('userModalLabel');
     const userForm = document.getElementById('userForm');
     const addUserBtn = document.getElementById('addUserBtn');
-    const photoPreview = document.getElementById('photo-preview');
 
-    /**
-     * Prepara y llena el modal para editar un usuario.
-     * @param {Element} editButton - El botón de editar que fue presionado.
-     */
+    const photoPreviewImg = document.getElementById('photo-preview-img');
+    const photoPreviewInitials = document.getElementById('photo-preview-initials');
+    const photoUploadInput = document.getElementById('photo-upload');
+
+    const passwordFieldGroup = document.getElementById('password-field-group');
+    const passwordInput = document.getElementById('userPassword');
+    const passwordHelp = document.getElementById('passwordHelp');
+
     function populateEditModal(editButton) {
-        const userRow = editButton.closest('tr'); // Obtenemos la fila de la tabla
-
-        // Leemos los datos desde los atributos data-* de la fila
-        const user = {
-            id: userRow.dataset.id,
-            firstName: userRow.dataset.firstName,
-            lastName: userRow.dataset.lastName,
-            email: userRow.dataset.email,
-            role: userRow.dataset.role,
-            status: userRow.dataset.status,
-            photo: userRow.dataset.photo
-        };
+        const userRow = editButton.closest('tr');
+        const userData = userRow.dataset;
 
         userModalLabel.textContent = 'Editar Usuario';
-        document.getElementById('userId').value = user.id;
-        document.getElementById('userFirstName').value = user.firstName;
-        document.getElementById('userLastName').value = user.lastName;
-        document.getElementById('userEmail').value = user.email;
-        document.getElementById('userRole').value = user.role;
-        document.getElementById('userStatus').value = user.status;
-        document.getElementById('userPassword').value = '';
 
+        document.getElementById('userId').value = userData.id;
+        document.getElementById('userFirstName').value = userData.firstName;
+        document.getElementById('userLastName').value = userData.lastName;
+        document.getElementById('userEmail').value = userData.email;
+        document.getElementById('userPhone').value = userData.phoneNumber;
+        document.getElementById('userRole').value = userData.roleId;
+        document.getElementById('userStatus').value = userData.status;
 
-        if (user.photo && user.photo !== 'null') {
-            photoPreview.src = user.photo;
+        passwordFieldGroup.style.display = 'none';
+        passwordInput.required = false;
+        passwordHelp.textContent = 'Dejar en blanco para no cambiar la contraseña.';
+
+        if (userData.photo && userData.photo !== 'null') {
+            photoPreviewImg.src = userData.photo;
+            photoPreviewImg.classList.remove('d-none');
+            photoPreviewInitials.classList.add('d-none');
         } else {
-            photoPreview.src = 'https://via.placeholder.com/150';
+            photoPreviewImg.classList.add('d-none');
+            photoPreviewInitials.textContent = getInitials(userData.firstName, userData.lastName);
+            photoPreviewInitials.classList.remove('d-none');
         }
     }
-  
+
     function prepareAddModal() {
         userModalLabel.textContent = 'Agregar Nuevo Usuario';
         userForm.reset();
         document.getElementById('userId').value = '';
-        photoPreview.src = 'https://via.placeholder.com/150';
+
+        passwordFieldGroup.style.display = 'block';
+        passwordInput.required = true;
+        passwordHelp.textContent = '';
+
+        photoPreviewImg.classList.add('d-none');
+        photoPreviewInitials.textContent = '';
+        photoPreviewInitials.classList.remove('d-none');
+    }
+
+    if (photoUploadInput) {
+        photoUploadInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    photoPreviewImg.src = e.target.result;
+                    photoPreviewImg.classList.remove('d-none');
+                    photoPreviewInitials.classList.add('d-none');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     }
 
     if (usersTableBody) {
@@ -61,5 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
             prepareAddModal();
         });
     }
-
 });
+
+function getInitials(firstName, lastName) {
+    return `${firstName ? firstName[0] : ''}${lastName ? lastName[0] : ''}`.toUpperCase();
+}

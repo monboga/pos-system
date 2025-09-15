@@ -92,7 +92,6 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-
                     <li>
                         <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;"></form><a
                             class="dropdown-item" href="#"
@@ -105,6 +104,16 @@
 
         <div id="main-content" class="main-content">
             <h1 class="h3 mb-4">Configuración de Cuenta</h1>
+
+            <div th:if="${passwordSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${passwordSuccess}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${passwordError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${passwordError}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
             <div class="row">
                 <div class="col-md-3">
                     <div class="card">
@@ -121,7 +130,6 @@
                         <div class="card-body p-4 profile-section">
                             <div class="d-flex align-items-center">
                                 <div class="user-avatar me-3" style="width: 80px; height: 80px; font-size: 2rem;">
-
                                     <img th:if="${loggedInUser.photo != null}" th:src="${loggedInUser.photo}"
                                         alt="Avatar" id="profile-avatar-img"
                                         style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
@@ -130,10 +138,10 @@
                                         th:text="${#strings.substring(loggedInUser.firstName, 0, 1) + #strings.substring(loggedInUser.lastName, 0, 1)}"></span>
                                 </div>
                                 <div>
-                                    <h5 class="fw-bold mb-0"
+                                    <h5 class="fw-bold mb-0" id="profile-full-name"
                                         th:text="${loggedInUser.firstName + ' ' + loggedInUser.lastName}"></h5>
-                                    <p class="text-muted mb-0"
-                                        th:text="${!loggedInUser.roles.isEmpty() ? loggedInUser.roles.iterator().next().getName() : 'Sin Rol'}">
+                                    <p class="text-muted mb-0" id="profile-role"
+                                        th:text="${!loggedInUser.roles.isEmpty() ? #strings.replace(loggedInUser.roles.iterator().next().name, 'ROLE_', '') : 'Sin Rol'}">
                                     </p>
                                 </div>
                             </div>
@@ -143,28 +151,28 @@
                     </div>
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Información Personal</h5><button
-                                class="btn btn-outline-secondary" data-bs-toggle="modal"
+                            <h5 class="card-title mb-0">Información Personal</h5>
+                            <button class="btn btn-outline-secondary" data-bs-toggle="modal"
                                 data-bs-target="#editInfoModal"><i class="bi bi-pencil me-1"></i> Editar</button>
                         </div>
                         <div class="card-body p-4">
                             <div class="row">
                                 <div class="col-md-6 mb-3"><strong>Nombre:</strong>
-
-                                    <p th:text="${loggedInUser.firstName}"></p>
+                                    <p id="profile-first-name" th:text="${loggedInUser.firstName}"></p>
                                 </div>
                                 <div class="col-md-6 mb-3"><strong>Apellido:</strong>
-                                    <p th:text="${loggedInUser.lastName}"></p>
+                                    <p id="profile-last-name" th:text="${loggedInUser.lastName}"></p>
                                 </div>
                                 <div class="col-md-6 mb-3"><strong>Correo:</strong>
-                                    <p th:text="${loggedInUser.email}"></p>
+                                    <p id="profile-email" th:text="${loggedInUser.email}"></p>
                                 </div>
                                 <div class="col-md-6 mb-3"><strong>Teléfono:</strong>
-                                    <p th:text="${loggedInUser.phoneNumber}"></p>
+                                    <p id="profile-phone" th:text="${loggedInUser.phoneNumber}"></p>
                                 </div>
                             </div>
                             <hr>
-                            <button class="btn btn-secondary">Cambiar Contraseña</button>
+                            <button class="btn btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#changePasswordModal">Cambiar Contraseña</button>
                         </div>
                     </div>
                 </div>
@@ -180,14 +188,13 @@
                         data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center">
-
                     <div class="user-avatar mx-auto mb-3" style="width: 150px; height: 150px; font-size: 4rem;"><img
                             src="" alt="Avatar" id="modal-avatar-img" class="d-none img-thumbnail"
-                            style="width: 100%; height: 100%; object-fit: cover;"><span id="modal-avatar-initials"
-                            class="fw-bold"></span></div><input type="file" class="form-control mb-3"
-                        id="profile-photo-upload">
-                    <div class="form-floating mb-3"><input type="text" class="form-control" id="profileNameModal"
-                            value=""><label for="profileNameModal">Nombre Completo</label></div>
+                            style="width: 100%; height: 100%; object-fit: cover; padding: 0;"><span
+                            id="modal-avatar-initials" class="fw-bold"></span></div><input type="file"
+                        class="form-control mb-3" id="profile-photo-upload">
+                    <div class="form-floating mb-3"><input type="text" class="form-control" id="profileFullNameModal"
+                            value=""><label for="profileFullNameModal">Nombre Completo</label></div>
                 </div>
                 <div class="modal-footer"><button type="button" class="btn btn-secondary"
                         data-bs-dismiss="modal">Cancelar</button><button type="button"
@@ -195,7 +202,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="editInfoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -206,18 +212,40 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 mb-3"><label class="form-label">Nombre</label><input type="text"
-                                class="form-control" value=""></div>
+                                class="form-control" id="infoFirstName"></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Apellido</label><input type="text"
-                                class="form-control" value=""></div>
+                                class="form-control" id="infoLastName"></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Correo</label><input type="email"
-                                class="form-control" value=""></div>
+                                class="form-control" id="infoEmail"></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Teléfono</label><input type="tel"
-                                class="form-control" value=""></div>
+                                class="form-control" id="infoPhone"></div>
                     </div>
                 </div>
                 <div class="modal-footer"><button type="button" class="btn btn-secondary"
                         data-bs-dismiss="modal">Cancelar</button><button type="button"
                         class="btn btn-primary">Guardar</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cambiar Contraseña</h5><button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+                <form th:action="@{/profile/change-password}" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3"><label for="newPassword" class="form-label">Nueva Contraseña</label><input
+                                type="password" name="newPassword" class="form-control" required></div>
+                        <div class="mb-3"><label for="confirmPassword" class="form-label">Confirmar
+                                Contraseña</label><input type="password" name="confirmPassword" class="form-control"
+                                required></div>
+                    </div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Cancelar</button><button type="submit"
+                            class="btn btn-primary">Guardar Cambios</button></div>
+                </form>
             </div>
         </div>
     </div>

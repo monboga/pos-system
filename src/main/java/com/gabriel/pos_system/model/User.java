@@ -51,7 +51,7 @@ public class User implements UserDetails {
     private Integer status;
 
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String photo;
 
     @CreationTimestamp

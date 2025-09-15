@@ -16,17 +16,22 @@
     <div class="wrapper">
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
-                <div class="logo-container"><i class="bi bi-shop logo-icon" id="sidebar-logo-icon"></i><img src=""
-                        alt="Logo" class="sidebar-logo d-none" id="sidebar-logo"><span class="logo-text">Mi POS</span>
+                <div class="logo-container">
+                    <i class="bi bi-shop logo-icon" id="sidebar-logo-icon"></i>
+                    <img src="" alt="Logo" class="sidebar-logo d-none" id="sidebar-logo">
+                    <span class="logo-text">Mi POS</span>
                 </div>
-                <div class="form-check form-switch theme-switcher"><input class="form-check-input" type="checkbox"
-                        role="switch" id="themeSwitch"><label class="form-check-label" for="themeSwitch"><i
-                            class="bi bi-sun-fill"></i></label><label class="form-check-label" for="themeSwitch"><i
-                            class="bi bi-moon-fill"></i></label></div>
+                <div class="form-check form-switch theme-switcher">
+                    <input class="form-check-input" type="checkbox" role="switch" id="themeSwitch">
+                    <label class="form-check-label" for="themeSwitch"><i class="bi bi-sun-fill"></i></label>
+                    <label class="form-check-label" for="themeSwitch"><i class="bi bi-moon-fill"></i></label>
+                </div>
             </div>
             <ul class="list-unstyled sidebar-nav" id="sidebar-nav">
-                <li class="sidebar-item"><a th:href="@{/dashboard}" class="sidebar-link"><i
-                            class="bi bi-speedometer2 sidebar-icon"></i><span>Dashboard</span></a></li>
+                <li class="sidebar-item">
+                    <a th:href="@{/dashboard}" class="sidebar-link"><i
+                            class="bi bi-speedometer2 sidebar-icon"></i><span>Dashboard</span></a>
+                </li>
                 <li class="sidebar-item">
                     <a href="#admin-submenu" data-bs-toggle="collapse" class="sidebar-link" aria-expanded="true"><i
                             class="bi bi-people sidebar-icon"></i><span>Administración</span><i
@@ -38,9 +43,9 @@
                         <li><a th:href="@{/clients}" class="sidebar-link">Clientes</a></li>
                     </ul>
                 </li>
-                <li class="sidebar-item"><a href="#inventory-submenu" data-bs-toggle="collapse"
-                        class="sidebar-link collapsed" aria-expanded="false"><i
-                            class="bi bi-box-seam sidebar-icon"></i><span>Inventario</span><i
+                <li class="sidebar-item">
+                    <a href="#inventory-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false"><i class="bi bi-box-seam sidebar-icon"></i><span>Inventario</span><i
                             class="bi bi-chevron-down arrow ms-auto"></i></a>
                     <ul id="inventory-submenu" class="collapse list-unstyled sidebar-dropdown"
                         data-bs-parent="#sidebar-nav">
@@ -48,9 +53,9 @@
                         <li><a th:href="@{/products}" class="sidebar-link">Producto</a></li>
                     </ul>
                 </li>
-                <li class="sidebar-item"><a href="#sales-submenu" data-bs-toggle="collapse"
-                        class="sidebar-link collapsed" aria-expanded="false"><i
-                            class="bi bi-cart3 sidebar-icon"></i><span>Ventas</span><i
+                <li class="sidebar-item">
+                    <a href="#sales-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false"><i class="bi bi-cart3 sidebar-icon"></i><span>Ventas</span><i
                             class="bi bi-chevron-down arrow ms-auto"></i></a>
                     <ul id="sales-submenu" class="collapse list-unstyled sidebar-dropdown"
                         data-bs-parent="#sidebar-nav">
@@ -58,8 +63,9 @@
                         <li><a th:href="@{/sales-history}" class="sidebar-link">Historial de Ventas</a></li>
                     </ul>
                 </li>
-                <li class="sidebar-item"><a href="#reports-submenu" data-bs-toggle="collapse"
-                        class="sidebar-link collapsed" aria-expanded="false"><i
+                <li class="sidebar-item">
+                    <a href="#reports-submenu" data-bs-toggle="collapse" class="sidebar-link collapsed"
+                        aria-expanded="false"><i
                             class="bi bi-file-earmark-bar-graph sidebar-icon"></i><span>Reportes</span><i
                             class="bi bi-chevron-down arrow ms-auto"></i></a>
                     <ul id="reports-submenu" class="collapse list-unstyled sidebar-dropdown"
@@ -68,17 +74,24 @@
                     </ul>
                 </li>
             </ul>
-            <div class="sidebar-footer dropdown"><a href="#"
-                    class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser"
-                    data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="sidebar-footer dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                    id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                     <div
                         style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; background-color: var(--primary-color);">
-                        <img src="" alt="Avatar" id="sidebar-avatar-img" class="d-none"
-                            style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"><span
-                            id="sidebar-avatar-initials" class="fw-bold"></span>
+                        <img th:if="${loggedInUser != null && loggedInUser.photo != null}"
+                            th:src="${loggedInUser.photo}" alt="Avatar" id="sidebar-avatar-img"
+                            style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        <span th:if="${loggedInUser != null && loggedInUser.photo == null}" id="sidebar-avatar-initials"
+                            class="fw-bold"
+                            th:text="${#strings.substring(loggedInUser.firstName, 0, 1) + #strings.substring(loggedInUser.lastName, 0, 1)}"></span>
                     </div>
-                    <div class="user-info"><span id="sidebar-user-name"></span><span id="sidebar-user-email"
-                            class="text-muted"></span></div>
+                    <div class="user-info">
+                        <span id="sidebar-user-name"
+                            th:text="${loggedInUser != null ? loggedInUser.firstName + ' ' + loggedInUser.lastName : 'Usuario'}"></span>
+                        <span id="sidebar-user-email" class="text-muted"
+                            th:text="${loggedInUser != null ? loggedInUser.email : ''}"></span>
+                    </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
                     <li><a class="dropdown-item" th:href="@{/profile}">Mi Perfil</a></li>
@@ -86,7 +99,11 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#" id="logout-button">Cerrar Sesión</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;"></form>
+                        <a class="dropdown-item" href="#"
+                            onclick="document.getElementById('logoutForm').submit(); return false;">Cerrar Sesión</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -97,13 +114,14 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Usuarios Registrados</h5>
-                    <div class="d-flex gap-2"><input type="search" class="form-control"
-                            placeholder="Buscar usuario..."><button
-                            class="btn btn-outline-success d-flex align-items-center gap-1"><i
-                                class="bi bi-file-earmark-excel"></i><span>Exportar</span></button><button
-                            id="addUserBtn" class="btn btn-primary d-flex align-items-center gap-1"
+                    <div class="d-flex gap-2">
+                        <input type="search" class="form-control" placeholder="Buscar usuario...">
+                        <button class="btn btn-outline-success d-flex align-items-center gap-1"><i
+                                class="bi bi-file-earmark-excel"></i><span>Exportar</span></button>
+                        <button id="addUserBtn" class="btn btn-primary d-flex align-items-center gap-1"
                             data-bs-toggle="modal" data-bs-target="#userModal"><i
-                                class="bi bi-plus-circle"></i><span>Agregar Usuario</span></button></div>
+                                class="bi bi-plus-circle"></i><span>Agregar Usuario</span></button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -119,7 +137,40 @@
                                     <th>Operaciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="users-table-body"></tbody>
+                            <tbody id="users-table-body">
+                                <tr th:each="user : ${users}" th:data-id="${user.id}"
+                                    th:data-first-name="${user.firstName}" th:data-last-name="${user.lastName}"
+                                    th:data-email="${user.email}"
+                                    th:data-role="${!user.roles.isEmpty() ? user.roles.iterator().next().getName() : ''}"
+                                    th:data-status="${user.status}" th:data-photo="${user.photo}">
+                                    <td>
+                                        <img th:if="${user.photo != null}" th:src="${user.photo}" class="user-photo"
+                                            alt="Foto de Usuario">
+                                        <div th:unless="${user.photo != null}" class="user-avatar-initials"
+                                            th:text="${#strings.substring(user.firstName, 0, 1) + #strings.substring(user.lastName, 0, 1)}">
+                                        </div>
+                                    </td>
+                                    <td th:text="${user.firstName + ' ' + user.lastName}"></td>
+                                    <td th:text="${user.email}"></td>
+                                    <td><span class="badge bg-primary"
+                                            th:text="${!user.roles.isEmpty() ? user.roles.iterator().next().getName() : 'Sin Rol'}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:if="${user.status == 1}"
+                                            class="badge rounded-pill status-active">Activo</span>
+                                        <span th:unless="${user.status == 1}"
+                                            class="badge rounded-pill status-inactive">Inactivo</span>
+                                    </td>
+                                    <td th:text="${#temporals.format(user.creationDate, 'yyyy-MM-dd')}"></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-secondary edit-user-btn"
+                                            data-bs-toggle="modal" data-bs-target="#userModal"><i
+                                                class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger delete-user-btn"><i
+                                                class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -131,8 +182,8 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="userModalLabel">Agregar Nuevo Usuario</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="userModalLabel">Agregar Nuevo Usuario</h5><button type="button"
+                        class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="userForm">
@@ -159,8 +210,8 @@
                                     <div class="col-md-6 mb-3"><label for="userRole"
                                             class="form-label">Rol</label><select class="form-select" id="userRole">
                                             <option selected>Seleccionar rol...</option>
-                                            <option value="Administrador">Administrador</option>
-                                            <option value="Vendedor">Vendedor</option>
+                                            <option value="ROLE_ADMIN">Administrador</option>
+                                            <option value="ROLE_USER">Vendedor</option>
                                         </select></div>
                                     <div class="col-md-6 mb-3"><label for="userStatus"
                                             class="form-label">Estado</label><select class="form-select"
@@ -185,7 +236,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/userService.js}"></script>
     <script th:src="@{/js/dashboard.js}"></script>
     <script th:src="@{/js/users.js}"></script>
 </body>

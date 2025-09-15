@@ -1,68 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Si no hay un usuario logueado, redirigir al login.
-    // Excluimos esta lógica de las propias páginas de login/forgot-password que no cargan este script.
-    if (!getLoggedInUser()) {
-        window.location.href = '/login';
-        return; // Detenemos la ejecución del resto del script
-    }
-
+    // --- CONSTANTES GLOBALES ---
     const sidebar = document.getElementById('sidebar');
     const toggleButton = document.getElementById('sidebar-toggle');
     const toggleIcon = toggleButton.querySelector('i');
     const submenuLinks = document.querySelectorAll('.sidebar-link[data-bs-toggle="collapse"]');
-    const content = document.getElementById('main-content');
-
+    const content = document.querySelectorAll('.main-content, .pos-wrapper'); // Apunta a ambos tipos de layout
 
     let activePopover = null;
 
-    function loadBusinessLogo() {
-        const LOGO_STORAGE_KEY = 'businessLogo';
-        const DEFAULT_LOGO_ICON_CLASS = 'bi-shop'; // Clase del ícono por defecto
-
-        const savedLogoUrl = localStorage.getItem(LOGO_STORAGE_KEY);
-        const sidebarLogoImg = document.getElementById('sidebar-logo');
-        const sidebarLogoIcon = document.getElementById('sidebar-logo-icon');
-
-        if (sidebarLogoImg && sidebarLogoIcon) {
-            if (savedLogoUrl) {
-                // Si hay un logo guardado, mostramos la imagen y ocultamos el ícono
-                sidebarLogoImg.src = savedLogoUrl;
-                sidebarLogoImg.classList.remove('d-none');
-                sidebarLogoIcon.classList.add('d-none');
-            } else {
-                // Si no hay logo, ocultamos la imagen y mostramos el ícono
-                sidebarLogoImg.classList.add('d-none');
-                sidebarLogoIcon.classList.remove('d-none');
-            }
-        }
-    }
-
-    function loadSidebarUser() {
-        const loggedInUser = getLoggedInUser();
-        if (!loggedInUser) return;
-
-        const sidebarAvatarImg = document.getElementById('sidebar-avatar-img');
-        const sidebarAvatarInitials = document.getElementById('sidebar-avatar-initials');
-        const sidebarUserName = document.getElementById('sidebar-user-name');
-        const sidebarUserEmail = document.getElementById('sidebar-user-email');
-
-        // Actualizar nombre y email
-        if (sidebarUserName) sidebarUserName.textContent = `${loggedInUser.firstName} ${loggedInUser.lastName}`;
-        if (sidebarUserEmail) sidebarUserEmail.textContent = loggedInUser.email;
-
-        // Lógica para mostrar foto o iniciales
-        if (loggedInUser.photo) {
-            if (sidebarAvatarImg) {
-                sidebarAvatarImg.src = loggedInUser.photo;
-                sidebarAvatarImg.classList.remove('d-none');
-            }
-            if (sidebarAvatarInitials) sidebarAvatarInitials.classList.add('d-none');
-        } else {
-            if (sidebarAvatarImg) sidebarAvatarImg.classList.add('d-none');
-            if (sidebarAvatarInitials) {
-                sidebarAvatarInitials.textContent = getInitials(loggedInUser.firstName, loggedInUser.lastName);
-                sidebarAvatarInitials.classList.remove('d-none');
-            }
+    // --- LÓGICA DE PERSISTENCIA DE ESTADO ---
+    function applyInitialSidebarState() {
+        const savedState = localStorage.getItem('sidebarState');
+        if (savedState === 'collapsed') {
+            sidebar.classList.add('collapsed');
+            content.forEach(c => c.classList.add('expanded'));
+            toggleIcon.classList.remove('bi-chevron-left');
+            toggleIcon.classList.add('bi-chevron-right');
         }
     }
 
@@ -74,54 +27,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // --- (NUEVA FUNCIÓN) PARA APLICAR EL ESTADO INICIAL DEL SIDEBAR ---
-    function applyInitialSidebarState() {
-        const savedState = localStorage.getItem('sidebarState');
-        if (savedState === 'collapsed') {
-            sidebar.classList.add('collapsed');
-            content.classList.add('expanded');
-
-            // Forzamos el cierre de submenús que puedan estar abiertos por defecto en la plantilla
-            document.querySelectorAll('.sidebar-dropdown.collapse.show').forEach(submenu => {
-                submenu.classList.remove('show');
-                const parentLink = document.querySelector(`a[href="#${submenu.id}"]`);
-                if (parentLink) {
-                    parentLink.setAttribute('aria-expanded', 'false');
-                    parentLink.classList.add('collapsed');
-                }
-            });
-
-            toggleIcon.classList.remove('bi-chevron-left');
-            toggleIcon.classList.add('bi-chevron-right');
-        }
-        // Llamamos a manageSubmenuAttributes al final para asegurar el estado correcto de los enlaces
-        manageSubmenuAttributes();
-    }
-
     toggleButton.addEventListener('click', function () {
         sidebar.classList.toggle('collapsed');
-        content.classList.toggle('expanded');
+        content.forEach(c => c.classList.toggle('expanded'));
+        localStorage.setItem('sidebarState', sidebar.classList.contains('collapsed') ? 'collapsed' : 'expanded');
 
-        // --- (LÍNEAS AÑADIDAS) GUARDAR EL NUEVO ESTADO ---
-        if (sidebar.classList.contains('collapsed')) {
-            localStorage.setItem('sidebarState', 'collapsed');
-        } else {
-            localStorage.setItem('sidebarState', 'expanded');
-        }
-
-        if (activePopover) {
-            activePopover.dispose();
-            activePopover = null;
-        }
+        if (activePopover) { activePopover.dispose(); activePopover = null; }
 
         if (sidebar.classList.contains('collapsed')) {
             document.querySelectorAll('.sidebar-dropdown.collapse.show').forEach(submenu => {
                 submenu.classList.remove('show');
                 const parentLink = document.querySelector(`a[href="#${submenu.id}"]`);
-                if (parentLink) {
-                    parentLink.setAttribute('aria-expanded', 'false');
-                    parentLink.classList.add('collapsed');
-                }
+                if (parentLink) { parentLink.setAttribute('aria-expanded', 'false'); parentLink.classList.add('collapsed'); }
             });
             toggleIcon.classList.remove('bi-chevron-left');
             toggleIcon.classList.add('bi-chevron-right');
@@ -129,12 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
             toggleIcon.classList.remove('bi-chevron-right');
             toggleIcon.classList.add('bi-chevron-left');
         }
-
         manageSubmenuAttributes();
     });
 
     submenuLinks.forEach(link => {
-        // ... (esta sección de popovers se mantiene sin cambios) ...
         link.addEventListener('click', function (event) {
             if (sidebar.classList.contains('collapsed')) {
                 event.preventDefault(); event.stopPropagation();
@@ -147,10 +62,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     Array.from(targetSubmenu.children).forEach(child => popoverContent.appendChild(child.cloneNode(true)));
                     const popover = new bootstrap.Popover(this, { container: 'body', placement: 'right', trigger: 'manual', html: true, content: popoverContent, customClass: 'sidebar-popover' });
                     popover.show(); activePopover = popover;
-                    document.body.addEventListener('click', function hidePopoverOnClickOutside(e) {
+                    document.body.addEventListener('click', function hide(e) {
                         if (!link.contains(e.target) && !document.querySelector('.popover')?.contains(e.target)) {
                             if (activePopover) { activePopover.dispose(); activePopover = null; }
-                            document.body.removeEventListener('click', hidePopoverOnClickOutside);
+                            document.body.removeEventListener('click', hide);
                         }
                     }, { once: true });
                 }
@@ -158,44 +73,26 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // --- LÓGICA DEL THEME SWITCHER (SIN CAMBIOS) ---
+    // --- LÓGICA DEL THEME SWITCHER ---
     const themeSwitch = document.getElementById('themeSwitch');
     const htmlElement = document.documentElement;
 
     function applyInitialTheme() {
         const savedTheme = localStorage.getItem('theme') || 'light';
         htmlElement.setAttribute('data-bs-theme', savedTheme);
-        if (themeSwitch) {
-            themeSwitch.checked = (savedTheme === 'dark');
-        }
+        if (themeSwitch) { themeSwitch.checked = (savedTheme === 'dark'); }
     }
 
     if (themeSwitch) {
         themeSwitch.addEventListener('change', function () {
-            if (this.checked) {
-                htmlElement.setAttribute('data-bs-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                htmlElement.setAttribute('data-bs-theme', 'light');
-                localStorage.setItem('theme', 'light');
-            }
+            const theme = this.checked ? 'dark' : 'light';
+            htmlElement.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('theme', theme);
         });
     }
 
-    const logoutButton = document.getElementById('logout-button');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', function (event) {
-            event.preventDefault();
-            // Limpiamos el ID del usuario de la sesión
-            sessionStorage.removeItem('loggedInUserId');
-            // Redirigimos a la página de login
-            window.location.href = '/login';
-        });
-    }
-
-    // --- (LLAMADAS INICIALES) APLICAR ESTADOS AL CARGAR LA PÁGINA ---
+    // --- LLAMADAS INICIALES AL CARGAR LA PÁGINA ---
     applyInitialTheme();
-    loadBusinessLogo();
-    applyInitialSidebarState(); // <-- LLAMADA A LA NUEVA FUNCIÓN
-    loadSidebarUser();
+    applyInitialSidebarState();
+    manageSubmenuAttributes();
 });

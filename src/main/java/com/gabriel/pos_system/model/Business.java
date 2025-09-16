@@ -1,11 +1,18 @@
 package com.gabriel.pos_system.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -54,6 +61,10 @@ public class Business {
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String logo;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "business_regimenes", joinColumns = @JoinColumn(name = "business_id"), inverseJoinColumns = @JoinColumn(name = "regimen_fiscal_id", referencedColumnName = "c_regimen_fiscal"))
+    private Set<RegimenFiscal> regimenesFiscales = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -125,6 +136,14 @@ public class Business {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public Set<RegimenFiscal> getRegimenesFiscales() {
+        return regimenesFiscales;
+    }
+
+    public void setRegimenesFiscales(Set<RegimenFiscal> regimenesFiscales) {
+        this.regimenesFiscales = regimenesFiscales;
     }
 
 }

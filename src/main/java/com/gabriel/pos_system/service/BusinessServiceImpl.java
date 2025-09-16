@@ -8,14 +8,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gabriel.pos_system.dto.BusinessDto;
 import com.gabriel.pos_system.model.Business;
+import com.gabriel.pos_system.model.RegimenFiscal;
 import com.gabriel.pos_system.repository.BusinessRepository;
+import com.gabriel.pos_system.repository.RegimenFiscalRepository;
 
 @Service
 public class BusinessServiceImpl implements BusinessService {
-    private final BusinessRepository businessRepository;
 
-    public BusinessServiceImpl(BusinessRepository businessRepository) {
+    private final BusinessRepository businessRepository;
+    private final RegimenFiscalRepository regimenFiscalRepository;
+
+    public BusinessServiceImpl(BusinessRepository businessRepository, RegimenFiscalRepository regimenFiscalRepository) {
         this.businessRepository = businessRepository;
+        this.regimenFiscalRepository = regimenFiscalRepository;
     }
 
     @Override
@@ -35,6 +40,15 @@ public class BusinessServiceImpl implements BusinessService {
         business.setPhoneNumber(dto.getPhoneNumber());
         business.setPostalCode(dto.getPostalCode());
         business.setCurrencyType(dto.getCurrencyType());
+
+        if (dto.getRegimenFiscalId() != null && !dto.getRegimenFiscalId().isEmpty()) {
+            RegimenFiscal regimen = regimenFiscalRepository.findById(dto.getRegimenFiscalId())
+                    .orElseThrow(() -> new RuntimeException("Régimen Fiscal no encontrado."));
+
+            // Como es selección única por ahora, limpiamos y añadimos el nuevo
+            business.getRegimenesFiscales().clear();
+            business.getRegimenesFiscales().add(regimen);
+        }
 
         if (logoFile != null && !logoFile.isEmpty()) {
             String logoBase64 = Base64.getEncoder().encodeToString(logoFile.getBytes());

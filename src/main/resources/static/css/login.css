@@ -81,3 +81,13 @@ body {
     text-decoration: none;
     font-weight: 500;
 }
+
+.otp-input {
+    text-align: center;
+    font-size: 1.5rem;
+    letter-spacing: 0.75rem;
+    /* Crea el espacio entre los dígitos */
+    font-weight: 500;
+    padding-left: 1.5rem !important;
+    /* Ajusta el padding para centrar mejor con el espaciado */
+}

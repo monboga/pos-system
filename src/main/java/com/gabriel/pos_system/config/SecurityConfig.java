@@ -45,7 +45,9 @@ public class SecurityConfig {
                 // personalizado
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/forgot-password", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/login", "/forgot-password", "/business/logo", "/css/**", "/js/**",
+                                "/images/**")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

@@ -16,4 +16,6 @@ public interface UserService {
     List<User> findAllUsers();
 
     void updatePassword(User user, String newPassword);
+
+    void updatePassword(String email, String newPassword);
 }

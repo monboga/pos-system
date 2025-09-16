@@ -117,4 +117,14 @@ public class UserServiceImpl implements UserService {
                 user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
+
+    @Override
+    public void updatePassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el correo: " + email));
+
+        // Encriptamos la nueva contraseña antes de guardarla
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 }

@@ -11,11 +11,6 @@ public class ViewController {
         return "login";
     }
 
-    @GetMapping("/forgot-password")
-    public String showForgotPassword() {
-        return "forgot-password";
-    }
-
     @GetMapping({ "/", "/index" })
     public String showHome() {
         return "index";

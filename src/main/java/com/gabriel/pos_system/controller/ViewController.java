@@ -26,11 +26,6 @@ public class ViewController {
         return "dashboard";
     }
 
-    @GetMapping("/business")
-    public String showBusinessPage() {
-        return "business";
-    }
-
     @GetMapping("/clients")
     public String showClientsPage() {
         return "clients";

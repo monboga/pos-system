@@ -17,8 +17,8 @@
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
                 <div class="logo-container">
-                    <i class="bi bi-shop logo-icon" id="sidebar-logo-icon"></i>
-                    <img src="" alt="Logo" class="sidebar-logo d-none" id="sidebar-logo">
+                    <img th:if="${businessLogoExists}" th:src="@{/business/logo}" alt="Logo" class="sidebar-logo" />
+                    <i th:unless="${businessLogoExists}" class="bi bi-shop logo-icon"></i>
                     <span class="logo-text">Mi POS</span>
                 </div>
                 <div class="form-check form-switch theme-switcher">

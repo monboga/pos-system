@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Verificar Código - POS</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <img th:if="${businessLogoExists}" th:src="@{/business/logo}" alt="Logo del Negocio" class="login-logo" />
+        <img th:unless="${businessLogoExists}" src="https://placehold.co/80x80/4A148C/FFFFFF?text=L"
+            alt="Logo del Negocio" class="login-logo" />
+        <div class="card login-card">
+            <div class="card-body">
+                <h2 class="h4 fw-bold mb-2">Código de Verificación</h2>
+                <p class="text-muted mb-4">Ingresa el código de 6 dígitos que enviamos a tu correo.</p>
+
+                <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                <form th:action="@{/verify-otp}" method="post">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="otp" placeholder="_ _ _ _ _ _" maxlength="6"
+                            required="required"
+                            style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;" />
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Verificar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

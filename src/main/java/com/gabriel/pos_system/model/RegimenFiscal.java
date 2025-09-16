@@ -22,6 +22,16 @@ public class RegimenFiscal {
     @Column(nullable = false)
     private boolean moral;
 
+    public RegimenFiscal() {
+    }
+
+    public RegimenFiscal(String cRegimenFiscal, String descripcion, boolean fisica, boolean moral) {
+        this.cRegimenFiscal = cRegimenFiscal;
+        this.descripcion = descripcion;
+        this.fisica = fisica;
+        this.moral = moral;
+    }
+
     public String getcRegimenFiscal() {
         return cRegimenFiscal;
     }

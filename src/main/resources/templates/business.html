@@ -117,6 +117,16 @@
                                         Social</label><input type="text" class="form-control" id="razonSocial"
                                         th:field="*{razonSocial}"></div>
                             </div>
+                            <div class="mb-3">
+                                <label for="regimenFiscal" class="form-label">Régimen Fiscal</label>
+                                <select class="form-select" id="regimenFiscal" name="regimenFiscalId">
+                                    <option value="">Seleccionar un régimen...</option>
+                                    <option th:each="regimen : ${allRegimenes}" th:value="${regimen.cRegimenFiscal}"
+                                        th:text="${regimen.cRegimenFiscal + ' - ' + regimen.descripcion}"
+                                        th:selected="${!businessData.regimenesFiscales.isEmpty() and businessData.regimenesFiscales.iterator().next().cRegimenFiscal == regimen.cRegimenFiscal}">
+                                    </option>
+                                </select>
+                            </div>
                             <div class="row">
                                 <div class="col-md-8 mb-3"><label for="address"
                                         class="form-label">Dirección</label><input type="text" class="form-control"
@@ -139,7 +149,7 @@
                         </div>
                         <div class="col-md-4 text-center">
                             <p class="fw-bold">Logo de la Empresa</p>
-                            <img th:src="*{logo != null ? logo : 'https://via.placeholder.com/200x200.png?text=Logo'}"
+                            <img th:src="*{logo != null ? @{/business/logo} : 'https://via.placeholder.com/200x200.png?text=Logo'}"
                                 class="business-logo-preview mb-3" alt="Logo" id="business-logo-preview">
                             <input class="form-control" type="file" id="logoUpload" name="logoFile" accept="image/*">
                         </div>

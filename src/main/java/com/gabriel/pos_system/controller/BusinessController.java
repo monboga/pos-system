@@ -31,10 +31,11 @@ public class BusinessController {
 
     @GetMapping("/business")
     public String showBusinessPage(Model model) {
+        // Obtenemos la entidad desde la base de datos
         Business businessData = businessService.getBusinessData();
-        // Pasamos los datos existentes o un objeto nuevo a la vista
+
+        // Pasamos la entidad directamente (o una nueva si no existe)
         model.addAttribute("businessData", businessData != null ? businessData : new Business());
-        // Pasamos todos los regimenes fiscales a la vista
         model.addAttribute("allRegimenes", regimenFiscalRepository.findAll());
         return "business";
     }

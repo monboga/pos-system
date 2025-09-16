@@ -63,7 +63,7 @@ public class Business {
     private String logo;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "business_regimenes", joinColumns = @JoinColumn(name = "business_id"), inverseJoinColumns = @JoinColumn(name = "regimen_fiscal_id"))
+    @JoinTable(name = "business_regimenes", joinColumns = @JoinColumn(name = "business_id"), inverseJoinColumns = @JoinColumn(name = "regimen_fiscal_id", referencedColumnName = "c_regimen_fiscal"))
     private Set<RegimenFiscal> regimenesFiscales = new HashSet<>();
 
     public Long getId() {

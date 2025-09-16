@@ -149,7 +149,7 @@
                         </div>
                         <div class="col-md-4 text-center">
                             <p class="fw-bold">Logo de la Empresa</p>
-                            <img th:src="*{logo != null ? @{/business/logo} : 'https://via.placeholder.com/200x200.png?text=Logo'}"
+                            <img th:src="*{logo != null ? logo : 'https://via.placeholder.com/200x200.png?text=Logo'}"
                                 class="business-logo-preview mb-3" alt="Logo" id="business-logo-preview">
                             <input class="form-control" type="file" id="logoUpload" name="logoFile" accept="image/*">
                         </div>

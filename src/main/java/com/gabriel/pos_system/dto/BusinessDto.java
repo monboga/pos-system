@@ -10,6 +10,9 @@ public class BusinessDto {
     private Integer postalCode;
     private String currencyType;
 
+    // recibe el c_regimen_fiscal seleccionado
+    private String regimenFiscalId;
+
     public String getRfc() {
         return rfc;
     }
@@ -64,6 +67,14 @@ public class BusinessDto {
 
     public void setCurrencyType(String currencyType) {
         this.currencyType = currencyType;
+    }
+
+    public String getRegimenFiscalId() {
+        return regimenFiscalId;
+    }
+
+    public void setRegimenFiscalId(String regimenFiscalId) {
+        this.regimenFiscalId = regimenFiscalId;
     }
 
 }

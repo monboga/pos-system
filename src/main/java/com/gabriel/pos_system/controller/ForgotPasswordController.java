@@ -3,6 +3,8 @@ package com.gabriel.pos_system.controller;
 import java.time.LocalDateTime;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,7 @@ public class ForgotPasswordController {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(ForgotPasswordController.class);
 
     public ForgotPasswordController(EmailService emailService, UserRepository userRepository, UserService userService) {
         this.emailService = emailService;
@@ -37,29 +40,31 @@ public class ForgotPasswordController {
     @PostMapping("/forgot-password")
     public String processForgotPassword(@RequestParam("email") String email, HttpSession session,
             RedirectAttributes redirectAttributes) {
-        // 1. Verificar si el usuario existe
+        logger.info("Solicitud de recuperación de contraseña recibida para el correo: {}", email);
+
         if (userRepository.findByEmail(email).isEmpty()) {
+            logger.warn("Intento de recuperación para un correo no existente: {}", email);
             redirectAttributes.addFlashAttribute("error", "No se encontró ninguna cuenta con ese correo electrónico.");
             return "redirect:/forgot-password";
         }
 
-        // 2. Generar un OTP de 6 dígitos
         String otp = String.format("%06d", new Random().nextInt(999999));
 
         try {
-            // 3. Enviar el correo con el OTP
+            logger.info("Enviando OTP {} al correo {}", otp, email);
             emailService.sendOtpEmail(email, otp);
 
-            // 4. Guardar el OTP, el email y una marca de tiempo en la sesión
             session.setAttribute("otp", otp);
             session.setAttribute("email", email);
             session.setAttribute("otpTimestamp", LocalDateTime.now());
 
             redirectAttributes.addFlashAttribute("success", "Se ha enviado un código de verificación a tu correo.");
+            logger.info("OTP enviado exitosamente a {}", email);
             return "redirect:/verify-otp";
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al enviar el correo. Inténtalo de nuevo.");
+            logger.error("Error al enviar el correo de recuperación a {}: {}", email, e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al enviar el correo. Inténtalo de nuevo más tarde.");
             return "redirect:/forgot-password";
         }
     }

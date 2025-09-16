@@ -16,21 +16,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gabriel.pos_system.dto.BusinessDto;
 import com.gabriel.pos_system.model.Business;
+import com.gabriel.pos_system.repository.RegimenFiscalRepository;
 import com.gabriel.pos_system.service.BusinessService;
 
 @Controller
 public class BusinessController {
     private final BusinessService businessService;
+    private final RegimenFiscalRepository regimenFiscalRepository;
 
-    public BusinessController(BusinessService businessService) {
+    public BusinessController(BusinessService businessService, RegimenFiscalRepository regimenFiscalRepository) {
         this.businessService = businessService;
+        this.regimenFiscalRepository = regimenFiscalRepository;
     }
 
     @GetMapping("/business")
     public String showBusinessPage(Model model) {
+        // Obtenemos la entidad desde la base de datos
         Business businessData = businessService.getBusinessData();
-        // Pasamos los datos existentes o un objeto nuevo a la vista
+
+        // Pasamos la entidad directamente (o una nueva si no existe)
         model.addAttribute("businessData", businessData != null ? businessData : new Business());
+        model.addAttribute("allRegimenes", regimenFiscalRepository.findAll());
         return "business";
     }
 

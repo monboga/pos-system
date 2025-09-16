@@ -16,14 +16,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gabriel.pos_system.dto.BusinessDto;
 import com.gabriel.pos_system.model.Business;
+import com.gabriel.pos_system.repository.RegimenFiscalRepository;
 import com.gabriel.pos_system.service.BusinessService;
 
 @Controller
 public class BusinessController {
     private final BusinessService businessService;
+    private final RegimenFiscalRepository regimenFiscalRepository;
 
-    public BusinessController(BusinessService businessService) {
+    public BusinessController(BusinessService businessService, RegimenFiscalRepository regimenFiscalRepository) {
         this.businessService = businessService;
+        this.regimenFiscalRepository = regimenFiscalRepository;
     }
 
     @GetMapping("/business")
@@ -31,6 +34,8 @@ public class BusinessController {
         Business businessData = businessService.getBusinessData();
         // Pasamos los datos existentes o un objeto nuevo a la vista
         model.addAttribute("businessData", businessData != null ? businessData : new Business());
+        // Pasamos todos los regimenes fiscales a la vista
+        model.addAttribute("allRegimenes", regimenFiscalRepository.findAll());
         return "business";
     }
 

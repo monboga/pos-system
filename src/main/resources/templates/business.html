@@ -104,11 +104,23 @@
 
         <div id="main-content" class="main-content">
             <h1 class="h3 mb-4">Datos del Negocio</h1>
-            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <div class="card">
-                <div class="card-body">
-                    <form class="row g-3 p-3" th:action="@{/business/save}" th:object="${businessData}" method="post"
-                        enctype="multipart/form-data">
+                <div class="card-body p-4">
+                    <div id="empty-business-state" th:if="${businessData.rfc == null}" class="text-center p-5">
+                        <h5 class="text-muted">Aún no has agregado la información de tu negocio</h5>
+                        <p class="text-muted mb-4">Configura los datos de tu empresa para continuar.</p>
+                        <button id="show-business-form-btn" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Agregar Información del Negocio
+                        </button>
+                    </div>
+
+                    <form class="row g-3" id="business-form"
+                        th:classappend="${businessData.rfc == null} ? 'd-none' : ''" th:action="@{/business/save}"
+                        th:object="${businessData}" method="post" enctype="multipart/form-data">
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-6 mb-3"><label for="rfc" class="form-label">RFC</label><input
@@ -149,7 +161,7 @@
                         </div>
                         <div class="col-md-4 text-center">
                             <p class="fw-bold">Logo de la Empresa</p>
-                            <img th:src="*{logo != null ? logo : 'https://via.placeholder.com/200x200.png?text=Logo'}"
+                            <img th:src="${businessLogoExists ? @{/business/logo} : 'https://via.placeholder.com/200x200.png?text=Logo'}"
                                 class="business-logo-preview mb-3" alt="Logo" id="business-logo-preview">
                             <input class="form-control" type="file" id="logoUpload" name="logoFile" accept="image/*">
                         </div>

@@ -208,3 +208,14 @@ body.d-flex {
     margin-top: 1rem;
     padding-top: 1rem;
 }
+
+.pos-section {
+    background-color: var(--bs-secondary-bg, #f8f9fa);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+[data-bs-theme="dark"] .pos-section {
+    background-color: var(--bs-tertiary-bg);
+}

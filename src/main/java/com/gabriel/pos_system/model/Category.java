@@ -1,10 +1,15 @@
 package com.gabriel.pos_system.model;
 
+
+import java.util.HashSet;
+import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +28,10 @@ public class Category {
     @NotNull
     @Column(nullable = false)
     private Integer estado;
+
+
+    @OneToMany(mappedBy = "category")
+    private Set<Product> products = new HashSet<>();
 
     public Long getId() {
         return id;

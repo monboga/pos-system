@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const productForm = document.getElementById('productForm');
     const addProductBtn = document.getElementById('addProductBtn');
 
-    // Selectores del modal
     const photoPreviewImg = document.getElementById('photo-preview-img');
     const photoUploadInput = document.getElementById('photo-upload');
 
@@ -19,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         productModalLabel.textContent = 'Editar Producto';
 
-        // Llenar todos los campos del formulario desde los atributos data-*
+        // Llenar todos los campos del formulario desde los atributos data-* de la fila
         document.getElementById('productId').value = productData.id;
         document.getElementById('productDescription').value = productData.descripcion;
         document.getElementById('productBrand').value = productData.marca;
@@ -49,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function prepareAddModal() {
         productModalLabel.textContent = 'Agregar Nuevo Producto';
         productForm.reset();
-        document.getElementById('productId').value = '';
+        document.getElementById('productId').value = ''; // Asegura que el ID esté vacío
         photoPreviewImg.src = 'https://via.placeholder.com/200';
     }
 

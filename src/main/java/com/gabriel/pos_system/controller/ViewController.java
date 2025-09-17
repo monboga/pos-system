@@ -21,11 +21,6 @@ public class ViewController {
         return "dashboard";
     }
 
-    @GetMapping("/categories")
-    public String showCategoriesPage() {
-        return "categories";
-    }
-
     @GetMapping("/products")
     public String showProductsPage() {
         return "products";

@@ -10,9 +10,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.gabriel.pos_system.model.ClaveProdServSat;
+import com.gabriel.pos_system.model.ImpuestoSat;
+import com.gabriel.pos_system.model.MedidaLocal;
+import com.gabriel.pos_system.model.MedidaSat;
+import com.gabriel.pos_system.model.ObjetoImpSat;
 import com.gabriel.pos_system.model.RegimenFiscal;
 import com.gabriel.pos_system.model.Role;
 import com.gabriel.pos_system.model.User;
+import com.gabriel.pos_system.repository.ClaveProdServSatRepository;
+import com.gabriel.pos_system.repository.ImpuestoSatRepository;
+import com.gabriel.pos_system.repository.MedidaLocalRepository;
+import com.gabriel.pos_system.repository.MedidaSatRepository;
+import com.gabriel.pos_system.repository.ObjetoImpSatRepository;
 import com.gabriel.pos_system.repository.RegimenFiscalRepository;
 import com.gabriel.pos_system.repository.RoleRepository;
 import com.gabriel.pos_system.repository.UserRepository;
@@ -84,6 +94,55 @@ public class PosSystemApplication {
 								true, true),
 						new RegimenFiscal("626", "Régimen Simplificado de Confianza", true, true));
 				repository.saveAll(regimenes);
+			}
+		};
+	}
+
+	@Bean
+	CommandLineRunner seedCatalogos(
+			MedidaLocalRepository medidaLocalRepo,
+			MedidaSatRepository medidaSatRepo,
+			ClaveProdServSatRepository claveProdServRepo,
+			ObjetoImpSatRepository objetoImpRepo,
+			ImpuestoSatRepository impuestoRepo) {
+		return args -> {
+			if (medidaLocalRepo.count() == 0) {
+				medidaLocalRepo.saveAll(Arrays.asList(
+						new MedidaLocal("PZA", "Pieza"), new MedidaLocal("CJA", "Caja"),
+						new MedidaLocal("KG", "Kilo Gramo"), new MedidaLocal("Mts", "Metros")));
+			}
+			if (medidaSatRepo.count() == 0) {
+				medidaSatRepo.saveAll(Arrays.asList(
+						new MedidaSat("Múltiplos / Fracciones / Decimales", "H87", "Pieza"),
+						new MedidaSat("Unidades de venta", "EA", "Elemento"),
+						new MedidaSat("Unidades específicas de la industria (varias)", "E48", "Unidad de Servicio"),
+						new MedidaSat("Mecánica", "KGM", "Kilogramo"),
+						new MedidaSat("Diversos", "A9", "Tarifa"),
+						new MedidaSat("Tiempo y Espacio", "MTR", "Metro"),
+						new MedidaSat("Unidades de empaque", "XUN", "Unidad")
+				// ... Agrega más si es necesario
+				));
+			}
+			if (claveProdServRepo.count() == 0) {
+				claveProdServRepo.saveAll(Arrays.asList(
+						new ClaveProdServSat("01010101", "No existe en el catálogo"),
+						new ClaveProdServSat("10101500", "Animales vivos de granja")
+				// ... Agrega más si es necesario
+				));
+			}
+			if (objetoImpRepo.count() == 0) {
+				objetoImpRepo.saveAll(Arrays.asList(
+						new ObjetoImpSat("01", "No objeto de impuesto."),
+						new ObjetoImpSat("02", "Sí objeto de impuesto."),
+						new ObjetoImpSat("03", "Sí objeto del impuesto y no obligado al desglose."),
+						new ObjetoImpSat("04", "Sí objeto del impuesto y no causa impuesto."),
+						new ObjetoImpSat("05", "Sí objeto del impuesto, IVA crédito PODEBI.")));
+			}
+			if (impuestoRepo.count() == 0) {
+				impuestoRepo.saveAll(Arrays.asList(
+						new ImpuestoSat("001", "ISR", true, false, "Federal"),
+						new ImpuestoSat("002", "IVA", true, true, "Federal"),
+						new ImpuestoSat("003", "IEPS", true, true, "Federal")));
 			}
 		};
 	}

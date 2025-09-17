@@ -20,10 +20,11 @@
                 <i th:unless="${businessLogoExists}" class="bi bi-shop logo-icon"></i>
                 <span class="logo-text">Mi POS</span>
             </div>
-            <div class="form-check form-switch theme-switcher"><input class="form-check-input" type="checkbox"
-                    role="switch" id="themeSwitch"><label class="form-check-label" for="themeSwitch"><i
-                        class="bi bi-sun-fill"></i></label><label class="form-check-label" for="themeSwitch"><i
-                        class="bi bi-moon-fill"></i></label></div>
+            <div class="form-check form-switch theme-switcher">
+                <input class="form-check-input" type="checkbox" role="switch" id="themeSwitch">
+                <label class="form-check-label" for="themeSwitch"><i class="bi bi-sun-fill"></i></label>
+                <label class="form-check-label" for="themeSwitch"><i class="bi bi-moon-fill"></i></label>
+            </div>
         </div>
         <ul class="list-unstyled sidebar-nav" id="sidebar-nav">
             <li class="sidebar-item"><a th:href="@{/dashboard}" class="sidebar-link"><i
@@ -71,7 +72,6 @@
                 id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                 <div
                     style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; background-color: var(--primary-color);">
-
                     <img th:if="${loggedInUser != null && loggedInUser.photo != null}" th:src="${loggedInUser.photo}"
                         alt="Avatar" id="sidebar-avatar-img"
                         style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
@@ -92,7 +92,6 @@
                 <li>
                     <hr class="dropdown-divider">
                 </li>
-
                 <li>
                     <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;"></form>
                     <a class="dropdown-item" href="#"
@@ -106,102 +105,75 @@
 
     <div class="pos-wrapper" id="main-content">
         <main class="pos-catalog">
-            <div class="mb-4"><label for="client-select" class="form-label fw-bold">Selección de Cliente</label><select
-                    class="form-select" id="client-select">
-                    <option selected>Seleccionar cliente por RFC...</option>
-                    <option value="1">XAXX010101000 - Público en General</option>
-                    <option value="2">PAGJ880101XXX - Juan Pérez</option>
-                </select></div>
-            <h2 class="h4 mb-3">Categorías</h2>
-            <div class="row g-3 mb-4">
-                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none active"><i
-                            class="bi bi-stars fs-4"></i>
-                        <div>Pestañas</div>
-                    </a></div>
-                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none"><i
-                            class="bi bi-eyedropper fs-4"></i>
-                        <div>Adhesivos</div>
-                    </a></div>
-                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none"><i
-                            class="bi bi-magic fs-4"></i>
-                        <div>Pinzas</div>
-                    </a></div>
-                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none"><i
-                            class="bi bi-brush fs-4"></i>
-                        <div>Accesorios</div>
-                    </a></div>
-                <div class="col"><a href="#" class="card category-card text-center p-3 text-decoration-none"><i
-                            class="bi bi-capsule fs-4"></i>
-                        <div>Removedores</div>
-                    </a></div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="h4">Catálogo de Productos</h2><input type="search" class="form-control"
-                    style="max-width: 250px;" placeholder="Filtrar por nombre...">
+            <div class="pos-section">
+                <h2 class="h5 fw-bold mb-3">Selección de Cliente</h2>
+                <select class="form-select" id="client-select">
+                    <option value="">Seleccionar cliente...</option>
+                    <option th:each="client : ${clients}" th:value="${client.rfc}"
+                        th:text="${client.rfc + ' - ' + client.nombre}"></option>
+                </select>
             </div>
 
-            <div class="row g-3" id="product-grid">
-                <div class="col-lg-4 col-md-6 product-container" data-id="1" data-name="Pestañas Nagaraku"
-                    data-description="Curva D, 0.07mm" data-price="150.50"
-                    data-image="https://images.unsplash.com/photo-1599351432899-6893a9914c67?q=80&w=400&auto=format&fit=crop">
-                    <div class="card product-card h-100">
-                        <div class="card-body">
-                            <img src="https://images.unsplash.com/photo-1599351432899-6893a9914c67?q=80&w=400&auto=format&fit=crop"
-                                class="product-image" alt="Pestañas Nagaraku">
-                            <div class="product-content">
-                                <div class="product-info">
-                                    <h6 class="fw-bold">Pestañas Nagaraku</h6>
-                                    <p class="text-muted small mb-0">Curva D, 0.07mm</p>
-                                </div>
-                                <div class="product-footer"><span class="product-price">$150.50</span>
-                                    <div class="quantity-controls"><button class="btn-decrease"
-                                            data-action="decrease">-</button><span
-                                            class="quantity-value">0</span><button class="btn-increase"
-                                            data-action="increase">+</button></div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="pos-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 fw-bold mb-0">Categorías</h2>
+                    <button id="clear-category-filters" class="btn btn-sm btn-outline-danger">Eliminar filtros</button>
+                </div>
+                <div class="row g-3" id="category-cards-container">
+                    <div class="col">
+                        <a href="#" class="card category-card text-center p-3 text-decoration-none active"
+                            data-category-name="all">
+                            <i class="bi bi-grid-fill fs-4"></i>
+                            <div>Todas</div>
+                        </a>
+                    </div>
+                    <div class="col" th:each="category : ${categories}">
+                        <a href="#" class="card category-card text-center p-3 text-decoration-none"
+                            th:data-category-name="${category.descripcion}">
+                            <i class="bi bi-tag-fill fs-4"></i>
+                            <div th:text="${category.descripcion}"></div>
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 product-container" data-id="2" data-name="Adhesivo Sky Glue"
-                    data-description="Tapa Roja, 5ml" data-price="250.00"
-                    data-image="https://images.unsplash.com/photo-1620916298379-2475a2a22534?q=80&w=400&auto=format&fit=crop">
-                    <div class="card product-card h-100">
-                        <div class="card-body">
-                            <img src="https://images.unsplash.com/photo-1620916298379-2475a2a22534?q=80&w=400&auto=format&fit=crop"
-                                class="product-image" alt="Adhesivo Sky Glue">
-                            <div class="product-content">
-                                <div class="product-info">
-                                    <h6 class="fw-bold">Adhesivo Sky Glue</h6>
-                                    <p class="text-muted small mb-0">Tapa Roja, 5ml</p>
-                                </div>
-                                <div class="product-footer"><span class="product-price">$250.00</span>
-                                    <div class="quantity-controls"><button class="btn-decrease"
-                                            data-action="decrease">-</button><span
-                                            class="quantity-value">0</span><button class="btn-increase"
-                                            data-action="increase">+</button></div>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+
+            <div class="pos-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h5 fw-bold mb-0">Catálogo de Productos</h2>
+                    <div class="input-group" style="max-width: 250px;">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="search" class="form-control" id="product-search-input"
+                            placeholder="Filtrar por nombre...">
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 product-container" data-id="3" data-name="Pinza Curva Vetus"
-                    data-description="Acero inoxidable" data-price="120.00"
-                    data-image="https://images.unsplash.com/photo-1596704922459-74e279144300?q=80&w=400&auto=format&fit=crop">
-                    <div class="card product-card h-100">
-                        <div class="card-body">
-                            <img src="https://images.unsplash.com/photo-1596704922459-74e279144300?q=80&w=400&auto=format&fit=crop"
-                                class="product-image" alt="Pinza Curva Vetus">
-                            <div class="product-content">
-                                <div class="product-info">
-                                    <h6 class="fw-bold">Pinza Curva Vetus</h6>
-                                    <p class="text-muted small mb-0">Acero inoxidable</p>
-                                </div>
-                                <div class="product-footer"><span class="product-price">$120.00</span>
-                                    <div class="quantity-controls"><button class="btn-decrease"
-                                            data-action="decrease">-</button><span
-                                            class="quantity-value">0</span><button class="btn-increase"
-                                            data-action="increase">+</button></div>
+
+                <div class="row g-3" id="product-grid">
+                    <div th:if="${#lists.isEmpty(products)}" class="col-12">
+                        <div class="alert alert-secondary text-center">Sin productos agregados</div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 product-container" th:each="product : ${products}"
+                        th:data-id="${product.id}" th:data-name="${product.descripcion}"
+                        th:data-description="${product.marca}" th:data-price="${product.precioUnitario}"
+                        th:data-image="${product.imagen}" th:data-category-name="${product.category.descripcion}">
+                        <div class="card product-card h-100">
+                            <div class="card-body">
+                                <img th:src="${product.imagen != null ? product.imagen : 'https://via.placeholder.com/90'}"
+                                    class="product-image" alt="Producto">
+                                <div class="product-content">
+                                    <div class="product-info">
+                                        <h6 class="fw-bold" th:text="${product.descripcion}"></h6>
+                                        <p class="text-muted small mb-0" th:text="${product.marca}"></p>
+                                    </div>
+                                    <div class="product-footer">
+                                        <span class="product-price"
+                                            th:text="${'$' + #numbers.formatDecimal(product.precioUnitario, 1, 2)}"></span>
+                                        <div class="quantity-controls">
+                                            <button class="btn-decrease" data-action="decrease">-</button>
+                                            <span class="quantity-value">0</span>
+                                            <button class="btn-increase" data-action="increase">+</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -209,6 +181,7 @@
                 </div>
             </div>
         </main>
+
         <aside class="pos-invoice">
             <h2 class="h4 mb-4">Pedido</h2>
             <div class="invoice-items" id="invoice-items"></div>
@@ -220,11 +193,14 @@
                     <div class="d-flex justify-content-between fw-bold fs-5 summary-divider"><span>Total</span><span
                             id="total">$0.00</span></div>
                 </div>
-                <div class="d-grid mt-3"><button class="btn btn-primary btn-lg" data-bs-toggle="modal"
-                        data-bs-target="#confirmSaleModal">Confirmar Venta</button></div>
+                <div class="d-grid mt-3">
+                    <button class="btn btn-primary btn-lg" data-bs-toggle="modal"
+                        data-bs-target="#confirmSaleModal">Confirmar Venta</button>
+                </div>
             </div>
         </aside>
     </div>
+
     <div class="modal fade" id="confirmSaleModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -241,6 +217,7 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/js/dashboard.js}"></script>
     <script th:src="@{/js/pos.js}"></script>

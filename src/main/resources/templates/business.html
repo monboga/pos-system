@@ -106,8 +106,17 @@
             <h1 class="h3 mb-4">Datos del Negocio</h1>
             <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
             <div class="card">
-                <div class="card-body">
-                    <form class="row g-3 p-3" th:action="@{/business/save}" th:object="${businessData}" method="post"
+                <div class="card-body p-4">
+                    <div id="empty-business-state" th:if="${businessData.id == null}" class="text-center p-5">
+                        <h5 class="text-muted">No tienes información agregada del negocio</h5>
+                        <p class="text-muted mb-4">Configura los datos de tu empresa para empezar a operar.</p>
+                        <button id="show-business-form-btn" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Agregar Información del Negocio
+                        </button>
+                    </div>
+
+                    <form class="row g-3" id="business-form" th:classappend="${businessData.id == null} ? 'd-none'"
+                        th:action="@{/business/save}" th:object="${businessData}" method="post"
                         enctype="multipart/form-data">
                         <div class="col-md-8">
                             <div class="row">

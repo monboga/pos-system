@@ -51,7 +51,7 @@ public class PosSystemApplication {
 			User admin = new User();
 			admin.setFirstName("Admin");
 			admin.setLastName("Usuario");
-			admin.setEmail("admin@pos.com");
+			admin.setEmail("admin@test.com");
 			// ¡IMPORTANTE! Hasheamos la contraseña antes de guardarla
 			admin.setPassword(passwordEncoder.encode("admin123"));
 			admin.setStatus(1);

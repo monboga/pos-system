@@ -237,9 +237,18 @@
                                 </div>
                                 <div class="mb-3" id="password-field-group">
                                     <label for="userPassword" class="form-label">Contraseña</label>
-                                    <input type="password" class="form-control" id="userPassword"
-                                        th:field="*{password}">
-                                    <small class="form-text text-muted" id="passwordHelp"></small>
+                                    <div class="input-group-icon">
+                                        <i class="bi bi-lock-fill icon"></i>
+                                        <input type="password" class="form-control" id="userPassword"
+                                            th:field="*{password}" />
+                                        <i class="bi bi-eye-fill icon-toggle" id="toggleUserPassword"></i>
+                                    </div>
+                                    <ul class="password-strength-list text-start mt-2" id="user-password-strength">
+                                        <li data-validate="length">Mínimo 12 caracteres</li>
+                                        <li data-validate="uppercase">Una letra mayúscula</li>
+                                        <li data-validate="number">Un número</li>
+                                        <li data-validate="special">Un caracter especial</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -255,6 +264,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/js/dashboard.js}"></script>
     <script th:src="@{/js/users.js}"></script>
+    <script th:src="@{/js/password-validation.js}"></script>
+    <script>
+        initializePasswordValidation('userPassword', 'toggleUserPassword', 'user-password-strength');
+    </script>
 </body>
 
 </html>

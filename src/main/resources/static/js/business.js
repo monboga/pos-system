@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Selectores para la previsualización de la imagen
     const logoUploadInput = document.getElementById('logoUpload');
-    const logoPreview = document.getElementById('business-logo-preview');
+    const logoPreviewImg = document.getElementById('business-logo-preview');
+    const logoPreviewPlaceholder = document.getElementById('business-logo-placeholder');
 
     // Listener para el botón en el estado vacío
     if (showBusinessFormBtn) {
@@ -21,18 +22,30 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Lógica de previsualización de imagen
-    if (logoUploadInput && logoPreview) {
+    if (logoUploadInput) {
         logoUploadInput.addEventListener('change', function (event) {
+            // 1. Obtenemos el archivo que el usuario seleccionó.
             const file = event.target.files[0];
+
             if (file) {
+                // 2. Creamos un nuevo FileReader.
                 const reader = new FileReader();
 
-                // Cuando el lector termine, pone el resultado como src de la imagen de vista previa
+                // 3. Definimos qué hacer cuando el lector termine de leer el archivo.
                 reader.onload = function (e) {
-                    logoPreview.src = e.target.result;
+                    // a. Ponemos la data de la imagen en el 'src' de nuestra etiqueta <img>.
+                    logoPreviewImg.src = e.target.result;
+
+                    // b. Forzamos que la etiqueta <img> sea visible.
+                    logoPreviewImg.style.display = 'block';
+
+                    // c. Ocultamos el placeholder del ícono.
+                    if (logoPreviewPlaceholder) {
+                        logoPreviewPlaceholder.style.display = 'none';
+                    }
                 };
 
-                // Lee el archivo para activar el evento 'onload'
+                // 4. Le decimos al lector que empiece a leer el archivo.
                 reader.readAsDataURL(file);
             }
         });

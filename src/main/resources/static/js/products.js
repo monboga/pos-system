@@ -6,7 +6,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const addProductBtn = document.getElementById('addProductBtn');
 
     const photoPreviewImg = document.getElementById('photo-preview-img');
+    const photoPreviewPlaceholder = document.getElementById('photo-preview-placeholder');
     const photoUploadInput = document.getElementById('photo-upload');
+
+    function showImagePreview(src) {
+        photoPreviewImg.src = src;
+        photoPreviewImg.classList.remove('d-none');
+        photoPreviewPlaceholder.classList.add('d-none');
+    }
+
+    function showPlaceholder() {
+        photoPreviewImg.src = '';
+        photoPreviewImg.classList.add('d-none');
+        photoPreviewPlaceholder.classList.remove('d-none');
+    }
 
     /**
      * Prepara y llena el modal para editar un producto.
@@ -36,9 +49,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Mostrar la imagen actual del producto
         if (productData.imagen && productData.imagen !== 'null') {
-            photoPreviewImg.src = productData.imagen;
+            showImagePreview(productData.imagen);
         } else {
-            photoPreviewImg.src = 'https://via.placeholder.com/200';
+            showPlaceholder();
         }
     }
 
@@ -49,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
         productModalLabel.textContent = 'Agregar Nuevo Producto';
         productForm.reset();
         document.getElementById('productId').value = ''; // Asegura que el ID esté vacío
-        photoPreviewImg.src = 'https://via.placeholder.com/200';
+        showPlaceholder();
     }
 
     // Listener para la previsualización de la imagen
@@ -59,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    photoPreviewImg.src = e.target.result;
+                    showImagePreview(e.target.result);
                 };
                 reader.readAsDataURL(file);
             }

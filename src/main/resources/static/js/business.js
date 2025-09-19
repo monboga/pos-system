@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Selectores para la previsualización de la imagen
     const logoUploadInput = document.getElementById('logoUpload');
-    const logoPreview = document.getElementById('business-logo-preview');
+    const logoPreviewImg = document.getElementById('business-logo-preview');
+    const logoPreviewPlaceholder = document.getElementById('business-logo-placeholder');
 
     // Listener para el botón en el estado vacío
     if (showBusinessFormBtn) {
@@ -21,18 +22,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Lógica de previsualización de imagen
-    if (logoUploadInput && logoPreview) {
+    if (logoUploadInput && logoPreviewImg && logoPreviewPlaceholder) {
         logoUploadInput.addEventListener('change', function (event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-
-                // Cuando el lector termine, pone el resultado como src de la imagen de vista previa
                 reader.onload = function (e) {
-                    logoPreview.src = e.target.result;
+                    logoPreviewImg.src = e.target.result;
+                    logoPreviewImg.classList.remove('d-none');
+                    logoPreviewPlaceholder.classList.add('d-none');
                 };
-
-                // Lee el archivo para activar el evento 'onload'
                 reader.readAsDataURL(file);
             }
         });

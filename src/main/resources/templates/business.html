@@ -158,8 +158,17 @@
                         </div>
                         <div class="col-md-4 text-center">
                             <p class="fw-bold">Logo de la Empresa</p>
-                            <img th:src="*{logo != null ? logo : 'https://via.placeholder.com/200x200.png?text=Logo'}"
-                                class="business-logo-preview mb-3" alt="Logo" id="business-logo-preview">
+                            <div class="business-logo-preview mb-3"
+                                style="width: 200px; height: 200px; margin: 0 auto;">
+                                <img th:if="*{logo != null}" th:src="*{logo}" class="h-100 w-100"
+                                    style="object-fit: contain;" alt="Logo" id="business-logo-preview-img" />
+
+                                <div th:unless="*{logo != null}" class="image-placeholder"
+                                    id="business-logo-placeholder">
+                                    <i class="bi bi-image-fill"></i>
+                                </div>
+                            </div>
+
                             <input class="form-control" type="file" id="logoUpload" name="logoFile" accept="image/*">
                         </div>
                         <div class="col-12 text-end border-top pt-3">

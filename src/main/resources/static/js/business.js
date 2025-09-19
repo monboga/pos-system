@@ -22,16 +22,30 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Lógica de previsualización de imagen
-    if (logoUploadInput && logoPreviewImg && logoPreviewPlaceholder) {
+    if (logoUploadInput) {
         logoUploadInput.addEventListener('change', function (event) {
+            // 1. Obtenemos el archivo que el usuario seleccionó.
             const file = event.target.files[0];
+
             if (file) {
+                // 2. Creamos un nuevo FileReader.
                 const reader = new FileReader();
+
+                // 3. Definimos qué hacer cuando el lector termine de leer el archivo.
                 reader.onload = function (e) {
+                    // a. Ponemos la data de la imagen en el 'src' de nuestra etiqueta <img>.
                     logoPreviewImg.src = e.target.result;
-                    logoPreviewImg.classList.remove('d-none');
-                    logoPreviewPlaceholder.classList.add('d-none');
+
+                    // b. Forzamos que la etiqueta <img> sea visible.
+                    logoPreviewImg.style.display = 'block';
+
+                    // c. Ocultamos el placeholder del ícono.
+                    if (logoPreviewPlaceholder) {
+                        logoPreviewPlaceholder.style.display = 'none';
+                    }
                 };
+
+                // 4. Le decimos al lector que empiece a leer el archivo.
                 reader.readAsDataURL(file);
             }
         });

@@ -91,3 +91,22 @@ body {
     padding-left: 1.5rem !important;
     /* Ajusta el padding para centrar mejor con el espaciado */
 }
+
+.input-group-icon .icon-toggle {
+    position: absolute;
+    right: 1rem;
+    /* Lo posiciona a la derecha */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    /* Cambia el cursor a una 'manita' para indicar que es clickeable */
+    color: #6c757d;
+    /* Un color sutil para el ícono */
+    z-index: 5;
+    /* Asegura que esté por encima del input */
+}
+
+.input-group-icon .icon-toggle:hover {
+    color: var(--primary-color);
+    /* Cambia de color al pasar el mouse */
+}

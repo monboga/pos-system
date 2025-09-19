@@ -228,9 +228,15 @@
                                     <div class="col-md-4"><label for="productBrand"
                                             class="form-label">Marca</label><input type="text" class="form-control"
                                             id="productBrand" th:field="*{marca}"></div>
-                                    <div class="col-md-8"><label for="productBarcode" class="form-label">Código de
-                                            Barra</label><input type="text" class="form-control" id="productBarcode"
-                                            th:field="*{codigoDeBarra}"></div>
+                                    <div class="col-md-8">
+                                        <label for="productBarcode" class="form-label">Código de
+                                            Barra</label>
+                                        <input type="text" class="form-control" id="productBarcode"
+                                            th:field="*{codigoDeBarra}"
+                                            th:classappend="${barcodeError} ? 'is-invalid' : ''">
+                                        <div th:if="${barcodeError}" class="invalid-feedback" th:text="${barcodeError}">
+                                        </div>
+                                    </div>
                                     <div class="col-md-4"><label for="productCategory"
                                             class="form-label">Categoría</label><select class="form-select"
                                             id="productCategory" th:field="*{categoryId}" required>

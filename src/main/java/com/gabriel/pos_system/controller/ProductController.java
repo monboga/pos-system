@@ -2,6 +2,7 @@ package com.gabriel.pos_system.controller;
 
 import java.io.IOException;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,8 +69,22 @@ public class ProductController {
     public String saveProduct(@ModelAttribute("productDto") ProductDto dto,
             @RequestParam("productImage") MultipartFile file,
             RedirectAttributes redirectAttributes) throws IOException {
-        productService.saveProduct(dto, file);
-        redirectAttributes.addFlashAttribute("successMessage", "¡Producto guardado exitosamente!");
+        try {
+            productService.saveProduct(dto, file);
+            redirectAttributes.addFlashAttribute("successMessage", "¡Producto guardado exitosamente!");
+        } catch (DataIntegrityViolationException e) {
+            // Si atrapamos la excepción de duplicado...
+            // 1. Añadimos el mensaje de error para mostrarlo en la vista.
+            redirectAttributes.addFlashAttribute("barcodeError", e.getMessage());
+            // 2. Devolvemos los datos que el usuario ya había ingresado para que no los
+            // pierda.
+            redirectAttributes.addFlashAttribute("productDto", dto);
+        } catch (IOException e) {
+            // Manejo de otros posibles errores
+            redirectAttributes.addFlashAttribute("errorMessage", "Error al procesar la imagen.");
+        }
+
+        // Siempre redirigimos a la página de productos.
         return "redirect:/products";
     }
 }

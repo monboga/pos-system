@@ -27,10 +27,10 @@ public class POSController {
         model.addAttribute("clients", clientRepository.findAll());
 
         // 2. Obtenemos todas las categorías y las añadimos al modelo
-        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("categories", categoryRepository.findByEstado(1));
 
         // 3. Obtenemos todos los productos y los añadimos al modelo
-        model.addAttribute("products", productRepository.findAll());
+        model.addAttribute("products", productRepository.findByEstadoAndCategoryEstado(1, 1));
 
         return "pos";
     }

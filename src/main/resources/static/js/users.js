@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const photoUploadInput = document.getElementById('photo-upload');
 
     const passwordFieldGroup = document.getElementById('password-field-group');
+    const passwordStrengthList = document.getElementById('user-password-strength');
     const passwordInput = document.getElementById('userPassword');
     const passwordHelp = document.getElementById('passwordHelp');
 

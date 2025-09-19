@@ -110,3 +110,41 @@ body {
     color: var(--primary-color);
     /* Cambia de color al pasar el mouse */
 }
+
+/* --- (NUEVO) Estilos para la lista de validación de contraseña --- */
+.password-strength-list {
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.password-strength-list li {
+    color: var(--bs-secondary-color);
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 0.25rem;
+}
+
+/* Icono de círculo por defecto */
+.password-strength-list li::before {
+    content: '\F28A';
+    /* Código del ícono 'circle' de Bootstrap Icons */
+    font-family: 'bootstrap-icons';
+    margin-right: 0.75rem;
+    font-size: 0.75rem;
+    vertical-align: middle;
+}
+
+/* Estilo cuando la validación es correcta */
+.password-strength-list li.valid {
+    color: var(--bs-success);
+    /* Color verde de éxito */
+    text-decoration: line-through;
+}
+
+/* Icono de check cuando es válido */
+.password-strength-list li.valid::before {
+    content: '\F26E';
+    /* Código del ícono 'check-circle-fill' */
+    font-weight: bold;
+}

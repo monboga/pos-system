@@ -372,3 +372,73 @@ body {
     background-color: transparent;
     box-shadow: none;
 }
+
+/* --- (AÑADIDO) Estilos para Inputs con Íconos (Global) --- */
+.input-group-icon {
+    position: relative;
+}
+
+.input-group-icon .form-control {
+    padding-left: 2.75rem;
+    padding-right: 2.75rem;
+}
+
+.input-group-icon .icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-color);
+    z-index: 5;
+}
+
+.input-group-icon .icon-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d;
+    z-index: 5;
+}
+
+.input-group-icon .icon-toggle:hover {
+    color: var(--primary-color);
+}
+
+/* --- (NUEVO) Estilos para la lista de validación de contraseña --- */
+.password-strength-list {
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 0.9rem;
+}
+
+.password-strength-list li {
+    color: var(--bs-secondary-color);
+    /* Color gris por defecto */
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 0.25rem;
+}
+
+/* Icono de círculo por defecto (Bootstrap Icons) */
+.password-strength-list li::before {
+    content: '\F28A';
+    /* Código del ícono 'circle' */
+    font-family: 'bootstrap-icons';
+    margin-right: 0.75rem;
+    font-size: 0.75rem;
+    vertical-align: middle;
+}
+
+/* Estilo cuando la validación es correcta */
+.password-strength-list li.valid {
+    color: var(--bs-success);
+    /* Color verde de éxito */
+}
+
+/* Icono de check cuando es válido */
+.password-strength-list li.valid::before {
+    content: '\F26E';
+    /* Código del ícono 'check-circle-fill' */
+    font-weight: bold;
+}

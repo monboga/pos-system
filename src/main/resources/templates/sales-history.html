@@ -146,7 +146,8 @@
                                 </tr>
                             </thead>
                             <tbody id="sales-history-body">
-                                <tr th:each="saleDto : ${sales}" th:data-sale-id="${saleDto.id}">
+                                <tr th:each="saleDto : ${sales}" th:data-sale-id="${saleDto.id}"
+                                    th:data-details="${saleDto.detailsJson}">
                                     <td th:text="${#temporals.format(saleDto.fechaRegistro, 'yyyy-MM-dd HH:mm')}"></td>
                                     <td th:text="${saleDto.numeroVenta}"></td>
                                     <td th:text="${saleDto.documentType}"></td>

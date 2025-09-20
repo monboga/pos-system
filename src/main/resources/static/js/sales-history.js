@@ -1,6 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
     const salesTableBody = document.getElementById('sales-history-body');
     const saleDetailModal = document.getElementById('saleDetailModal');
+    const filterTypeSelect = document.getElementById('filterType');
+    const dateFilter = document.getElementById('dateFilter');
+    const saleNumberFilter = document.getElementById('saleNumberFilter');
+
+    if (filterTypeSelect && dateFilter && saleNumberFilter) {
+        filterTypeSelect.addEventListener('change', function () {
+            if (this.value === 'date') {
+                dateFilter.classList.remove('d-none');
+                saleNumberFilter.classList.add('d-none');
+            } else if (this.value === 'saleNumber') {
+                dateFilter.classList.add('d-none');
+                saleNumberFilter.classList.remove('d-none');
+            }
+        });
+    }
 
     if (salesTableBody && saleDetailModal) {
         salesTableBody.addEventListener('click', function (event) {

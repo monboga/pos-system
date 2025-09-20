@@ -24,7 +24,7 @@ public class POSController {
     @GetMapping("/pos")
     public String showPOSPage(Model model) {
         // 1. Obtenemos todos los clientes y los añadimos al modelo
-        model.addAttribute("clients", clientRepository.findAll());
+        model.addAttribute("clients", clientRepository.findByActivo(1));
 
         // 2. Obtenemos todas las categorías y las añadimos al modelo
         model.addAttribute("categories", categoryRepository.findByEstado(1));

@@ -1,15 +1,22 @@
 package com.gabriel.pos_system.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,13 +37,32 @@ public class SalesHistoryController {
     }
 
     @GetMapping("/sales-history")
-    public String showSalesHistoryPage(Model model) {
-        List<Sale> sales = saleRepository.findAllByOrderByIdDesc();
-        List<SaleHistoryRowDto> salesDtos = new ArrayList<>();
+    public String showSalesHistoryPage(
+            @RequestParam(required = false) String filterType,
+            @RequestParam(required = false) String saleNumber,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
 
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Sale> salesPage;
 
-        // Convertimos cada entidad 'Sale' a un 'SaleHistoryRowDto'
-        for (Sale sale : sales) {
+        if ("saleNumber".equals(filterType) && saleNumber != null && !saleNumber.trim().isEmpty()) {
+            salesPage = saleRepository.findByNumeroVentaContainingIgnoreCase(saleNumber, pageable);
+        } else if ("date".equals(filterType) && startDate != null && !startDate.isEmpty() && endDate != null
+                && !endDate.isEmpty()) {
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+            salesPage = saleRepository.findByFechaRegistroBetween(start.atStartOfDay(), end.atTime(LocalTime.MAX),
+                    pageable);
+        } else {
+            salesPage = saleRepository.findAllByOrderByIdDesc(pageable);
+        }
+
+        // Convertimos solo la página actual de Sale a DTOs
+        List<SaleHistoryRowDto> salesDtos = salesPage.getContent().stream().map(sale -> {
             SaleHistoryRowDto dto = new SaleHistoryRowDto();
             dto.setId(sale.getId());
             dto.setFechaRegistro(sale.getFechaRegistro());
@@ -45,18 +71,24 @@ public class SalesHistoryController {
             dto.setClientRfc(sale.getClient().getRfc());
             dto.setClientNombre(sale.getClient().getNombre());
             dto.setTotal(sale.getTotal());
-
             try {
-                // Preparamos el JSON aquí, en el backend
                 dto.setDetailsJson(objectMapper.writeValueAsString(sale.getDetails()));
             } catch (JsonProcessingException e) {
                 dto.setDetailsJson("[]");
             }
-            salesDtos.add(dto);
-        }
+            return dto;
+        }).collect(Collectors.toList());
 
+        model.addAttribute("sales", salesDtos); // La lista de DTOs para la tabla
+        model.addAttribute("salesPage", salesPage); // El objeto Page completo para la paginación
 
-        model.addAttribute("sales", salesDtos);
+        // Devolvemos los parámetros para mantener el estado de los filtros y paginación
+        model.addAttribute("selectedFilterType", filterType);
+        model.addAttribute("saleNumberValue", saleNumber);
+        model.addAttribute("startDateValue", startDate);
+        model.addAttribute("endDateValue", endDate);
+        model.addAttribute("selectedSize", size); // Para el dropdown de tamaño
+
         return "sales-history";
     }
 

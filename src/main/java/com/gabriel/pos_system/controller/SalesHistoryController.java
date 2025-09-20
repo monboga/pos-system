@@ -1,5 +1,7 @@
 package com.gabriel.pos_system.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,12 +33,30 @@ public class SalesHistoryController {
     }
 
     @GetMapping("/sales-history")
-    public String showSalesHistoryPage(Model model) {
-        List<Sale> sales = saleRepository.findAllByOrderByIdDesc();
+    public String showSalesHistoryPage(
+            @RequestParam(required = false) String filterType,
+            @RequestParam(required = false) String saleNumber,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            Model model) {
+
+        List<Sale> sales;
+
+        if ("saleNumber".equals(filterType) && saleNumber != null && !saleNumber.trim().isEmpty()) {
+            // Filtrar por número de venta
+            sales = saleRepository.findByNumeroVentaContainingIgnoreCase(saleNumber);
+        } else if ("date".equals(filterType) && startDate != null && !startDate.isEmpty() && endDate != null
+                && !endDate.isEmpty()) {
+            // Filtrar por rango de fechas
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+            sales = saleRepository.findByFechaRegistroBetween(start.atStartOfDay(), end.atTime(LocalTime.MAX));
+        } else {
+            // Por defecto, obtener todas las ventas
+            sales = saleRepository.findAllByOrderByIdDesc();
+        }
+
         List<SaleHistoryRowDto> salesDtos = new ArrayList<>();
-
-
-        // Convertimos cada entidad 'Sale' a un 'SaleHistoryRowDto'
         for (Sale sale : sales) {
             SaleHistoryRowDto dto = new SaleHistoryRowDto();
             dto.setId(sale.getId());
@@ -45,9 +66,7 @@ public class SalesHistoryController {
             dto.setClientRfc(sale.getClient().getRfc());
             dto.setClientNombre(sale.getClient().getNombre());
             dto.setTotal(sale.getTotal());
-
             try {
-                // Preparamos el JSON aquí, en el backend
                 dto.setDetailsJson(objectMapper.writeValueAsString(sale.getDetails()));
             } catch (JsonProcessingException e) {
                 dto.setDetailsJson("[]");
@@ -55,8 +74,13 @@ public class SalesHistoryController {
             salesDtos.add(dto);
         }
 
-
         model.addAttribute("sales", salesDtos);
+        // Devolvemos los parámetros a la vista para mantener el estado de los filtros
+        model.addAttribute("selectedFilterType", filterType);
+        model.addAttribute("saleNumberValue", saleNumber);
+        model.addAttribute("startDateValue", startDate);
+        model.addAttribute("endDateValue", endDate);
+
         return "sales-history";
     }
 

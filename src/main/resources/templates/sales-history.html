@@ -109,27 +109,45 @@
             <h1 class="h3 mb-4">Historial de Ventas</h1>
             <div class="card">
                 <div class="card-header">
-                    <div class="d-flex flex-wrap align-items-end gap-3">
+                    <form th:action="@{/sales-history}" method="get" class="d-flex flex-wrap align-items-end gap-3">
                         <div>
                             <label for="filterType" class="form-label">Buscar por</label>
-                            <select class="form-select" id="filterType">
-                                <option value="date" selected>Rango de Fechas</option>
-                                <option value="saleNumber">Número de Venta</option>
+                            <select class="form-select" id="filterType" name="filterType">
+                                <option value="date"
+                                    th:selected="${selectedFilterType == 'date' or selectedFilterType == null}">Rango de
+                                    Fechas</option>
+                                <option value="saleNumber" th:selected="${selectedFilterType == 'saleNumber'}">Número de
+                                    Venta</option>
                             </select>
                         </div>
-                        <div id="dateFilter" class="d-flex gap-3">
-                            <div><label for="startDate" class="form-label">Fecha de Inicio</label><input type="date"
-                                    class="form-control" id="startDate"></div>
-                            <div><label for="endDate" class="form-label">Fecha de Fin</label><input type="date"
-                                    class="form-control" id="endDate"></div>
+
+                        <div id="dateFilter" th:classappend="${selectedFilterType == 'saleNumber' ? 'd-none' : ''}"
+                            class="d-flex gap-3">
+                            <div>
+                                <label for="startDate" class="form-label">Fecha de Inicio</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate"
+                                    th:value="${startDateValue}">
+                            </div>
+                            <div>
+                                <label for="endDate" class="form-label">Fecha de Fin</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate"
+                                    th:value="${endDateValue}">
+                            </div>
                         </div>
-                        <div id="saleNumberFilter" class="d-none">
-                            <div><label for="saleNumberInput" class="form-label">Número de Venta</label><input
-                                    type="text" class="form-control" id="saleNumberInput"
-                                    placeholder="Ingrese el número..."></div>
+
+                        <div id="saleNumberFilter"
+                            th:classappend="${selectedFilterType != 'saleNumber' ? 'd-none' : ''}">
+                            <div>
+                                <label for="saleNumberInput" class="form-label">Número de Venta</label>
+                                <input type="text" class="form-control" id="saleNumberInput" name="saleNumber"
+                                    placeholder="Ingrese el número..." th:value="${saleNumberValue}">
+                            </div>
                         </div>
-                        <button class="btn btn-primary"><i class="bi bi-search me-2"></i>Aplicar Filtro</button>
-                    </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search me-2"></i>Aplicar Filtro
+                        </button>
+                    </form>
                 </div>
                 <div class="card-body">
                     <div th:if="${!#lists.isEmpty(sales)}" class="table-responsive">

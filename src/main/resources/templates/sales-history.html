@@ -132,7 +132,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
+                    <div th:if="${!#lists.isEmpty(sales)}" class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
@@ -145,29 +145,26 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2025-09-14</td>
-                                    <td>V-000123</td>
-                                    <td>Factura</td>
-                                    <td>PAGJ880101XXX</td>
-                                    <td>Juan Pérez Gómez</td>
-                                    <td>$1,452.90</td>
-                                    <td><button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#saleDetailModal"><i class="bi bi-eye"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td>2025-09-13</td>
-                                    <td>V-000122</td>
-                                    <td>Ticket</td>
-                                    <td>XAXX010101000</td>
-                                    <td>Público en General</td>
-                                    <td>$350.00</td>
-                                    <td><button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#saleDetailModal"><i class="bi bi-eye"></i></button></td>
+                            <tbody id="sales-history-body">
+                                <tr th:each="saleDto : ${sales}" th:data-sale-id="${saleDto.id}">
+                                    <td th:text="${#temporals.format(saleDto.fechaRegistro, 'yyyy-MM-dd HH:mm')}"></td>
+                                    <td th:text="${saleDto.numeroVenta}"></td>
+                                    <td th:text="${saleDto.documentType}"></td>
+                                    <td th:text="${saleDto.clientRfc}"></td>
+                                    <td th:text="${saleDto.clientNombre}"></td>
+                                    <td th:text="${'$' + #numbers.formatDecimal(saleDto.total, 1, 2)}"></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary view-sale-btn"
+                                            data-bs-toggle="modal" data-bs-target="#saleDetailModal">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div th:if="${#lists.isEmpty(sales)}" class="text-center p-4">
+                        <p class="text-muted">Aún no se han registrado ventas.</p>
                     </div>
                 </div>
             </div>
@@ -179,19 +176,19 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="saleDetailModalLabel">Detalle de Venta: V-000123</h5><button
-                        type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="saleDetailModalLabel">Detalle de Venta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-4">
-                        <div class="col-md-6"><strong>Fecha:</strong> 2025-09-14</div>
-                        <div class="col-md-6"><strong>Tipo de Documento:</strong> Factura</div>
-                        <div class="col-md-6"><strong>Cliente:</strong> Juan Pérez Gómez</div>
-                        <div class="col-md-6"><strong>RFC:</strong> PAGJ880101XXX</div>
+                        <div class="col-md-6"><strong>Tipo de Documento:</strong> <span id="modal-doc-type"></span>
+                        </div>
+                        <div class="col-md-6"><strong>Cliente:</strong> <span id="modal-client-name"></span></div>
+                        <div class="col-md-6"><strong>RFC:</strong> <span id="modal-client-rfc"></span></div>
                     </div>
                     <h6>Productos</h6>
                     <table class="table table-bordered">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th>Producto</th>
                                 <th>Cantidad</th>
@@ -199,25 +196,13 @@
                                 <th>Total</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Pestañas Nagaraku</td>
-                                <td>5</td>
-                                <td>$150.50</td>
-                                <td>$752.50</td>
-                            </tr>
-                            <tr>
-                                <td>Adhesivo Sky Glue</td>
-                                <td>2</td>
-                                <td>$250.00</td>
-                                <td>$500.00</td>
-                            </tr>
+                        <tbody id="modal-products-body">
                         </tbody>
                     </table>
                     <div class="text-end mt-4">
-                        <p class="mb-1"><strong>Subtotal:</strong> $1,252.50</p>
-                        <p class="mb-1"><strong>IVA (16%):</strong> $200.40</p>
-                        <h5 class="mb-0"><strong>Total:</strong> $1,452.90</h5>
+                        <p class="mb-1"><strong>Subtotal:</strong> <span id="modal-subtotal"></span></p>
+                        <p class="mb-1"><strong>IVA (16%):</strong> <span id="modal-iva"></span></p>
+                        <h5 class="mb-0"><strong>Total:</strong> <span id="modal-total"></span></h5>
                     </div>
                 </div>
                 <div class="modal-footer">

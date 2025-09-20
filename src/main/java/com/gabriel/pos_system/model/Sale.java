@@ -28,6 +28,9 @@ public class Sale {
     @Column(unique = true, nullable = false)
     private String numeroVenta;
 
+    @Column(nullable = false)
+    private String documentType;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime fechaRegistro;
@@ -117,6 +120,14 @@ public class Sale {
 
     public void setDetails(Set<SaleDetail> details) {
         this.details = details;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
 }

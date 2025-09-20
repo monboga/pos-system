@@ -34,8 +34,7 @@ public class SaleServiceImpl implements SaleService {
         this.saleRepository = saleRepository;
         this.clientRepository = clientRepository;
         this.productRepository = productRepository;
-        // Inicializamos el contador con el último ID de venta para generar números
-        // secuenciales
+        // Al arrancar, inicializamos el contador con el último ID de venta de la BD
         long lastSaleId = saleRepository.findTopByOrderByIdDesc().map(Sale::getId).orElse(0L);
         this.saleCounter.set(lastSaleId);
     }
@@ -49,9 +48,11 @@ public class SaleServiceImpl implements SaleService {
         // --- INICIO DE LA REFACTORIZACIÓN ---
 
         // 1. Primero, validamos y actualizamos el stock de todos los productos.
-        List<Product> updatedProducts = new ArrayList<>();
+        List<Product> productsToUpdate = new ArrayList<>();
+
         for (CartItemDto item : saleDto.getItems()) {
-            Product product = productRepository.findById(item.getId())
+            // Usamos nuestro nuevo método para buscar Y bloquear el producto.
+            Product product = productRepository.findByIdForUpdate(item.getId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + item.getId()));
 
             if (product.getStock() < item.getQuantity()) {
@@ -59,12 +60,14 @@ public class SaleServiceImpl implements SaleService {
             }
 
             product.setStock(product.getStock() - item.getQuantity());
-            updatedProducts.add(product);
+            productsToUpdate.add(product);
         }
-        // Guardamos todos los productos actualizados de una vez.
-        productRepository.saveAll(updatedProducts);
 
-        // 2. Ahora, creamos la venta con la certeza de que el stock es correcto.
+        // Guardamos todos los productos actualizados de una vez.
+        productRepository.saveAll(productsToUpdate);
+
+        // A partir de aquí, la creación de la venta es igual, pero ya no hay riesgo de
+        // deadlock.
         Sale newSale = new Sale();
         newSale.setNumeroVenta("V-" + String.format("%06d", saleCounter.incrementAndGet()));
         newSale.setClient(client);
@@ -75,7 +78,7 @@ public class SaleServiceImpl implements SaleService {
         double subtotal = 0.0;
 
         for (CartItemDto item : saleDto.getItems()) {
-            Product product = updatedProducts.stream()
+            Product product = productsToUpdate.stream()
                     .filter(p -> p.getId().equals(item.getId())).findFirst().get();
 
             SaleDetail detail = new SaleDetail();

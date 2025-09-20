@@ -34,7 +34,6 @@ public class SalesHistoryController {
         List<Sale> sales = saleRepository.findAllByOrderByIdDesc();
         List<SaleHistoryRowDto> salesDtos = new ArrayList<>();
 
-        // Convertimos cada entidad 'Sale' a un 'SaleHistoryRowDto'
         for (Sale sale : sales) {
             SaleHistoryRowDto dto = new SaleHistoryRowDto();
             dto.setId(sale.getId());
@@ -44,17 +43,16 @@ public class SalesHistoryController {
             dto.setClientRfc(sale.getClient().getRfc());
             dto.setClientNombre(sale.getClient().getNombre());
             dto.setTotal(sale.getTotal());
-
-            // Convertimos la lista de detalles a un String JSON aquí, en el backend
             try {
+                // Preparamos el JSON aquí, en el backend
                 dto.setDetailsJson(objectMapper.writeValueAsString(sale.getDetails()));
             } catch (JsonProcessingException e) {
-                dto.setDetailsJson("[]"); // Ponemos un array vacío si hay un error
+                dto.setDetailsJson("[]");
             }
             salesDtos.add(dto);
         }
 
-        model.addAttribute("sales", salesDtos); // Pasamos la lista de DTOs a la vista
+        model.addAttribute("sales", salesDtos);
         return "sales-history";
     }
 

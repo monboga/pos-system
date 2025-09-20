@@ -44,14 +44,21 @@ document.addEventListener("DOMContentLoaded", function () {
     if (saveAsTicketBtn) {
         saveAsTicketBtn.addEventListener('click', function () {
 
+            // 1. Deshabilitamos el botón para prevenir dobles clics
+            saveAsTicketBtn.disabled = true;
+            saveAsTicketBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Guardando...
+            `;
+
             if (!csrfToken || !csrfHeader) {
                 showErrorToast('Error de seguridad. No se pudo procesar la venta.');
+                // Volvemos a habilitar el botón si hay un error temprano
+                saveAsTicketBtn.disabled = false;
+                saveAsTicketBtn.textContent = 'No';
                 return;
             }
             if (confirmSaleModal) confirmSaleModal.hide();
-
-            // 1. Ocultamos el modal de confirmación
-            confirmSaleModal.hide();
 
             // 2. Construimos el objeto de datos (DTO) para enviar al backend
             const saleData = {
@@ -90,6 +97,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(error => {
                     // 5. Si algo falló, mostramos un toast de error
                     showErrorToast(error.message);
+                }).finally(() => {
+                    // 2. Volvemos a habilitar el botón cuando la operación termina (éxito o error)
+                    saveAsTicketBtn.disabled = false;
+                    saveAsTicketBtn.textContent = 'No';
                 });
         });
     }

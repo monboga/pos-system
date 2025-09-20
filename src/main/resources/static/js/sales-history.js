@@ -3,18 +3,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const saleDetailModal = document.getElementById('saleDetailModal');
     const filterTypeSelect = document.getElementById('filterType');
     const dateFilter = document.getElementById('dateFilter');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
     const saleNumberFilter = document.getElementById('saleNumberFilter');
+    const saleNumberInput = document.getElementById('saleNumberInput');
 
-    if (filterTypeSelect && dateFilter && saleNumberFilter) {
-        filterTypeSelect.addEventListener('change', function () {
-            if (this.value === 'date') {
-                dateFilter.classList.remove('d-none');
-                saleNumberFilter.classList.add('d-none');
-            } else if (this.value === 'saleNumber') {
-                dateFilter.classList.add('d-none');
-                saleNumberFilter.classList.remove('d-none');
-            }
-        });
+    // Función para manejar la visibilidad y estado de los filtros
+    function toggleFilters() {
+        if (filterTypeSelect.value === 'date') {
+            dateFilter.classList.remove('d-none');
+            startDateInput.disabled = false;
+            endDateInput.disabled = false;
+
+            saleNumberFilter.classList.add('d-none');
+            saleNumberInput.disabled = true;
+        } else if (filterTypeSelect.value === 'saleNumber') {
+            dateFilter.classList.add('d-none');
+            startDateInput.disabled = true;
+            endDateInput.disabled = true;
+
+            saleNumberFilter.classList.remove('d-none');
+            saleNumberInput.disabled = false;
+        }
+    }
+
+    if (filterTypeSelect) {
+        // Ejecutar al cargar la página para establecer el estado inicial correcto
+        toggleFilters();
+
+        filterTypeSelect.addEventListener('change', toggleFilters);
     }
 
     if (salesTableBody && saleDetailModal) {

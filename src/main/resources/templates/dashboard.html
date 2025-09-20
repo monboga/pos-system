@@ -126,7 +126,7 @@
                             <i class="bi bi-cart-check-fill text-primary fs-1 me-3"></i>
                             <div>
                                 <h6 class="card-subtitle text-muted">Total de Ventas</h6>
-                                <h2 class="card-title fw-bold">1,250</h2>
+                                <h2 class="card-title fw-bold" th:text="${totalSales}">1,250</h2>
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
                             <i class="bi bi-cash-coin text-success fs-1 me-3"></i>
                             <div>
                                 <h6 class="card-subtitle text-muted">Total de Ingresos</h6>
-                                <h2 class="card-title fw-bold">$84,320</h2>
+                                <h2 class="card-title fw-bold" th:text="${totalRevenue}">$84,320</h2>
                             </div>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
                             <i class="bi bi-box-seam-fill text-warning fs-1 me-3"></i>
                             <div>
                                 <h6 class="card-subtitle text-muted">Total de Productos</h6>
-                                <h2 class="card-title fw-bold">315</h2>
+                                <h2 class="card-title fw-bold" th:text="${totalProducts}">0</h2>
                             </div>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
                             <i class="bi bi-tags-fill text-info fs-1 me-3"></i>
                             <div>
                                 <h6 class="card-subtitle text-muted">Total de Categorías</h6>
-                                <h2 class="card-title fw-bold">25</h2>
+                                <h2 class="card-title fw-bold" th:text="${totalCategories}">0</h2>
                             </div>
                         </div>
                     </div>

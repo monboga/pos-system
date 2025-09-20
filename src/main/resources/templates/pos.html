@@ -158,8 +158,13 @@
                         th:data-image="${product.imagen}" th:data-category-name="${product.category.descripcion}">
                         <div class="card product-card h-100">
                             <div class="card-body">
-                                <img th:src="${product.imagen != null ? product.imagen : 'https://via.placeholder.com/90'}"
-                                    class="product-image" alt="Producto">
+                                <div style="width: 90px; height: 90px; flex-shrink: 0;">
+                                    <img th:if="${product.imagen != null}" th:src="${product.imagen}"
+                                        class="product-image" alt="Producto" style="width:100%; height:100%;">
+                                    <div th:unless="${product.imagen != null}" class="image-placeholder">
+                                        <i class="bi bi-image-fill"></i>
+                                    </div>
+                                </div>
                                 <div class="product-content">
                                     <div class="product-info">
                                         <h6 class="fw-bold" th:text="${product.descripcion}"></h6>

@@ -147,6 +147,11 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search me-2"></i>Aplicar Filtro
                         </button>
+
+                        <a th:if="${selectedFilterType != null && !#strings.isEmpty(selectedFilterType)}"
+                            th:href="@{/sales-history}" class="btn btn-danger" title="Eliminar Filtro">
+                            <i class="bi bi-funnel-fill me-2"></i>Eliminar Filtro
+                        </a>
                     </form>
                 </div>
                 <div class="card-body">
@@ -176,6 +181,10 @@
                                         <button class="btn btn-sm btn-outline-primary view-sale-btn"
                                             data-bs-toggle="modal" data-bs-target="#saleDetailModal">
                                             <i class="bi bi-eye"></i>
+                                        </button>
+
+                                        <button class="btn btn-sm btn-success ms-1" title="Realizar Factura">
+                                            <i class="bi bi-file-earmark-text"></i>
                                         </button>
                                     </td>
                                 </tr>

@@ -34,7 +34,9 @@ public class SaleServiceImpl implements SaleService {
         this.saleRepository = saleRepository;
         this.clientRepository = clientRepository;
         this.productRepository = productRepository;
+
         // Al arrancar, inicializamos el contador con el último ID de venta de la BD
+
         long lastSaleId = saleRepository.findTopByOrderByIdDesc().map(Sale::getId).orElse(0L);
         this.saleCounter.set(lastSaleId);
     }

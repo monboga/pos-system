@@ -143,6 +143,7 @@
                                     <th>Foto</th>
                                     <th>Nombre</th>
                                     <th>Correo</th>
+                                    <th>Teléfono</th>
                                     <th>Rol</th>
                                     <th>Estado</th>
                                     <th>Fecha de Creación</th>
@@ -164,6 +165,9 @@
                                     </td>
                                     <td th:text="${user.firstName + ' ' + user.lastName}"></td>
                                     <td th:text="${user.email}"></td>
+                                    <td
+                                        th:text="${user.phoneNumber != null and !user.phoneNumber.isEmpty() ? user.phoneNumber : 'N/A'}">
+                                    </td>
                                     <td><span class="badge bg-primary"
                                             th:text="${!user.roles.isEmpty() ? #strings.replace(user.roles.iterator().next().name, 'ROLE_', '') : 'Sin Rol'}"></span>
                                     </td>

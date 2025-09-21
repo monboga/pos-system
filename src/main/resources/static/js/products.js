@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Selectores del DOM
     const productsTableBody = document.getElementById('products-table-body');
+    const addProductBtn = document.getElementById('addProductBtn');
+    const productModalEl = document.getElementById('productModal');
     const productModalLabel = document.getElementById('productModalLabel');
     const productForm = document.getElementById('productForm');
-    const addProductBtn = document.getElementById('addProductBtn');
 
     const photoPreviewImg = document.getElementById('photo-preview-img');
     const photoPreviewPlaceholder = document.getElementById('photo-preview-placeholder');
@@ -148,18 +149,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Listeners para los botones de la tabla y "Agregar"
-    if (productsTableBody) {
-        productsTableBody.addEventListener('click', function (event) {
-            const editButton = event.target.closest('.edit-product-btn');
-            if (editButton) {
-                populateEditModal(editButton);
-            }
-        });
-    }
+    if (productModalEl) {
+        productModalEl.addEventListener('show.bs.modal', function (event) {
+            // Obtenemos el botón que disparó el modal
+            const button = event.relatedTarget;
 
-    if (addProductBtn) {
-        addProductBtn.addEventListener('click', function () {
-            prepareAddModal();
+            // Verificamos si el botón es de 'editar' (tiene la clase 'edit-product-btn')
+            if (button && button.classList.contains('edit-product-btn')) {
+                populateEditModal(button);
+            } else {
+                // Si no, asumimos que es el botón de 'agregar' o se abrió de otra forma
+                prepareAddModal();
+            }
         });
     }
 });

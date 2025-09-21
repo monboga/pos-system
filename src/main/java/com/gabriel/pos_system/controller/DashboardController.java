@@ -11,11 +11,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.gabriel.pos_system.model.User;
 import com.gabriel.pos_system.repository.CategoryRepository;
 import com.gabriel.pos_system.repository.ProductRepository;
 import com.gabriel.pos_system.repository.SaleDetailRepository;
@@ -39,6 +42,18 @@ public class DashboardController {
 
     @GetMapping("/dashboard")
     public String showDashboardPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User loggedInUser = (User) authentication.getPrincipal();
+            model.addAttribute("loggedInUser", loggedInUser);
+        }
+
+        // 2. Formatear la fecha actual para mostrarla bajo el título
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy",
+                new Locale("es", "ES"));
+        model.addAttribute("currentDate",
+                today.format(formatter).substring(0, 1).toUpperCase() + today.format(formatter).substring(1));
         // --- Lógica para las Cards ---
         long totalProducts = productRepository.count();
         long totalCategories = categoryRepository.count();

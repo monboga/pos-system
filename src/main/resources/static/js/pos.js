@@ -141,16 +141,17 @@ document.addEventListener("DOMContentLoaded", function () {
         invoiceItemsContainer.innerHTML = '';
         if (Object.keys(cart).length === 0) {
             invoiceItemsContainer.innerHTML = '<p class="text-muted text-center mt-4">No hay productos en el pedido.</p>';
+            calculateTotals();
             updateCatalogView(); // Asegura que el catálogo se resetee visualmente
             return;
         }
 
         for (const productId in cart) {
             const item = cart[productId];
-
-            // --- INICIO DE LA CORRECCIÓN ---
             // Lógica para decidir si mostrar la imagen o el placeholder
             let imageHtml;
+            // Agregamos una variable para controlar si el botón debe estar deshabilitado
+            const isIncreaseDisabled = item.quantity >= item.stock;
             if (item.image && item.image !== 'null' && item.image.trim() !== '') {
                 // Si hay una imagen válida, creamos la etiqueta <img>
                 imageHtml = `<img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 0.5rem;">`;
@@ -164,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                 `;
             }
-            // --- FIN DE LA CORRECCIÓN ---
 
             const itemHtml = `
                 <div class="invoice-item mb-3">
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <small class="text-muted">${item.description}</small>
                     </div>
                     <div class="quantity-controls-vertical">
-                        <button data-id="${productId}" data-action="increase">+</button>
+                        <button data-id="${productId}" data-action="increase" ${isIncreaseDisabled ? 'disabled' : ''}>+</button>
                         <span class="quantity-value">${item.quantity}</span>
                         <button data-id="${productId}" data-action="decrease">-</button>
                     </div>
@@ -189,8 +189,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ... (El resto de las funciones: calculateTotals, handleCartAction, updateCatalogView, applyFilters, etc., se mantienen exactamente igual)
     function calculateTotals() { const subtotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0); const iva = subtotal * 0.16; const total = subtotal + iva; subtotalEl.textContent = `$${subtotal.toFixed(2)}`; ivaEl.textContent = `$${iva.toFixed(2)}`; totalEl.textContent = `$${total.toFixed(2)}`; }
-    function handleCartAction(productId, action, productData = {}) { const existingItem = cart[productId]; if (action === 'increase') { if (existingItem) { cart[productId].quantity++; } else { cart[productId] = { ...productData, quantity: 1 }; } } else if (action === 'decrease') { if (existingItem) { cart[productId].quantity--; if (cart[productId].quantity <= 0) { delete cart[productId]; } } } renderCart(); }
-    function updateCatalogView() { document.querySelectorAll('.product-container').forEach(cardContainer => { const productId = cardContainer.dataset.id; const quantityValueEl = cardContainer.querySelector('.quantity-value'); if (cart[productId]) { cardContainer.querySelector('.product-card').classList.add('in-cart'); quantityValueEl.textContent = cart[productId].quantity; } else { cardContainer.querySelector('.product-card').classList.remove('in-cart'); quantityValueEl.textContent = '0'; } }); }
+    function handleCartAction(productId, action, productData = {}) {
+        const existingItem = cart[productId];
+        if (action === 'increase') {
+            if (existingItem) {
+                if (existingItem.quantity < existingItem.stock) {
+                    cart[productId].quantity++;
+                }
+            } else {
+                if (productData.stock > 0) {
+                    cart[productId] = { ...productData, quantity: 1 };
+                }
+            }
+        }
+        else if (action === 'decrease') {
+            if (existingItem) {
+                cart[productId].quantity--;
+                if (cart[productId].quantity <= 0) {
+                    delete cart[productId];
+                }
+            }
+        }
+        renderCart();
+    }
+    function updateCatalogView() {
+        document.querySelectorAll('.product-container').forEach(cardContainer => {
+            const productId = cardContainer.dataset.id;
+            const stock = parseInt(cardContainer.dataset.stock, 10);
+            const quantityValueEl = cardContainer.querySelector('.quantity-value');
+            const increaseBtn = cardContainer.querySelector('.btn-increase');
+
+            if (cart[productId]) {
+                cardContainer.querySelector('.product-card').classList.add('in-cart');
+                quantityValueEl.textContent = cart[productId].quantity;
+                // Deshabilita el botón '+' si la cantidad en el carrito iguala o supera el stock
+                if (increaseBtn) {
+                    increaseBtn.disabled = cart[productId].quantity >= stock;
+                }
+            } else {
+                cardContainer.querySelector('.product-card').classList.remove('in-cart');
+                if (quantityValueEl) quantityValueEl.textContent = '0';
+                // Habilita el botón si el producto ya no está en el carrito
+                if (increaseBtn) {
+                    increaseBtn.disabled = false;
+                }
+            }
+        });
+    }
     function applyFilters() { const allProducts = productGrid.querySelectorAll('.product-container'); allProducts.forEach(product => { const productName = product.dataset.name.toLowerCase(); const productCategory = product.dataset.categoryName; const nameMatch = productName.includes(searchTerm); const categoryMatch = activeCategories.length === 0 || activeCategories.includes(productCategory); if (nameMatch && categoryMatch) { product.style.display = 'block'; } else { product.style.display = 'none'; } }); }
     function updateCategoryCardsVisualState() { const allCategoryCards = categoryCardsContainer.querySelectorAll('.category-card'); allCategoryCards.forEach(card => { const cardCategoryName = card.dataset.categoryName; if (cardCategoryName === 'all') { card.classList.toggle('active', activeCategories.length === 0); } else { card.classList.toggle('active', activeCategories.includes(cardCategoryName)); } }); }
 
@@ -208,7 +253,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (productGrid) {
-        productGrid.addEventListener('click', function (e) { const button = e.target.closest('.quantity-controls button'); if (!button) return; const action = button.dataset.action; const productContainer = button.closest('.product-container'); const productId = productContainer.dataset.id; const productData = { id: productId, name: productContainer.dataset.name, description: productContainer.dataset.description, price: parseFloat(productContainer.dataset.price), image: productContainer.dataset.image }; handleCartAction(productId, action, productData); });
+        productGrid.addEventListener('click', function (e) {
+            const button = e.target.closest('.quantity-controls button');
+            if (!button) return;
+            const action = button.dataset.action;
+            const productContainer = button.closest('.product-container');
+            const productId = productContainer.dataset.id;
+            const productData = {
+                id: productId,
+                name: productContainer.dataset.name,
+                description: productContainer.dataset.description,
+                price: parseFloat(productContainer.dataset.price),
+                image: productContainer.dataset.image,
+                stock: parseInt(productContainer.dataset.stock, 10)
+            };
+            handleCartAction(productId, action, productData);
+        });
     }
 
     if (invoiceItemsContainer) {

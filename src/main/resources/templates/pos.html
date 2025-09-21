@@ -159,7 +159,8 @@
                     <div class="col-lg-4 col-md-6 product-container" th:each="product : ${products}"
                         th:data-id="${product.id}" th:data-name="${product.descripcion}"
                         th:data-description="${product.marca}" th:data-price="${product.precioUnitario}"
-                        th:data-image="${product.imagen}" th:data-category-name="${product.category.descripcion}">
+                        th:data-image="${product.imagen}" th:data-category-name="${product.category.descripcion}"
+                        th:data-stock="${product.stock}">
                         <div class="card product-card h-100">
                             <div class="card-body">
                                 <div style="width: 90px; height: 90px; flex-shrink: 0;">
@@ -177,10 +178,15 @@
                                     <div class="product-footer">
                                         <span class="product-price"
                                             th:text="${'$' + #numbers.formatDecimal(product.precioUnitario, 1, 2)}"></span>
-                                        <div class="quantity-controls">
+
+                                        <div th:if="${product.stock > 0}" class="quantity-controls">
                                             <button class="btn-decrease" data-action="decrease">-</button>
                                             <span class="quantity-value">0</span>
                                             <button class="btn-increase" data-action="increase">+</button>
+                                        </div>
+
+                                        <div th:unless="${product.stock > 0}">
+                                            <strong class="text-danger">Sin Stock</strong>
                                         </div>
                                     </div>
                                 </div>

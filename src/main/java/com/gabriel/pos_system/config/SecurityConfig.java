@@ -41,19 +41,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Le decimos a Spring Security que use nuestro proveedor de autenticación
-                // personalizado
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+                        // Reglas de Acceso Específicas
+                        .requestMatchers("/users/**", "/business/**").hasRole("ADMIN") // Solo ADMINS
+                        .requestMatchers("/pos/**", "/clients/**", "/categories/**", "/products/**")
+                        .hasAnyRole("ADMIN", "USER") // ADMINS y USERS
+
+                        // Rutas Públicas (esto se mantiene igual)
                         .requestMatchers("/login", "/forgot-password/**", "/verify-otp/**", "/reset-password/**",
                                 "/business/logo", "/css/**", "/js/**",
                                 "/images/**")
                         .permitAll()
+
+                        // Cualquier otra petición requiere autenticación
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/index", true)
+                        .defaultSuccessUrl("/dashboard", true) // Cambiado a /dashboard para una mejor UX
                         .permitAll())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")

@@ -44,8 +44,8 @@ public class PosSystemApplication {
 			}
 
 			// Crear Roles
-			Role adminRole = roleRepository.save(new Role("ROLE_ADMIN"));
-			roleRepository.save(new Role("ROLE_USER"));
+			Role adminRole = roleRepository.save(new Role("ROLE_ADMIN", "Administrador"));
+			roleRepository.save(new Role("ROLE_USER", "Usuario"));
 
 			// Crear Usuario Administrador por defecto
 			User admin = new User();

@@ -304,11 +304,15 @@
                                             class="form-label">Stock</label><input type="number" class="form-control"
                                             id="productStock" th:field="*{stock}"></div>
                                     <div class="col-md-4"><label for="productPrice" class="form-label">Precio
-                                            Unitario</label><input type="number" step="0.01" class="form-control"
-                                            id="productPrice" th:field="*{precioUnitario}"></div>
+                                            Unitario</label>
+                                        <input type="text" inputmode="decimal" class="form-control" id="productPrice"
+                                            th:field="*{precioUnitario}">
+                                    </div>
                                     <div class="col-md-4"><label for="productDiscount" class="form-label">Descuento
-                                            (%)</label><input type="number" class="form-control" id="productDiscount"
-                                            th:field="*{descuento}"></div>
+                                            (%)</label>
+                                        <input type="text" inputmode="decimal" class="form-control" id="productDiscount"
+                                            th:field="*{descuento}">
+                                    </div>
                                     <div class="col-md-4"><label for="productStatus"
                                             class="form-label">Estado</label><select class="form-select"
                                             id="productStatus" th:field="*{estado}" required>

@@ -9,6 +9,41 @@ document.addEventListener("DOMContentLoaded", function () {
     const photoPreviewPlaceholder = document.getElementById('photo-preview-placeholder');
     const photoUploadInput = document.getElementById('photo-upload');
 
+    // Selectores para campos con formato
+    const priceInput = document.getElementById('productPrice');
+    const discountInput = document.getElementById('productDiscount');
+
+    /**
+     * Formatea un número como moneda MXN.
+     * @param {number|string} value - El valor numérico a formatear.
+     * @returns {string} - El valor formateado (ej: "$ 100.00 MXN").
+     */
+    function formatPrice(value) {
+        const num = parseFloat(value) || 0;
+        return num.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+    }
+
+    /**
+     * Formatea un número como porcentaje.
+     * @param {number|string} value - El valor numérico a formatear.
+     * @returns {string} - El valor formateado (ej: "5 %").
+     */
+    function formatDiscount(value) {
+        const num = parseFloat(value) || 0;
+        return `${num} %`;
+    }
+
+    /**
+     * Extrae el valor numérico de una cadena formateada.
+     * @param {string} value - La cadena formateada.
+     * @returns {string} - El número como cadena de texto.
+     */
+    function unformatValue(value) {
+        // Extrae todos los dígitos, el punto decimal y el signo negativo.
+        const matches = value.match(/[\d.-]+/g);
+        return matches ? matches.join('') : '0';
+    }
+
     function showImagePreview(src) {
         photoPreviewImg.src = src;
         photoPreviewImg.classList.remove('d-none');
@@ -38,14 +73,15 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('productBarcode').value = productData.codigoDeBarra;
         document.getElementById('productCategory').value = productData.categoryId;
         document.getElementById('productStock').value = productData.stock;
-        document.getElementById('productPrice').value = productData.precioUnitario;
-        document.getElementById('productDiscount').value = productData.descuento;
         document.getElementById('productStatus').value = productData.estado;
         document.getElementById('productUnit').value = productData.medidaLocalId;
         document.getElementById('productUnitSat').value = productData.medidaSatId;
         document.getElementById('productKeySat').value = productData.claveProdServSatId;
         document.getElementById('productTaxObject').value = productData.objetoImpSatId;
         document.getElementById('productTax').value = productData.impuestoSatId;
+
+        priceInput.value = formatPrice(productData.precioUnitario);
+        discountInput.value = formatDiscount(productData.descuento);
 
         // Mostrar la imagen actual del producto
         if (productData.imagen && productData.imagen !== 'null') {
@@ -63,7 +99,39 @@ document.addEventListener("DOMContentLoaded", function () {
         productForm.reset();
         document.getElementById('productId').value = ''; // Asegura que el ID esté vacío
         showPlaceholder();
+
+        discountInput.value = formatDiscount(0);
+        priceInput.value = formatPrice(0);
+
+        // Establecer valores por defecto para el modo "Agregar"
+        document.getElementById('productUnit').value = 'PZA'; // Unidad de Medida (Empresa): Pieza
+        document.getElementById('productUnitSat').value = 'Unidades de venta';  // Unidad de Medida (SAT): Unidades de Venta
+        document.getElementById('productKeySat').value = '01010101'; // Clave del Producto (SAT): No Existe en el Catalogo
+        document.getElementById('productTaxObject').value = '02'; // Objeto del Impuesto: Si Objeto de Impuesto
+        document.getElementById('productTax').value = '002'; // Impuesto: IVA
     }
+
+    // Formatear al salir del campo
+    priceInput.addEventListener('blur', () => {
+        priceInput.value = formatPrice(priceInput.value);
+    });
+    discountInput.addEventListener('blur', () => {
+        discountInput.value = formatDiscount(discountInput.value);
+    });
+
+    // Des-formatear al entrar al campo para facilitar la edición
+    priceInput.addEventListener('focus', () => {
+        priceInput.value = unformatValue(priceInput.value);
+    });
+    discountInput.addEventListener('focus', () => {
+        discountInput.value = unformatValue(discountInput.value);
+    });
+
+    // Antes de enviar el formulario, limpiar el formato para enviar solo números
+    productForm.addEventListener('submit', () => {
+        priceInput.value = unformatValue(priceInput.value);
+        discountInput.value = unformatValue(discountInput.value);
+    });
 
     // Listener para la previsualización de la imagen
     if (photoUploadInput) {

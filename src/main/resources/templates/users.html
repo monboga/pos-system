@@ -109,7 +109,25 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Usuarios Registrados</h5>
                     <div class="d-flex gap-2">
-                        <input type="search" class="form-control" placeholder="Buscar usuario...">
+                        <form th:action="@{/users}" method="get" class="d-flex align-items-center gap-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="pageSizeSelect" class="form-label mb-0">Mostrar:</label>
+                                <select id="pageSizeSelect" name="size" class="form-select form-select-sm"
+                                    style="width: auto;" onchange="this.form.submit()">
+                                    <option th:each="sizeOpt : ${#numbers.sequence(5, 20, 5)}" th:value="${sizeOpt}"
+                                        th:text="${sizeOpt}" th:selected="${sizeOpt == selectedSize}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <input type="search" name="searchName" class="form-control"
+                                    placeholder="Nombre o Apellido..." th:value="${searchNameValue}"
+                                    style="width: 250px;">
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
                         <button class="btn btn-outline-success d-flex align-items-center gap-1"><i
                                 class="bi bi-file-earmark-excel"></i><span>Exportar</span></button>
                         <button id="addUserBtn" class="btn btn-primary d-flex align-items-center gap-1"
@@ -118,7 +136,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div th:if="${!#lists.isEmpty(users)}" class="table-responsive">
+                    <div th:if="${!usersPage.empty}" class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
@@ -132,7 +150,7 @@
                                 </tr>
                             </thead>
                             <tbody id="users-table-body">
-                                <tr th:each="user : ${users}" th:data-id="${user.id}"
+                                <tr th:each="user : ${usersPage.content}" th:data-id="${user.id}"
                                     th:data-first-name="${user.firstName}" th:data-last-name="${user.lastName}"
                                     th:data-email="${user.email}" th:data-phone-number="${user.phoneNumber}"
                                     th:data-role-id="${!user.roles.isEmpty() ? user.roles.iterator().next().id : ''}"
@@ -166,10 +184,55 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div th:if="${usersPage.totalPages > 1}"
+                            class="d-flex justify-content-between align-items-center mt-3">
+
+                            <div class="text-muted">
+                                Mostrando
+                                <strong th:text="${usersPage.number * usersPage.size + 1}"></strong>
+                                a
+                                <strong
+                                    th:text="${usersPage.number * usersPage.size + usersPage.numberOfElements}"></strong>
+                                de
+                                <strong th:text="${usersPage.totalElements}"></strong>
+                                registros
+                            </div>
+
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination mb-0">
+                                    <li class="page-item" th:classappend="${usersPage.first} ? 'disabled'">
+                                        <a class="page-link"
+                                            th:href="@{/users(page=${usersPage.number - 1}, size=${selectedSize}, searchName=${searchNameValue})}">
+                                            Anterior
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item"
+                                        th:each="pageNumber : ${#numbers.sequence(0, usersPage.totalPages - 1)}"
+                                        th:classappend="${pageNumber == usersPage.number} ? 'active'">
+                                        <a class="page-link"
+                                            th:href="@{/users(page=${pageNumber}, size=${selectedSize}, searchName=${searchNameValue})}"
+                                            th:text="${pageNumber + 1}">
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item" th:classappend="${usersPage.last} ? 'disabled'">
+                                        <a class="page-link"
+                                            th:href="@{/users(page=${usersPage.number + 1}, size=${selectedSize}, searchName=${searchNameValue})}">
+                                            Siguiente
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
 
-                    <div th:if="${#lists.isEmpty(users)}" class="text-center p-4">
-                        <p class="text-muted">No hay registros de Usuarios</p>
+                    <div th:if="${usersPage.empty}" class="text-center p-4">
+                        <p class="text-muted" th:if="${searchNameValue != null && !searchNameValue.isEmpty()}"
+                            th:text="'No se encontraron usuarios con el nombre o apellido: ' + ${searchNameValue}"></p>
+                        <p class="text-muted" th:if="${searchNameValue == null || searchNameValue.isEmpty()}">
+                            No hay registros de Usuarios
+                        </p>
                         <button id="addUserBtnEmpty" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#userModal">
                             <i class="bi bi-plus-circle me-2"></i>Crear el primer usuario

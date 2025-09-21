@@ -143,7 +143,7 @@
                                     <h5 class="fw-bold mb-0" id="profile-full-name"
                                         th:text="${loggedInUser.firstName + ' ' + loggedInUser.lastName}"></h5>
                                     <p class="text-muted mb-0" id="profile-role"
-                                        th:text="${!loggedInUser.roles.isEmpty() ? #strings.replace(loggedInUser.roles.iterator().next().name, 'ROLE_', '') : 'Sin Rol'}">
+                                        th:text="${!loggedInUser.roles.isEmpty() ? loggedInUser.roles.iterator().next().getFriendlyName() : 'Sin Rol'}">
                                     </p>
                                 </div>
                             </div>

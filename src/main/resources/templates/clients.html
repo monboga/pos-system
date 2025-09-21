@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8">
@@ -132,10 +132,12 @@
 
                         <button class="btn btn-outline-success d-flex align-items-center gap-1"><i
                                 class="bi bi-file-earmark-excel"></i><span>Exportar</span></button>
-                        <button id="addClientBtn" class="btn btn-primary d-flex align-items-center gap-1"
-                            data-bs-toggle="modal" data-bs-target="#clientModal">
-                            <i class="bi bi-plus-circle"></i><span>Agregar Cliente</span>
-                        </button>
+                        <div sec:authorize="hasRole('ADMIN')">
+                            <button id="addClientBtn" class="btn btn-primary d-flex align-items-center gap-1"
+                                data-bs-toggle="modal" data-bs-target="#clientModal">
+                                <i class="bi bi-plus-circle"></i><span>Agregar Cliente</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -167,12 +169,14 @@
                                             class="badge rounded-pill status-inactive">Inactivo</span>
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-secondary edit-client-btn"
-                                            data-bs-toggle="modal" data-bs-target="#clientModal">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger"><i
-                                                class="bi bi-trash"></i></button>
+                                        <div sec:authorize="hasRole('ADMIN')">
+                                            <button class="btn btn-sm btn-outline-secondary edit-client-btn"
+                                                data-bs-toggle="modal" data-bs-target="#clientModal">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger"><i
+                                                    class="bi bi-trash"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>

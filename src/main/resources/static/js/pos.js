@@ -21,11 +21,43 @@ document.addEventListener("DOMContentLoaded", function () {
     const categoryCardsContainer = document.getElementById('category-cards-container');
     const clearCategoryFiltersBtn = document.getElementById('clear-category-filters');
     const productSearchInput = document.getElementById('product-search-input'); // Este es el que causaba el error
+    const clientNameDisplay = document.getElementById('client-name-display');
+    const clientRfcDisplay = document.getElementById('client-rfc-display');
+    const clientEmailDisplay = document.getElementById('client-email-display');
 
     const csrfMeta = document.querySelector('meta[name="_csrf"]');
     const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
     const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : null;
     const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : null;
+
+    if (clientSelect) {
+        // 1. Inicializamos Select2
+        $(clientSelect).select2({
+            theme: "bootstrap-5",
+            placeholder: "Seleccionar cliente...",
+            allowClear: true
+        });
+
+        // 2. Usamos el evento 'change' de jQuery, que funciona mejor con Select2
+        $(clientSelect).on('change', function () {
+            const selectedOption = $(this).find('option:selected');
+            const name = selectedOption.data('nombre');
+            const rfc = selectedOption.data('rfc');
+            const correo = selectedOption.data('correo');
+
+            if ($(this).val()) {
+                // Si se selecciona un cliente, poblamos los campos
+                clientNameDisplay.value = name || '';
+                clientRfcDisplay.value = rfc || '';
+                clientEmailDisplay.value = correo || '';
+            } else {
+                // Si se limpia la selección, vaciamos los campos
+                clientNameDisplay.value = '';
+                clientRfcDisplay.value = '';
+                clientEmailDisplay.value = '';
+            }
+        });
+    }
 
     if (confirmSaleBtn) {
         confirmSaleBtn.addEventListener('click', function () {

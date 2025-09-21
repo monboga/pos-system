@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Punto de Venta - POS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/pos.css}">
@@ -114,8 +117,26 @@
                 <select class="form-select" id="client-select">
                     <option value="">Seleccionar cliente...</option>
                     <option th:each="client : ${clients}" th:value="${client.rfc}"
-                        th:text="${client.rfc + ' - ' + client.nombre}"></option>
+                        th:text="${client.rfc + ' - ' + client.nombre}" th:data-nombre="${client.nombre}"
+                        th:data-rfc="${client.rfc}" th:data-correo="${client.correo}"> </option>
                 </select>
+                <div class="row g-2 mt-2">
+                    <div class="col-md-5">
+                        <label for="client-name-display" class="form-label small">Nombre</label>
+                        <input type="text" id="client-name-display" class="form-control"
+                            placeholder="Nombre del cliente" disabled>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="client-rfc-display" class="form-label small">RFC</label>
+                        <input type="text" id="client-rfc-display" class="form-control" placeholder="RFC del cliente"
+                            disabled>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="client-email-display" class="form-label small">Correo Electrónico</label>
+                        <input type="email" id="client-email-display" class="form-control"
+                            placeholder="Correo del cliente" disabled>
+                    </div>
+                </div>
             </div>
 
             <div class="pos-section">
@@ -124,15 +145,15 @@
                     <button id="clear-category-filters" class="btn btn-sm btn-outline-danger">Eliminar filtros</button>
                 </div>
                 <div class="row g-3" id="category-cards-container">
-                    <div class="col">
-                        <a href="#" class="card category-card text-center p-3 text-decoration-none active"
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <a href="#" class="card category-card text-center p-3 text-decoration-none active h-100"
                             data-category-name="all">
                             <i class="bi bi-grid-fill fs-4"></i>
                             <div>Todas</div>
                         </a>
                     </div>
-                    <div class="col" th:each="category : ${categories}">
-                        <a href="#" class="card category-card text-center p-3 text-decoration-none"
+                    <div class="col-6 col-md-4 col-lg-3" th:each="category : ${categories}">
+                        <a href="#" class="card category-card text-center p-3 text-decoration-none h-100"
                             th:data-category-name="${category.descripcion}">
                             <i class="bi bi-tag-fill fs-4"></i>
                             <div th:text="${category.descripcion}"></div>
@@ -250,7 +271,8 @@
             </div>
         </div>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/js/dashboard.js}"></script>
     <script th:src="@{/js/pos.js}"></script>

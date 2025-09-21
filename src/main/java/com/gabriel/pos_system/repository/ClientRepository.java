@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.NonNull;
 
 import com.gabriel.pos_system.model.Client;
 
@@ -18,5 +19,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     @Query("SELECT c FROM Client c WHERE LOWER(c.nombre) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(c.rfc) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Client> findBySearchTerm(String searchTerm, Pageable pageable);
 
-    Page<Client> findAll(Pageable pageable);
+    @Override
+    @NonNull
+    Page<Client> findAll(@NonNull Pageable pageable);
 }

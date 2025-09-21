@@ -490,3 +490,75 @@ body {
     border-color: var(--bs-border-color);
     color: var(--bs-body-color);
 }
+
+.welcome-panel {
+    background-color: #f3e5f5;
+    color: #4A148C;
+    padding: 2rem;
+    border-radius: 1rem;
+    position: relative;
+    /* IMPORTANTE: Quitamos 'overflow: hidden' para permitir que la imagen sobresalga */
+}
+
+/* 1. Hacemos el texto de bienvenida más grande y llamativo */
+.welcome-panel h2 {
+    font-size: 2.25rem;
+    /* Aumentamos el tamaño de la fuente */
+    font-weight: 700;
+    /* Hacemos la fuente más gruesa (bold) */
+}
+
+.welcome-panel .welcome-illustration {
+    position: relative;
+    height: 140px;
+    /* Damos una altura fija al contenedor para controlar la imagen */
+}
+
+/* 2. Aumentamos el tamaño de la imagen y la posicionamos para que sobresalga */
+.welcome-panel .welcome-img {
+    position: absolute;
+    right: 2.5rem;
+    /* La separamos un poco más del borde */
+
+    /* Hacemos que la imagen sobresalga aún más por abajo */
+    bottom: -40px;
+
+    /* Aumentamos significativamente la altura de la imagen */
+    height: 160%;
+
+    width: auto;
+    filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.15));
+}
+
+/* --- Estilos para el tema oscuro (sin cambios) --- */
+[data-bs-theme="dark"] .welcome-panel {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid var(--bs-border-color);
+}
+
+/* --- Media query para móviles (ajustada) --- */
+@media (max-width: 768px) {
+    .welcome-panel {
+        text-align: center;
+        padding-bottom: 0;
+        /* Quitamos el padding inferior para que la imagen se pegue */
+    }
+
+    .welcome-panel .welcome-illustration {
+        height: auto;
+        /* Dejamos que la altura sea automática en móviles */
+        margin-top: 1rem;
+    }
+
+    .welcome-panel .welcome-img {
+        position: static;
+        /* La imagen vuelve al flujo normal del documento */
+        max-width: 60%;
+        margin: 0 auto;
+        /* La centramos */
+        bottom: 0;
+        /* Reseteamos la posición */
+        height: auto;
+    }
+}

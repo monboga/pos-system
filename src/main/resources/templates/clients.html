@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8">
@@ -35,9 +35,15 @@
                             class="bi bi-chevron-down arrow ms-auto"></i></a>
                     <ul id="admin-submenu" class="collapse list-unstyled sidebar-dropdown show"
                         data-bs-parent="#sidebar-nav">
-                        <li><a th:href="@{/users}" class="sidebar-link">Usuarios</a></li>
-                        <li><a th:href="@{/business}" class="sidebar-link">Negocio</a></li>
-                        <li><a th:href="@{/clients}" class="sidebar-link active">Clientes</a></li>
+                        <li sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{/users}" class="sidebar-link">Usuarios</a>
+                        </li>
+                        <li sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{/business}" class="sidebar-link">Negocio</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/clients}" class="sidebar-link active">Clientes</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="sidebar-item"><a href="#inventory-submenu" data-bs-toggle="collapse"
@@ -132,10 +138,12 @@
 
                         <button class="btn btn-outline-success d-flex align-items-center gap-1"><i
                                 class="bi bi-file-earmark-excel"></i><span>Exportar</span></button>
-                        <button id="addClientBtn" class="btn btn-primary d-flex align-items-center gap-1"
-                            data-bs-toggle="modal" data-bs-target="#clientModal">
-                            <i class="bi bi-plus-circle"></i><span>Agregar Cliente</span>
-                        </button>
+                        <div sec:authorize="hasRole('ADMIN')">
+                            <button id="addClientBtn" class="btn btn-primary d-flex align-items-center gap-1"
+                                data-bs-toggle="modal" data-bs-target="#clientModal">
+                                <i class="bi bi-plus-circle"></i><span>Agregar Cliente</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -148,7 +156,7 @@
                                     <th>Correo</th>
                                     <th>Régimen Fiscal</th>
                                     <th>Estado</th>
-                                    <th>Acciones</th>
+                                    <th sec:authorize="hasRole('ADMIN')">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="clients-table-body">
@@ -166,7 +174,7 @@
                                         <span th:unless="${client.activo == 1}"
                                             class="badge rounded-pill status-inactive">Inactivo</span>
                                     </td>
-                                    <td>
+                                    <td sec:authorize="hasRole('ADMIN')">
                                         <button class="btn btn-sm btn-outline-secondary edit-client-btn"
                                             data-bs-toggle="modal" data-bs-target="#clientModal">
                                             <i class="bi bi-pencil"></i>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8">
@@ -35,9 +35,15 @@
                             class="bi bi-chevron-down arrow ms-auto"></i></a>
                     <ul id="admin-submenu" class="collapse list-unstyled sidebar-dropdown"
                         data-bs-parent="#sidebar-nav">
-                        <li><a th:href="@{/users}" class="sidebar-link">Usuarios</a></li>
-                        <li><a th:href="@{/business}" class="sidebar-link">Negocio</a></li>
-                        <li><a th:href="@{/clients}" class="sidebar-link">Clientes</a></li>
+                        <li sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{/users}" class="sidebar-link">Usuarios</a>
+                        </li>
+                        <li sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{/business}" class="sidebar-link">Negocio</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/clients}" class="sidebar-link">Clientes</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="sidebar-item">
@@ -136,10 +142,12 @@
 
                         <button class="btn btn-outline-success d-flex align-items-center gap-1"><i
                                 class="bi bi-file-earmark-excel"></i><span>Exportar</span></button>
-                        <button id="addProductBtn" class="btn btn-primary d-flex align-items-center gap-1"
-                            data-bs-toggle="modal" data-bs-target="#productModal">
-                            <i class="bi bi-plus-circle"></i><span>Agregar Producto</span>
-                        </button>
+                        <div sec:authorize="hasRole('ADMIN')">
+                            <button id="addProductBtn" class="btn btn-primary d-flex align-items-center gap-1"
+                                data-bs-toggle="modal" data-bs-target="#productModal">
+                                <i class="bi bi-plus-circle"></i><span>Agregar Producto</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -155,7 +163,7 @@
                                     <th>Stock</th>
                                     <th>Precio Unitario</th>
                                     <th>Estado</th>
-                                    <th>Acciones</th>
+                                    <th sec:authorize="hasRole('ADMIN')">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="products-table-body">
@@ -192,7 +200,7 @@
                                         <span th:unless="${product.estado == 1}"
                                             class="badge rounded-pill status-inactive">Inactivo</span>
                                     </td>
-                                    <td>
+                                    <td sec:authorize="hasRole('ADMIN')">
                                         <button class="btn btn-sm btn-outline-secondary edit-product-btn"
                                             data-bs-toggle="modal" data-bs-target="#productModal"><i
                                                 class="bi bi-pencil"></i></button>
@@ -240,10 +248,12 @@
                             th:text="'No se encontraron productos con la descripción: ' + ${searchTermValue}"></p>
                         <p class="text-muted" th:if="${searchTermValue == null || searchTermValue.isEmpty()}">No hay
                             registros de Productos</p>
-                        <button id="addProductBtnEmpty" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#productModal">
-                            <i class="bi bi-plus-circle me-2"></i>Crear el primer producto
-                        </button>
+                        <div sec:authorize="hasRole('ADMIN')">
+                            <button id="addProductBtnEmpty" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#productModal">
+                                <i class="bi bi-plus-circle me-2"></i>Crear el primer producto
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

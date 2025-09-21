@@ -18,11 +18,15 @@ public class Role {
     @Column(nullable = false, unique = true, length = 50)
     private String name;
 
+    @Column(nullable = false, length = 50)
+    private String friendlyName;
+
     public Role() {
     }
 
-    public Role(String name) {
+    public Role(String name, String friendlyName) {
         this.name = name;
+        this.friendlyName = friendlyName;
     }
 
     public Long getId() {
@@ -39,6 +43,14 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFriendlyName() {
+        return friendlyName;
+    }
+
+    public void setFriendlyName(String friendlyName) {
+        this.friendlyName = friendlyName;
     }
 
 }

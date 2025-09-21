@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8">
@@ -40,9 +40,15 @@
                     aria-expanded="false"><i class="bi bi-people sidebar-icon"></i><span>Administración</span><i
                         class="bi bi-chevron-down arrow ms-auto"></i></a>
                 <ul id="admin-submenu" class="collapse list-unstyled sidebar-dropdown" data-bs-parent="#sidebar-nav">
-                    <li><a th:href="@{/users}" class="sidebar-link">Usuarios</a></li>
-                    <li><a th:href="@{/business}" class="sidebar-link">Negocio</a></li>
-                    <li><a th:href="@{/clients}" class="sidebar-link">Clientes</a></li>
+                    <li sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/users}" class="sidebar-link">Usuarios</a>
+                    </li>
+                    <li sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/business}" class="sidebar-link">Negocio</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/clients}" class="sidebar-link">Clientes</a>
+                    </li>
                 </ul>
             </li>
             <li class="sidebar-item"><a href="#inventory-submenu" data-bs-toggle="collapse"

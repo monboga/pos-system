@@ -149,25 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
         newToastEl.addEventListener('hidden.bs.toast', () => newToastEl.remove());
     }
 
-    // Listener para el botón "Confirmar Venta"
-    if (saveAsTicketBtn) {
-        saveAsTicketBtn.addEventListener('click', function () {
-            if (!csrfToken || !csrfHeader) { showErrorToast('Error de seguridad. No se pudo procesar la venta.'); return; }
-            if (confirmSaleModal) confirmSaleModal.hide();
-            const saleData = { clientRfc: clientSelect.value, items: Object.keys(cart).map(productId => ({ id: parseInt(productId), quantity: cart[productId].quantity })) };
-            fetch('/pos/create-sale', { method: 'POST', headers: { 'Content-Type': 'application/json', [csrfHeader]: csrfToken }, body: JSON.stringify(saleData) })
-                .then(response => response.json().then(data => ({ ok: response.ok, data })))
-                .then(({ ok, data }) => {
-                    if (!ok) { throw new Error(data.message || 'Ocurrió un error desconocido.'); }
-                    saleSuccessMessage.textContent = `${data.message} Número de venta: ${data.saleNumber}`;
-                    if (saleSuccessModal) saleSuccessModal.show();
-                    cart = {};
-                    renderCart();
-                })
-                .catch(error => { showErrorToast(error.message); });
-        });
-    }
-
     // --- LÓGICA DEL CARRITO ---
     function renderCart() {
         invoiceItemsContainer.innerHTML = '';

@@ -193,59 +193,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/js/dashboard.js}"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // --- Gráfica de Barras: Ventas de los últimos 7 días ---
-            const salesCtx = document.getElementById('salesChart').getContext('2d');
-            const salesChart = new Chart(salesCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
-                    datasets: [{
-                        label: 'Ventas ($)',
-                        data: [1200, 1900, 3000, 5000, 2300, 4200, 3500],
-                        backgroundColor: 'rgba(74, 20, 140, 0.6)', // Morado de nuestro tema
-                        borderColor: 'rgba(74, 20, 140, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true }
-                    }
-                }
-            });
-
-            // --- Gráfica de Pastel: Productos más vendidos ---
-            const productsCtx = document.getElementById('productsChart').getContext('2d');
-            const productsChart = new Chart(productsCtx, {
-                type: 'doughnut', // 'pie' o 'doughnut' para pastel
-                data: {
-                    labels: ['Producto A', 'Producto B', 'Producto C', 'Producto D'],
-                    datasets: [{
-                        label: 'Cantidad Vendida',
-                        data: [300, 150, 100, 50],
-                        backgroundColor: [
-                            'rgba(74, 20, 140, 0.7)',
-                            'rgba(124, 77, 255, 0.7)',
-                            'rgba(179, 157, 219, 0.7)',
-                            'rgba(237, 231, 246, 0.7)'
-                        ],
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }
-            });
-        });
-    </script>
+    <script th:src="@{/js/dashboard-charts.js}"></script>
 </body>
 
 </html>

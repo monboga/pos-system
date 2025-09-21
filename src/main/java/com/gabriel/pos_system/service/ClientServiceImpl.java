@@ -1,7 +1,8 @@
 package com.gabriel.pos_system.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.pos_system.dto.ClientDto;
@@ -18,11 +19,6 @@ public class ClientServiceImpl implements ClientService {
     public ClientServiceImpl(ClientRepository clientRepository, RegimenFiscalRepository regimenFiscalRepository) {
         this.clientRepository = clientRepository;
         this.regimenFiscalRepository = regimenFiscalRepository;
-    }
-
-    @Override
-    public List<Client> findAllClients() {
-        return clientRepository.findAll();
     }
 
     @Override
@@ -45,6 +41,16 @@ public class ClientServiceImpl implements ClientService {
         client.setRegimenFiscal(regimen);
 
         clientRepository.save(client);
+    }
+
+    @Override
+    public Page<Client> findPaginated(int page, int size, String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return clientRepository.findBySearchTerm(searchTerm.trim(), pageable);
+        } else {
+            return clientRepository.findAll(pageable);
+        }
     }
 
 }

@@ -3,6 +3,7 @@ package com.gabriel.pos_system.controller;
 import java.io.IOException;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gabriel.pos_system.dto.ProductDto;
+import com.gabriel.pos_system.model.Product;
 import com.gabriel.pos_system.repository.CategoryRepository;
 import com.gabriel.pos_system.repository.ClaveProdServSatRepository;
 import com.gabriel.pos_system.repository.ImpuestoSatRepository;
@@ -48,13 +50,28 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public String showProductsPage(Model model) {
-        // Cargar la lista de productos para la tabla
-        model.addAttribute("products", productService.findAllProducts());
-        // Preparar un DTO vacío para el formulario de "Agregar"
-        model.addAttribute("productDto", new ProductDto());
+    public String showProductsPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String searchTerm,
+            Model model) {
 
-        // Cargar todas las listas de catálogos para los dropdowns del modal
+        // 1. Cargar la lista paginada de productos para la tabla
+        Page<Product> productsPage = productService.findPaginated(page, size, searchTerm);
+        model.addAttribute("productsPage", productsPage);
+
+        // 2. Devolver los parámetros para mantener el estado de los filtros
+        model.addAttribute("selectedSize", size);
+        model.addAttribute("searchTermValue", searchTerm);
+
+        // 3. Preparar DTO para el formulario de "Agregar" si no viene de una
+        // redirección con error
+        if (!model.containsAttribute("productDto")) {
+            model.addAttribute("productDto", new ProductDto());
+        }
+
+        // 4. Cargar todas las listas de catálogos para los dropdowns del modal (esto no
+        // cambia)
         model.addAttribute("allCategories", categoryRepository.findAll());
         model.addAttribute("allMedidasLocal", medidaLocalRepository.findAll());
         model.addAttribute("allMedidasSat", medidaSatRepository.findAll());

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let activePopover = null;
 
-    // --- LÓGICA DE PERSISTENCIA DE ESTADO (CON LA CORRECCIÓN) ---
+    // --- LÓGICA DE PERSISTENCIA DE ESTADO ---
     function applyInitialSidebarState() {
         const savedState = localStorage.getItem('sidebarState');
         if (savedState === 'collapsed') {

@@ -113,13 +113,13 @@ public class PosSystemApplication {
 			}
 			if (medidaSatRepo.count() == 0) {
 				medidaSatRepo.saveAll(Arrays.asList(
-						new MedidaSat("Múltiplos / Fracciones / Decimales", "H87", "Pieza"),
-						new MedidaSat("Unidades de venta", "EA", "Elemento"),
-						new MedidaSat("Unidades específicas de la industria (varias)", "E48", "Unidad de Servicio"),
-						new MedidaSat("Mecánica", "KGM", "Kilogramo"),
-						new MedidaSat("Diversos", "A9", "Tarifa"),
-						new MedidaSat("Tiempo y Espacio", "MTR", "Metro"),
-						new MedidaSat("Unidades de empaque", "XUN", "Unidad")
+						new MedidaSat("H87", "Múltiplos / Fracciones / Decimales", "Pieza"),
+						new MedidaSat("EA", "Unidades de venta", "Elemento"),
+						new MedidaSat("E48", "Unidades específicas de la industria (varias)", "Unidad de Servicio"),
+						new MedidaSat("KGM", "Mecánica", "Kilogramo"),
+						new MedidaSat("A9", "Diversos", "Tarifa"),
+						new MedidaSat("MTR", "Tiempo y Espacio", "Metro"),
+						new MedidaSat("XUN", "Unidades de empaque", "Unidad")
 				// ... Agrega más si es necesario
 				));
 			}

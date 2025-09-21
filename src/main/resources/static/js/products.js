@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Establecer valores por defecto para el modo "Agregar"
         document.getElementById('productUnit').value = 'PZA'; // Unidad de Medida (Empresa): Pieza
-        document.getElementById('productUnitSat').value = 'Unidades de venta';  // Unidad de Medida (SAT): Unidades de Venta
+        document.getElementById('productUnitSat').value = 'EA';  // Unidad de Medida (SAT): Unidades de Venta
         document.getElementById('productKeySat').value = '01010101'; // Clave del Producto (SAT): No Existe en el Catalogo
         document.getElementById('productTaxObject').value = '02'; // Objeto del Impuesto: Si Objeto de Impuesto
         document.getElementById('productTax').value = '002'; // Impuesto: IVA

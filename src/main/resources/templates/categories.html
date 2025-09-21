@@ -111,17 +111,38 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Categorías Registradas</h5>
-                    <div class="d-flex gap-2">
-                        <input type="search" class="form-control" placeholder="Buscar categoría...">
+                    <div class="d-flex align-items-center gap-2">
+                        <form th:action="@{/categories}" method="get" class="d-flex align-items-center gap-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="pageSizeSelect" class="form-label mb-0 text-nowrap">Mostrar:</label>
+                                <select id="pageSizeSelect" name="size" class="form-select form-select-sm"
+                                    style="width: auto;" onchange="this.form.submit()">
+                                    <option th:each="sizeOpt : ${#numbers.sequence(5, 20, 5)}" th:value="${sizeOpt}"
+                                        th:text="${sizeOpt}" th:selected="${sizeOpt == selectedSize}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <input type="search" name="searchTerm" class="form-control"
+                                    placeholder="Buscar por descripción..." th:value="${searchTermValue}"
+                                    style="width: 250px;">
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+
                         <button class="btn btn-outline-success d-flex align-items-center gap-1"><i
                                 class="bi bi-file-earmark-excel"></i><span>Exportar</span></button>
                         <button id="addCategoryBtn" class="btn btn-primary d-flex align-items-center gap-1"
-                            data-bs-toggle="modal" data-bs-target="#categoryModal"><i
-                                class="bi bi-plus-circle"></i><span>Agregar Categoría</span></button>
+                            data-bs-toggle="modal" data-bs-target="#categoryModal">
+                            <i class="bi bi-plus-circle"></i><span>Agregar Categoría</span>
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div th:if="${!#lists.isEmpty(categories)}" class="table-responsive">
+                    <div th:if="${!categoriesPage.empty}" class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
@@ -131,7 +152,7 @@
                                 </tr>
                             </thead>
                             <tbody id="categories-table-body">
-                                <tr th:each="category : ${categories}" th:data-id="${category.id}"
+                                <tr th:each="category : ${categoriesPage.content}" th:data-id="${category.id}"
                                     th:data-descripcion="${category.descripcion}" th:data-estado="${category.estado}">
                                     <td th:text="${category.descripcion}"></td>
                                     <td>
@@ -142,17 +163,53 @@
                                     </td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-secondary edit-category-btn"
-                                            data-bs-toggle="modal" data-bs-target="#categoryModal"><i
-                                                class="bi bi-pencil"></i></button>
+                                            data-bs-toggle="modal" data-bs-target="#categoryModal">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
                                         <button class="btn btn-sm btn-outline-danger"><i
                                                 class="bi bi-trash"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                        <div th:if="${categoriesPage.totalPages > 1}"
+                            class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="text-muted">
+                                Mostrando
+                                <strong th:text="${categoriesPage.number * categoriesPage.size + 1}"></strong>
+                                a
+                                <strong
+                                    th:text="${categoriesPage.number * categoriesPage.size + categoriesPage.numberOfElements}"></strong>
+                                de
+                                <strong th:text="${categoriesPage.totalElements}"></strong>
+                                registros
+                            </div>
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination mb-0">
+                                    <li class="page-item" th:classappend="${categoriesPage.first} ? 'disabled'">
+                                        <a class="page-link"
+                                            th:href="@{/categories(page=${categoriesPage.number - 1}, size=${selectedSize}, searchTerm=${searchTermValue})}">Anterior</a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:each="pageNumber : ${#numbers.sequence(0, categoriesPage.totalPages - 1)}"
+                                        th:classappend="${pageNumber == categoriesPage.number} ? 'active'">
+                                        <a class="page-link"
+                                            th:href="@{/categories(page=${pageNumber}, size=${selectedSize}, searchTerm=${searchTermValue})}"
+                                            th:text="${pageNumber + 1}"></a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${categoriesPage.last} ? 'disabled'">
+                                        <a class="page-link"
+                                            th:href="@{/categories(page=${categoriesPage.number + 1}, size=${selectedSize}, searchTerm=${searchTermValue})}">Siguiente</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
-                    <div th:if="${#lists.isEmpty(categories)}" class="text-center p-4">
-                        <p class="text-muted">No hay registros de Categorías</p>
+                    <div th:if="${categoriesPage.empty}" class="text-center p-4">
+                        <p class="text-muted" th:if="${searchTermValue != null && !searchTermValue.isEmpty()}"
+                            th:text="'No se encontraron categorías con la descripción: ' + ${searchTermValue}"></p>
+                        <p class="text-muted" th:if="${searchTermValue == null || searchTermValue.isEmpty()}">No hay
+                            registros de Categorías</p>
                         <button id="addCategoryBtnEmpty" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#categoryModal">
                             <i class="bi bi-plus-circle me-2"></i>Crear la primera categoría

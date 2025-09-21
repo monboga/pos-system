@@ -3,6 +3,7 @@ package com.gabriel.pos_system.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gabriel.pos_system.dto.UserDto;
@@ -14,6 +15,8 @@ public interface UserService {
     User findUserByEmail(String email);
 
     List<User> findAllUsers();
+
+    Page<User> findPaginated(int page, int size, String searchName);
 
     void updatePassword(User user, String newPassword);
 

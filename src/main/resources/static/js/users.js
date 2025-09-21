@@ -55,9 +55,23 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function setupAddModal() {
         userModalLabel.textContent = 'Agregar Nuevo Usuario';
+        userForm.reset(); // Limpia el formulario
+        document.getElementById('userId').value = '';
         passwordFieldGroup.style.display = 'block';
         passwordInput.required = true;
         updateInitialsPreview(); // Llama para mostrar iniciales vacías o basadas en texto residual
+        const userRoleSelect = document.getElementById('userRole');
+        if (userRoleSelect) {
+            // Itera sobre las opciones del select
+            for (let i = 0; i < userRoleSelect.options.length; i++) {
+                const option = userRoleSelect.options[i];
+                // Si el texto de la opción es 'USER', la selecciona
+                if (option.text.toUpperCase() === 'USER') {
+                    userRoleSelect.value = option.value;
+                    break; // Termina el bucle una vez encontrado
+                }
+            }
+        }
     }
 
     /**

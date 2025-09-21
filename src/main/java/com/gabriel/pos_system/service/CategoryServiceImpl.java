@@ -2,6 +2,9 @@ package com.gabriel.pos_system.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.pos_system.dto.CategoryDto;
@@ -16,10 +19,10 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    @Override
-    public List<Category> findAllCategories() {
-        return categoryRepository.findAll();
-    }
+    // @Override
+    // public List<Category> findAllCategories() {
+    // return categoryRepository.findAll();
+    // }
 
     @Override
     public void saveCategory(CategoryDto dto) {
@@ -37,5 +40,15 @@ public class CategoryServiceImpl implements CategoryService {
         category.setEstado(dto.getEstado());
 
         categoryRepository.save(category);
+    }
+
+    @Override
+    public Page<Category> findPaginated(int page, int size, String searchTerm) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return categoryRepository.findBySearchTerm(searchTerm.trim(), pageable);
+        } else {
+            return categoryRepository.findAll(pageable);
+        }
     }
 }

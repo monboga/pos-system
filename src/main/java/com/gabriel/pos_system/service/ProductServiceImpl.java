@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,10 +55,10 @@ public class ProductServiceImpl implements ProductService {
                 this.impuestoSatRepository = impuestoSatRepository;
         }
 
-        @Override
-        public List<Product> findAllProducts() {
-                return productRepository.findAll();
-        }
+        // @Override
+        // public List<Product> findAllProducts() {
+        // return productRepository.findAll();
+        // }
 
         @Override
         public void saveProduct(ProductDto dto, MultipartFile file) throws IOException {
@@ -122,5 +125,15 @@ public class ProductServiceImpl implements ProductService {
                 }
 
                 productRepository.save(product);
+        }
+
+        @Override
+        public Page<Product> findPaginated(int page, int size, String searchTerm) {
+                Pageable pageable = PageRequest.of(page, size);
+                if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                        return productRepository.findBySearchTerm(searchTerm.trim(), pageable);
+                } else {
+                        return productRepository.findAll(pageable);
+                }
         }
 }

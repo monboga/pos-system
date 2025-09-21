@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -126,5 +129,17 @@ public class UserServiceImpl implements UserService {
         // Encriptamos la nueva contraseña antes de guardarla
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    @Override
+    public Page<User> findPaginated(int page, int size, String searchName) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (searchName != null && !searchName.trim().isEmpty()) {
+            // Si hay un término de búsqueda, llamamos al método de búsqueda del repositorio
+            return userRepository.findBySearchTerm(searchName, pageable);
+        } else {
+            // Si no, devolvemos todos los usuarios paginados
+            return userRepository.findAll(pageable);
+        }
     }
 }

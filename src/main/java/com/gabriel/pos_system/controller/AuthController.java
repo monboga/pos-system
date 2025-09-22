@@ -18,16 +18,21 @@ import com.gabriel.pos_system.service.UserService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-public class ForgotPasswordController {
+public class AuthController {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final UserService userService;
-    private static final Logger logger = LoggerFactory.getLogger(ForgotPasswordController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    public ForgotPasswordController(EmailService emailService, UserRepository userRepository, UserService userService) {
+    public AuthController(EmailService emailService, UserRepository userRepository, UserService userService) {
         this.emailService = emailService;
         this.userRepository = userRepository;
         this.userService = userService;
+    }
+
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "login";
     }
 
     // Muestra el formulario inicial para ingresar el correo
@@ -109,6 +114,7 @@ public class ForgotPasswordController {
         if (session.getAttribute("otpVerified") == null || !(Boolean) session.getAttribute("otpVerified")) {
             return "redirect:/forgot-password";
         }
+
         return "reset-password";
     }
 
@@ -140,4 +146,5 @@ public class ForgotPasswordController {
                 "Tu contraseña ha sido actualizada exitosamente. Por favor, inicia sesión.");
         return "redirect:/login";
     }
+
 }

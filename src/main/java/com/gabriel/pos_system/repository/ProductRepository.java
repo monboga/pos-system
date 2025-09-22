@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.gabriel.pos_system.model.Product;
@@ -30,5 +31,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE LOWER(p.descripcion) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Product> findBySearchTerm(String searchTerm, Pageable pageable);
 
-    Page<Product> findAll(Pageable pageable);
+    @Override
+    @NonNull
+    Page<Product> findAll(@NonNull Pageable pageable);
 }

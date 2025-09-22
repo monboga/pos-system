@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.gabriel.pos_system.model.User;
@@ -20,5 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Método para devolver todos los usuarios de forma paginada (sobrescribe el de
     // JpaRepository para claridad)
-    Page<User> findAll(Pageable pageable);
+    @Override
+    @NonNull
+    Page<User> findAll(@NonNull Pageable pageable);
 }

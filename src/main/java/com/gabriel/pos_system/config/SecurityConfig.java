@@ -43,23 +43,24 @@ public class SecurityConfig {
         http
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        // Reglas de Acceso Específicas
-                        .requestMatchers("/users/**", "/business/**").hasRole("ADMIN") // Solo ADMINS
-                        .requestMatchers("/pos/**", "/clients/**", "/categories/**", "/products/**")
-                        .hasAnyRole("ADMIN", "USER") // ADMINS y USERS
-
-                        // Rutas Públicas (esto se mantiene igual)
+                        // REGLA #1: Rutas y recursos públicos. Esto debe ir PRIMERO.
                         .requestMatchers("/login", "/forgot-password/**", "/verify-otp/**", "/reset-password/**",
-                                "/business/logo", "/css/**", "/js/**",
-                                "/images/**")
+                                "/business/logo", "/css/**", "/js/**", "/images/**")
                         .permitAll()
 
-                        // Cualquier otra petición requiere autenticación
+                        // REGLA #2: Rutas específicas para ADMIN.
+                        .requestMatchers("/users/**", "/business/**").hasRole("ADMIN")
+
+                        // REGLA #3: Rutas para usuarios autenticados (ADMIN o USER).
+                        .requestMatchers("/pos/**", "/clients/**", "/categories/**", "/products/**")
+                        .hasAnyRole("ADMIN", "USER")
+
+                        // REGLA #4: Cualquier otra petición requiere autenticación.
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/dashboard", true) // Cambiado a /dashboard para una mejor UX
+                        .defaultSuccessUrl("/dashboard", true)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")

@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const endDateInput = document.getElementById('endDate');
     const saleNumberFilter = document.getElementById('saleNumberFilter');
     const saleNumberInput = document.getElementById('saleNumberInput');
+    const printButton = document.getElementById('printSaleBtn');
 
     // Función para manejar la visibilidad y estado de los filtros
     function toggleFilters() {
@@ -41,6 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const saleRow = viewButton.closest('tr');
             const saleId = saleRow.dataset.saleId;
+
+            // 1. Guardamos el ID de la venta en un atributo data-* del botón "Imprimir".
+            if (printButton) {
+                printButton.dataset.saleId = saleId;
+            }
 
             // Hacemos la petición fetch al backend
             fetch(`/sales-history/details/${saleId}`)
@@ -80,6 +86,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.error('Error:', error);
                     alert('Error al cargar los detalles. Por favor, intente de nuevo.');
                 });
+        });
+    }
+
+    if (printButton) {
+        printButton.addEventListener('click', function () {
+            // Leemos el ID que guardamos en el paso 1.
+            const saleIdToPrint = this.dataset.saleId;
+
+            if (saleIdToPrint) {
+                // Si encontramos el ID, abrimos la URL del reporte en una nueva pestaña.
+                window.open(`/sales/ticket/${saleIdToPrint}`, '_blank');
+            } else {
+                // Si no, mostramos el error que estabas viendo.
+                alert('No se pudo encontrar el ID de la venta para imprimir.');
+            }
         });
     }
 });

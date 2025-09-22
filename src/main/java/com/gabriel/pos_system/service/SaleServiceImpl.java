@@ -1,15 +1,25 @@
 package com.gabriel.pos_system.service;
 
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.pos_system.dto.CartItemDto;
 import com.gabriel.pos_system.dto.SaleDto;
+import com.gabriel.pos_system.dto.SaleReportDetailViewDto;
+import com.gabriel.pos_system.dto.SaleReportViewDto;
 import com.gabriel.pos_system.model.Client;
 import com.gabriel.pos_system.model.Product;
 import com.gabriel.pos_system.model.Sale;
@@ -104,5 +114,53 @@ public class SaleServiceImpl implements SaleService {
 
         return saleRepository.save(newSale);
         // --- FIN DE LA REFACTORIZACIÓN ---
+    }
+
+    @Override
+    public Page<SaleReportViewDto> findPaginatedSales(LocalDate startDate, LocalDate endDate, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Sale> salesPage;
+        if (startDate != null && endDate != null) {
+            salesPage = saleRepository.findByFechaRegistroBetween(startDate.atStartOfDay(),
+                    endDate.atTime(LocalTime.MAX), pageable);
+        } else {
+            salesPage = saleRepository.findAllByOrderByIdDesc(pageable);
+        }
+
+        // Mapeamos la Page<Sale> a una Page<SaleReportViewDto>
+        return salesPage.map(this::convertToDto);
+    }
+
+    // Método privado para convertir una entidad Sale a nuestro DTO
+    private SaleReportViewDto convertToDto(Sale sale) {
+        // Usamos Locale.of() como la forma moderna de especificar la localización
+        Locale localeMx = new Locale("es", "MX");
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(localeMx);
+
+        SaleReportViewDto dto = new SaleReportViewDto();
+        dto.setDocumentType(sale.getDocumentType());
+        dto.setClientRfc(sale.getClient().getRfc());
+        dto.setClientName(sale.getClient().getNombre());
+
+        // Formateamos los valores de moneda a String
+        dto.setSubtotal(currencyFormatter.format(sale.getSubtotal()));
+        dto.setIva(currencyFormatter.format(sale.getIva()));
+        dto.setTotal(currencyFormatter.format(sale.getTotal()));
+
+        // Convertimos también los detalles
+        List<SaleReportDetailViewDto> detailDtos = sale.getDetails().stream()
+                .map(detail -> {
+                    SaleReportDetailViewDto detailDto = new SaleReportDetailViewDto();
+                    detailDto.setProductName(detail.getProduct().getDescripcion());
+                    detailDto.setQuantity(detail.getCantidad());
+                    detailDto.setPrice(currencyFormatter.format(detail.getPrecioUnitario()));
+                    detailDto.setTotal(currencyFormatter.format(detail.getTotalProducto()));
+                    return detailDto;
+                }).collect(Collectors.toList());
+
+        dto.setDetails(detailDtos);
+
+        return dto;
     }
 }

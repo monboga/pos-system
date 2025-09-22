@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gabriel.pos_system.model.User;
 import com.gabriel.pos_system.repository.UserRepository;
 import com.gabriel.pos_system.service.EmailService;
 import com.gabriel.pos_system.service.UserService;
@@ -47,18 +48,29 @@ public class AuthController {
             RedirectAttributes redirectAttributes) {
         logger.info("Solicitud de recuperación de contraseña recibida para el correo: {}", email);
 
-        if (userRepository.findByEmail(email).isEmpty()) {
+        // 1. Buscamos al usuario por su correo electrónico.
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        // 2. Si el usuario no existe, devolvemos un error y redirigimos.
+        if (user == null) {
             logger.warn("Intento de recuperación para un correo no existente: {}", email);
             redirectAttributes.addFlashAttribute("error", "No se encontró ninguna cuenta con ese correo electrónico.");
             return "redirect:/forgot-password";
         }
 
+        // 3. Generamos un código OTP aleatorio de 6 dígitos.
         String otp = String.format("%06d", new Random().nextInt(999999));
 
         try {
             logger.info("Enviando OTP {} al correo {}", otp, email);
-            emailService.sendOtpEmail(email, otp);
 
+            // 4. Obtenemos el nombre del usuario para personalizar el correo.
+            String userFullName = user.getFirstName();
+
+            // 5. Llamamos al método del EmailService, ahora pasando el nombre del usuario.
+            emailService.sendOtpEmail(email, otp, userFullName);
+
+            // 6. Guardamos los datos necesarios en la sesión del usuario.
             session.setAttribute("otp", otp);
             session.setAttribute("email", email);
             session.setAttribute("otpTimestamp", LocalDateTime.now());

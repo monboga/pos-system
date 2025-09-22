@@ -1,11 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<body>
-    <p>Hola,</p>
-    <p>Has solicitado restablecer tu contraseña. Usa el siguiente código para continuar:</p>
-    <h2 th:text="${otp}">123456</h2>
-    <p>Si no solicitaste esto, puedes ignorar este correo.</p>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f7fa;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"
+        style="max-width: 600px; border-collapse: collapse; margin-top: 30px; margin-bottom: 30px;">
+        <tr>
+            <td align="center" style="padding: 20px 0 20px 0;">
+                <h1 style="margin: 0; color: #7E57C2; font-size: 28px;" th:text="${businessName}">Nombre del Negocio
+                </h1>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#ffffff"
+                style="padding: 40px 30px 40px 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td style="color: #333333; font-size: 24px; font-weight: bold; text-align: center;">
+                            Recuperación de Contraseña
+                        </td>
+                    </tr>
+                    <tr>
+                        <td
+                            style="padding: 20px 0 30px 0; color: #555555; font-size: 16px; line-height: 1.5; text-align: center;">
+                            Hola <b th:text="${userName}">Usuario</b>,<br><br>
+                            Usa el siguiente código de verificación para continuar. Si no solicitaste esto, puedes
+                            ignorar este correo de forma segura.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <div
+                                style="background-color: #EDE7F6; border-radius: 8px; padding: 20px; font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #5E35B1; display: inline-block;">
+                                <span th:text="${otpCode}">000000</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 30px 0 0 0; color: #777777; font-size: 14px; text-align: center;">
+                            Este código expirará en 10 minutos.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px 30px 20px 30px; text-align: center; color: #888888; font-size: 12px;">
+                &copy; [[${#dates.year(#dates.createNow())}]] <span th:text="${businessName}">Tu Negocio</span>. Todos
+                los derechos reservados.
+            </td>
+        </tr>
+    </table>
 </body>
 
 </html>

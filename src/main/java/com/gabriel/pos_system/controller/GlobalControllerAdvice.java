@@ -31,10 +31,11 @@ public class GlobalControllerAdvice {
         return null; // O un objeto de usuario anónimo si lo prefieres
     }
 
-    // Ahora solo devuelve 'true' o 'false', no la imagen completa.
     @ModelAttribute("businessLogoExists")
-    public boolean businessLogoExists() {
+    public boolean addBusinessLogoExistsAttribute() {
         Business business = businessService.getBusinessData();
-        return business != null && business.getLogo() != null;
+        // Devuelve true si el objeto de negocio no es nulo Y el string del logo no es
+        // nulo ni está vacío.
+        return business != null && business.getLogo() != null && !business.getLogo().isEmpty();
     }
 }

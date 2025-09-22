@@ -3,6 +3,8 @@ package com.gabriel.pos_system.controller;
 import java.io.IOException;
 import java.util.Base64;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -50,22 +52,35 @@ public class BusinessController {
     }
 
     @GetMapping("/business/logo")
-    public ResponseEntity<byte[]> getBusinessLogo() {
-        // 1. Obtenemos los datos del negocio.
+    public ResponseEntity<byte[]> getLogo() {
+        // 1. Obtenemos los datos del negocio
         Business business = businessService.getBusinessData();
 
-        // 2. Verificamos si existe un logo y si es una cadena Base64 válida.
-        if (business != null && business.getLogo() != null && business.getLogo().startsWith("data:image")) {
-            // 3. Separamos el contenido Base64 del prefijo.
-            String base64Image = business.getLogo().split(",")[1];
-            // 4. Decodificamos el texto a su arreglo de bytes original.
-            byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+        // 2. Verificamos si existe un negocio y si tiene un logo
+        if (business != null && business.getLogo() != null && !business.getLogo().isEmpty()) {
 
-            // 5. Devolvemos los bytes de la imagen con el tipo de contenido correcto.
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(imageBytes);
+            // 3. Tu logo está guardado como un Data URI ("data:image/png;base64,...")
+            // Necesitamos separar el prefijo de los datos Base64.
+            String[] parts = business.getLogo().split(",");
+            String imageTypePart = parts[0]; // "data:image/png;base64"
+            String base64Data = parts[1];
+
+            // Extraemos el tipo de contenido (ej. "image/png")
+            String contentType = imageTypePart.split(":")[1].split(";")[0];
+
+            // 4. Decodificamos el String Base64 a un array de bytes
+            byte[] logoBytes = Base64.getDecoder().decode(base64Data);
+
+            // 5. Preparamos las cabeceras de la respuesta HTTP
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(contentType));
+            headers.setContentLength(logoBytes.length);
+
+            // 6. Devolvemos la imagen con una respuesta 200 OK
+            return new ResponseEntity<>(logoBytes, headers, HttpStatus.OK);
+        } else {
+            // 7. Si no hay logo, devolvemos una respuesta 404 Not Found
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        // 6. Si no hay logo, devolvemos un error 404.
-        return ResponseEntity.notFound().build();
     }
 }

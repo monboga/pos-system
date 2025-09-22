@@ -1,8 +1,10 @@
 :root {
-    --primary-color: #4A148C;
-    /* Morado que hemos usado */
-    --primary-color-hover: #310e5f;
+    --primary-color: #7E57C2;
+    /* Tono lavanda principal */
+    --primary-color-hover: #5E35B1;
+    /* Un tono más oscuro para el efecto hover */
 }
+
 
 body {
     background-color: #f8f9fe;

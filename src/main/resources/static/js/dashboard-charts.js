@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         datasets: [{
                             label: 'Ventas ($)',
                             data: data.data,
-                            backgroundColor: 'rgba(74, 20, 140, 0.6)',
-                            borderColor: 'rgba(74, 20, 140, 1)',
+                            backgroundColor: 'rgba(126, 87, 194, 0.6)', // Tono lavanda con transparencia
+                            borderColor: 'rgba(126, 87, 194, 1)',
                             borderWidth: 1
                         }]
                     },
@@ -47,11 +47,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             label: 'Cantidad Vendida',
                             data: data.data,
                             backgroundColor: [
-                                'rgba(74, 20, 140, 0.8)',
-                                'rgba(124, 77, 255, 0.8)',
-                                'rgba(179, 157, 219, 0.8)',
-                                'rgba(237, 231, 246, 0.9)',
-                                'rgba(94, 53, 177, 0.8)'
+                                'rgba(126, 87, 194, 0.8)', // Lavanda Principal (#7E57C2)
+                                'rgba(94, 53, 177, 0.8)',  // Púrpura Oscuro (#5E35B1)
+                                'rgba(179, 157, 219, 0.8)',// Lavanda Claro (#B39DDB)
+                                'rgba(237, 231, 246, 0.9)',// Lavanda Pálido (#EDE7F6)
+                                'rgba(149, 117, 205, 0.8)' // Lavanda Medio (#9575CD)
                             ],
                             borderColor: '#ffffff'
                         }]

@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100"></div>
     <div class="wrapper">
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
@@ -126,8 +127,10 @@
                         enctype="multipart/form-data">
                         <div class="col-md-8">
                             <div class="row">
-                                <div class="col-md-6 mb-3"><label for="rfc" class="form-label">RFC</label><input
-                                        type="text" class="form-control" id="rfc" th:field="*{rfc}"></div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="rfc" class="form-label">RFC</label>
+                                    <input type="text" class="form-control" id="rfc" th:field="*{rfc}">
+                                </div>
                                 <div class="col-md-6 mb-3"><label for="razonSocial" class="form-label">Razón
                                         Social</label><input type="text" class="form-control" id="razonSocial"
                                         th:field="*{razonSocial}"></div>

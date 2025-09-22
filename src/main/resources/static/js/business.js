@@ -50,4 +50,55 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    function showErrorToast(message) {
+        const toastContainer = document.querySelector('.toast-container');
+        if (!toastContainer) return;
+        const toastHtml = `
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                    <strong class="me-auto">Campo Requerido</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">${message}</div>
+            </div>`;
+        toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+        const newToastEl = toastContainer.lastElementChild;
+        const newToast = new bootstrap.Toast(newToastEl, { delay: 3000 });
+        newToast.show();
+        newToastEl.addEventListener('hidden.bs.toast', () => newToastEl.remove());
+    }
+
+    if (businessForm) {
+        businessForm.addEventListener('submit', function (event) {
+            const errors = [];
+
+            // Obtenemos los valores de los campos que queremos validar
+            const rfc = document.getElementById('rfc').value.trim();
+            const razonSocial = document.getElementById('razonSocial').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const postalCode = document.getElementById('postalCode').value.trim();
+
+            // Verificamos si están vacíos y añadimos errores
+            if (rfc === '') errors.push('El RFC no puede estar vacío.');
+            if (razonSocial === '') errors.push('La Razón Social no puede estar vacía.');
+            if (email === '') errors.push('El Correo Electrónico no puede estar vacío.');
+            if (address === '') errors.push('La Dirección no puede estar vacía.');
+            if (phoneNumber === '') errors.push('El Teléfono no puede estar vacío.');
+            if (postalCode === '') errors.push('El Código Postal no puede estar vacío.');
+
+            // Si encontramos al menos un error...
+            if (errors.length > 0) {
+                // ...prevenimos el envío del formulario al backend.
+                event.preventDefault();
+
+                // ...y mostramos una notificación por cada error.
+                errors.forEach(error => showErrorToast(error));
+            }
+            // Si no hay errores, el formulario se envía normalmente.
+        });
+    }
 });

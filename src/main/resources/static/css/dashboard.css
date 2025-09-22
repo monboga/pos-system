@@ -1,17 +1,21 @@
+/* --- PALETA DE COLORES ACTUALIZADA --- */
 :root {
-    --primary-color: #4A148C;
-    --sidebar-bg: #1E0A3C;
+    --primary-color: #7E57C2;
+    /* Tono lavanda principal */
+    --sidebar-bg: #311B92;
+    /* Un morado oscuro y profundo para el sidebar */
     --sidebar-text-color: #E0E0E0;
     --sidebar-text-hover: #FFFFFF;
-    --sidebar-active-bg: #4A148C;
+    --sidebar-active-bg: #7E57C2;
 }
 
+/* --- TEMA OSCURO --- */
 [data-bs-theme="dark"] {
     --bs-body-bg: #121212;
     --bs-body-color: #e0e0e0;
     --bs-tertiary-bg: #1e1e1e;
     --bs-secondary-bg: #2a2a2a;
-    --bs-border-color: #3a3a3a;
+    --bs-border-color: #424242;
 }
 
 [data-bs-theme="dark"] .card {
@@ -492,8 +496,8 @@ body {
 }
 
 .welcome-panel {
-    background-color: #f3e5f5;
-    color: #4A148C;
+    background-color: #EDE7F6;
+    color: #4527a0;
     padding: 2rem;
     border-radius: 1rem;
     position: relative;
@@ -502,6 +506,7 @@ body {
 
 /* 1. Hacemos el texto de bienvenida más grande y llamativo */
 .welcome-panel h2 {
+    color: var(--primary-color);
     font-size: 2.25rem;
     /* Aumentamos el tamaño de la fuente */
     font-weight: 700;
@@ -535,6 +540,10 @@ body {
     background-color: #2a2a2a;
     color: #e0e0e0;
     border: 1px solid var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .welcome-panel h2 {
+    color: #B30DDB;
 }
 
 /* --- Media query para móviles (ajustada) --- */

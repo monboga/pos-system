@@ -112,13 +112,38 @@
             <h1 class="h3 mb-4">Reporte de Ventas</h1>
             <div class="card">
                 <div class="card-header">
-                    <div class="d-flex flex-wrap align-items-end gap-3">
-                        <div><label for="startDate" class="form-label">Fecha de Inicio</label><input type="date"
-                                class="form-control" id="startDate"></div>
-                        <div><label for="endDate" class="form-label">Fecha de Fin</label><input type="date"
-                                class="form-control" id="endDate"></div>
-                        <button class="btn btn-primary"><i class="bi bi-funnel me-2"></i>Aplicar Filtros</button>
-                    </div>
+                    <form th:action="@{/sales-report}" method="get" class="d-flex flex-wrap align-items-end gap-3">
+
+                        <div>
+                            <label for="pageSizeSelect" class="form-label">Mostrar:</label>
+                            <select id="pageSizeSelect" name="size" class="form-select form-select-sm"
+                                onchange="this.form.submit()">
+                                <option th:each="sizeOpt : ${#numbers.sequence(5, 20, 5)}" th:value="${sizeOpt}"
+                                    th:text="${sizeOpt}" th:selected="${sizeOpt == selectedSize}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="startDate" class="form-label">Fecha de Inicio</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate"
+                                th:value="${startDate}">
+                        </div>
+
+                        <div>
+                            <label for="endDate" class="form-label">Fecha de Fin</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" th:value="${endDate}">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-funnel me-2"></i>Aplicar
+                            Filtros</button>
+
+                        <a th:if="${startDate != null or endDate != null}" th:href="@{/sales-report}"
+                            class="btn btn-danger" title="Quitar Filtros">
+                            <i class="bi bi-funnel"></i>
+                        </a>
+
+                    </form>
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -127,7 +152,7 @@
                         <div class="w-25"><input type="search" class="form-control" placeholder="Buscar en reporte...">
                         </div>
                     </div>
-                    <div class="table-responsive">
+                    <div th:if="${!salesPage.empty}" class="table-responsive">
                         <table class="table table-hover table-bordered align-middle">
                             <thead>
                                 <tr>
@@ -144,38 +169,65 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td rowspan="2">Factura</td>
-                                    <td rowspan="2">PAGJ880101XXX</td>
-                                    <td rowspan="2">Juan Pérez Gómez</td>
-                                    <td rowspan="2">$1,252.50</td>
-                                    <td rowspan="2">$200.40</td>
-                                    <td rowspan="2">$1,452.90</td>
-                                    <td>Pestañas Nagaraku</td>
-                                    <td>5</td>
-                                    <td>$150.50</td>
-                                    <td>$752.50</td>
-                                </tr>
-                                <tr>
-                                    <td>Adhesivo Sky Glue</td>
-                                    <td>2</td>
-                                    <td>$250.00</td>
-                                    <td>$500.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Ticket</td>
-                                    <td>XAXX010101000</td>
-                                    <td>Público en General</td>
-                                    <td>$300.00</td>
-                                    <td>$48.00</td>
-                                    <td>$348.00</td>
-                                    <td>Pinza Curva Vetus</td>
-                                    <td>3</td>
-                                    <td>$100.00</td>
-                                    <td>$300.00</td>
-                                </tr>
+                                <th:block th:each="saleDto : ${salesPage.content}">
+                                    <tr th:each="detail, detailStat : ${saleDto.details}">
+
+                                        <td th:if="${detailStat.first}" th:rowspan="${#lists.size(saleDto.details)}"
+                                            th:text="${saleDto.documentType}"></td>
+                                        <td th:if="${detailStat.first}" th:rowspan="${#lists.size(saleDto.details)}"
+                                            th:text="${saleDto.clientRfc}"></td>
+                                        <td th:if="${detailStat.first}" th:rowspan="${#lists.size(saleDto.details)}"
+                                            th:text="${saleDto.clientName}"></td>
+                                        <td th:if="${detailStat.first}" th:rowspan="${#lists.size(saleDto.details)}"
+                                            th:text="${saleDto.subtotal}"></td>
+                                        <td th:if="${detailStat.first}" th:rowspan="${#lists.size(saleDto.details)}"
+                                            th:text="${saleDto.iva}"></td>
+                                        <td th:if="${detailStat.first}" th:rowspan="${#lists.size(saleDto.details)}"
+                                            th:text="${saleDto.total}"></td>
+
+                                        <td th:text="${detail.productName}"></td>
+                                        <td th:text="${detail.quantity}"></td>
+                                        <td th:text="${detail.price}"></td>
+                                        <td th:text="${detail.total}"></td>
+                                    </tr>
+                                </th:block>
                             </tbody>
                         </table>
+                        <div th:if="${salesPage.totalPages > 1}"
+                            class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="text-muted">
+                                Mostrando
+                                <strong th:text="${salesPage.number * salesPage.size + 1}"></strong>
+                                a
+                                <strong
+                                    th:text="${salesPage.number * salesPage.size + salesPage.numberOfElements}"></strong>
+                                de
+                                <strong th:text="${salesPage.totalElements}"></strong>
+                                registros
+                            </div>
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination mb-0">
+                                    <li class="page-item" th:classappend="${salesPage.first} ? 'disabled'">
+                                        <a class="page-link"
+                                            th:href="@{/sales-report(page=${salesPage.number - 1}, size=${selectedSize}, startDate=${startDate}, endDate=${endDate})}">Anterior</a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:each="pageNumber : ${#numbers.sequence(0, salesPage.totalPages - 1)}"
+                                        th:classappend="${pageNumber == salesPage.number} ? 'active'">
+                                        <a class="page-link"
+                                            th:href="@{/sales-report(page=${pageNumber}, size=${selectedSize}, startDate=${startDate}, endDate=${endDate})}"
+                                            th:text="${pageNumber + 1}"></a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${salesPage.last} ? 'disabled'">
+                                        <a class="page-link"
+                                            th:href="@{/sales-report(page=${salesPage.number + 1}, size=${selectedSize}, startDate=${startDate}, endDate=${endDate})}">Siguiente</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div th:if="${salesPage.empty}" class="text-center p-4">
+                        <p class="text-muted">No se encontraron ventas con los criterios seleccionados.</p>
                     </div>
                 </div>
             </div>

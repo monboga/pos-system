@@ -15,9 +15,4 @@ public class ViewController {
     public String showHome() {
         return "index";
     }
-
-    @GetMapping("sales-report")
-    public String showSalesReportPage() {
-        return "sales-report";
-    }
 }

@@ -2,6 +2,7 @@ package com.gabriel.pos_system;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -27,11 +28,18 @@ import com.gabriel.pos_system.repository.RegimenFiscalRepository;
 import com.gabriel.pos_system.repository.RoleRepository;
 import com.gabriel.pos_system.repository.UserRepository;
 
+import jakarta.annotation.PostConstruct;
+
 @SpringBootApplication
 public class PosSystemApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PosSystemApplication.class, args);
+	}
+
+	@PostConstruct
+	public void setDefaultLocale() {
+		Locale.setDefault(new Locale("es", "MX"));
 	}
 
 	@Bean

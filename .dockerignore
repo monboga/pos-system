@@ -1,0 +1,8 @@
+# Ignorar el archivo de secretos
+.env
+
+# Ignorar archivos y carpetas de compilación
+target/
+.git/
+.idea/
+*.iml

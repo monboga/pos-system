@@ -46,7 +46,7 @@ public class AuthController {
     @PostMapping("/forgot-password")
     public String processForgotPassword(@RequestParam("email") String email, HttpSession session,
             RedirectAttributes redirectAttributes) {
-        logger.info("Solicitud de recuperación de contraseña recibida para el correo: {}", email);
+        logger.info("Solicitud de recuperacion de contrasena recibida para el correo: {}", email);
 
         // 1. Buscamos al usuario por su correo electrónico.
         User user = userRepository.findByEmail(email).orElse(null);
@@ -54,7 +54,7 @@ public class AuthController {
         // 2. Si el usuario no existe, devolvemos un error y redirigimos.
         if (user == null) {
             logger.warn("Intento de recuperación para un correo no existente: {}", email);
-            redirectAttributes.addFlashAttribute("error", "No se encontró ninguna cuenta con ese correo electrónico.");
+            redirectAttributes.addFlashAttribute("error", "No se encontro ninguna cuenta con ese correo electronico.");
             return "redirect:/forgot-password";
         }
 
@@ -75,13 +75,13 @@ public class AuthController {
             session.setAttribute("email", email);
             session.setAttribute("otpTimestamp", LocalDateTime.now());
 
-            redirectAttributes.addFlashAttribute("success", "Se ha enviado un código de verificación a tu correo.");
+            redirectAttributes.addFlashAttribute("success", "Se ha enviado un codigo de verificacion a tu correo.");
             logger.info("OTP enviado exitosamente a {}", email);
             return "redirect:/verify-otp";
 
         } catch (Exception e) {
-            logger.error("Error al enviar el correo de recuperación a {}: {}", email, e.getMessage());
-            redirectAttributes.addFlashAttribute("error", "Error al enviar el correo. Inténtalo de nuevo más tarde.");
+            logger.error("Error al enviar el correo de recuperacion a {}: {}", email, e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al enviar el correo. Intentalo de nuevo mas tarde.");
             return "redirect:/forgot-password";
         }
     }
@@ -105,7 +105,7 @@ public class AuthController {
 
         // Validar que el OTP de la sesión exista y no haya expirado (ej. 10 minutos)
         if (sessionOtp == null || otpTimestamp.isBefore(LocalDateTime.now().minusMinutes(10))) {
-            redirectAttributes.addFlashAttribute("error", "El código ha expirado. Por favor, solicita uno nuevo.");
+            redirectAttributes.addFlashAttribute("error", "El codigo ha expirado. Por favor, solicita uno nuevo.");
             return "redirect:/forgot-password";
         }
 
@@ -114,7 +114,7 @@ public class AuthController {
             session.setAttribute("otpVerified", true);
             return "redirect:/reset-password";
         } else {
-            redirectAttributes.addFlashAttribute("error", "El código ingresado es incorrecto.");
+            redirectAttributes.addFlashAttribute("error", "El codigo ingresado es incorrecto.");
             return "redirect:/verify-otp";
         }
     }
@@ -155,7 +155,7 @@ public class AuthController {
         session.removeAttribute("otpVerified");
 
         redirectAttributes.addFlashAttribute("logout",
-                "Tu contraseña ha sido actualizada exitosamente. Por favor, inicia sesión.");
+                "Tu contrasena ha sido actualizada exitosamente. Por favor, inicia sesion.");
         return "redirect:/login";
     }
 

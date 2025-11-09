@@ -57,11 +57,10 @@ public class PosSystemApplication {
 
 			// Crear Usuario Administrador por defecto
 			User admin = new User();
-			admin.setFirstName("Admin");
-			admin.setLastName("Usuario");
-			admin.setEmail("admin@test.com");
-			// ¡IMPORTANTE! Hasheamos la contraseña antes de guardarla
-			admin.setPassword(passwordEncoder.encode("admin123"));
+			admin.setFirstName("ALBA");
+			admin.setLastName("MX");
+			admin.setEmail("alba.mx.pos@gmail.com");
+			admin.setPassword(passwordEncoder.encode("4lb4mx2024!"));
 			admin.setStatus(1);
 			admin.setRoles(Set.of(adminRole));
 

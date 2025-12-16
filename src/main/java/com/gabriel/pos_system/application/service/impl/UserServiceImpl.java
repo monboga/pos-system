@@ -1,7 +1,10 @@
 package com.gabriel.pos_system.application.service.impl;
 
+import com.gabriel.pos_system.application.dto.profile.ChangePasswordRequestDto;
+import com.gabriel.pos_system.application.dto.profile.UpdateProfileRequestDto;
+import com.gabriel.pos_system.application.dto.user.CreateUserRequestDto;
+import com.gabriel.pos_system.application.dto.user.UpdateUserRequestDto;
 import com.gabriel.pos_system.application.service.UserService;
-import com.gabriel.pos_system.application.dto.auth.UserDto; // Asumiendo que moviste UserDto aquí o lo importas
 import com.gabriel.pos_system.domain.model.Role;
 import com.gabriel.pos_system.domain.model.User;
 import com.gabriel.pos_system.infrastructure.notification.EmailService;
@@ -13,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,7 +28,7 @@ import java.util.Random;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor // Inyección de dependencias automática (Lombok)
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -32,41 +36,156 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
+    // --- MÉTODOS CRUD ---
+
     @Override
-    public void saveUser(UserDto userDto, MultipartFile photoFile) throws IOException {
-        User user;
-        if (userDto.getId() != null) {
-            user = userRepository.findById(userDto.getId())
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + userDto.getId()));
-        } else {
-            user = new User();
+    public Page<User> findPaginated(int page, int size, String searchName) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (searchName != null && !searchName.trim().isEmpty()) {
+            return userRepository.findBySearchTerm(searchName, pageable);
+        }
+        return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+    }
+
+    @Override
+    @Transactional // Asegura que si falla algo, no se guarde nada
+    public User createUser(CreateUserRequestDto request, MultipartFile photo) throws IOException {
+        // 1. Validar que el email no exista
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("El correo electrónico ya está registrado: " + request.getEmail());
         }
 
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setStatus(userDto.getStatus());
+        // 2. Buscar el Rol en la BD
+        Role role = roleRepository.findById(request.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + request.getRoleId()));
 
-        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        // 3. Crear la entidad User
+        User user = User.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
+                .status(request.getStatus())
+                .password(passwordEncoder.encode(request.getPassword())) // Encriptar
+                .roles(Set.of(role))
+                .build();
+
+        // 4. Procesar la foto si existe
+        if (photo != null && !photo.isEmpty()) {
+            String photoBase64 = Base64.getEncoder().encodeToString(photo.getBytes());
+            user.setPhoto("data:" + photo.getContentType() + ";base64," + photoBase64);
         }
 
-        if (photoFile != null && !photoFile.isEmpty()) {
-            String photoBase64 = Base64.getEncoder().encodeToString(photoFile.getBytes());
-            user.setPhoto("data:" + photoFile.getContentType() + ";base64," + photoBase64);
+        return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(Long id, UpdateUserRequestDto request, MultipartFile photo) throws IOException {
+        User user = getUserById(id);
+
+        // Actualizamos solo los campos que vienen en el request (PATCH parcial)
+        if (request.getFirstName() != null)
+            user.setFirstName(request.getFirstName());
+        if (request.getLastName() != null)
+            user.setLastName(request.getLastName());
+        if (request.getPhoneNumber() != null)
+            user.setPhoneNumber(request.getPhoneNumber());
+        if (request.getStatus() != null)
+            user.setStatus(request.getStatus());
+
+        // Actualizar Rol
+        if (request.getRoleId() != null) {
+            Role role = roleRepository.findById(request.getRoleId())
+                    .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + request.getRoleId()));
+            // Reemplazamos los roles actuales (asumiendo un solo rol por usuario en este
+            // sistema)
+            user.setRoles(Set.of(role));
         }
 
-        if (userDto.getRoleId() != null) {
-            Role role = roleRepository.findById(userDto.getRoleId())
-                    .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado."));
-            Set<Role> roles = new HashSet<>();
-            roles.add(role);
-            user.setRoles(roles);
+        // Actualizar Foto
+        if (photo != null && !photo.isEmpty()) {
+            String photoBase64 = Base64.getEncoder().encodeToString(photo.getBytes());
+            user.setPhoto("data:" + photo.getContentType() + ";base64," + photoBase64);
         }
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("No se puede eliminar. Usuario no encontrado con ID: " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    // --- MÉTODOS DE SEGURIDAD (OTP) ---
+
+    @Override
+    public void generateAndSendOtp(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con correo: " + email));
+
+        // Generar OTP de 6 dígitos
+        String otp = String.format("%06d", new Random().nextInt(999999));
+
+        // Guardar en BD con expiración (15 mins)
+        user.setOtpCode(otp);
+        user.setOtpExpiration(LocalDateTime.now().plusMinutes(15));
+        userRepository.save(user);
+
+        // Enviar correo
+        try {
+            emailService.sendOtpEmail(user.getEmail(), otp, user.getFirstName());
+        } catch (Exception e) {
+            // En un sistema real, podrías querer revertir el guardado del OTP si falla el
+            // correo
+            // o manejarlo con una cola de mensajería.
+            throw new RuntimeException("Error al enviar el correo de verificación: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean verifyOtp(String email, String otp) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+
+        if (user.getOtpCode() == null || user.getOtpExpiration() == null) {
+            return false;
+        }
+
+        // Verificar coincidencia y tiempo
+        return user.getOtpCode().equals(otp) &&
+                user.getOtpExpiration().isAfter(LocalDateTime.now());
+    }
+
+    @Override
+    public void resetPassword(String email, String otp, String newPassword) {
+        // Validar OTP nuevamente antes de cambiar la contraseña
+        if (!verifyOtp(email, otp)) {
+            throw new RuntimeException("El código OTP es inválido o ha expirado.");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        // Limpiar OTP para que no se pueda reusar
+        user.setOtpCode(null);
+        user.setOtpExpiration(null);
 
         userRepository.save(user);
     }
+
+    // --- MÉTODOS DE CONSULTA ---
 
     @Override
     public User findUserByEmail(String email) {
@@ -79,74 +198,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> findPaginated(int page, int size, String searchName) {
-        Pageable pageable = PageRequest.of(page, size);
-        if (searchName != null && !searchName.trim().isEmpty()) {
-            return userRepository.findBySearchTerm(searchName, pageable);
-        }
-        return userRepository.findAll(pageable);
-    }
-
-    @Override
-    public void updatePassword(User user, String newPassword) {
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-    }
-
-    // --- IMPLEMENTACIÓN DE LA LÓGICA OTP Y RESET PASSWORD ---
-
-    @Override
-    public void generateAndSendOtp(String email) {
+    @Transactional
+    public User updateProfile(String email, UpdateProfileRequestDto request) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado (Perfil)"));
 
-        // 1. Generar OTP de 6 dígitos
-        String otp = String.format("%06d", new Random().nextInt(999999));
+        // Actualizamos solo los campos permitidos
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setPhoneNumber(request.getPhoneNumber());
 
-        // 2. Guardar en BD con expiración (15 minutos)
-        user.setOtpCode(otp);
-        user.setOtpExpiration(LocalDateTime.now().plusMinutes(15));
-        userRepository.save(user);
+        // Nota: No actualizamos roles, estado ni email aquí.
 
-        // 3. Enviar correo
-        try {
-            emailService.sendOtpEmail(user.getEmail(), otp, user.getFirstName());
-        } catch (Exception e) {
-            throw new RuntimeException("Error al enviar el correo: " + e.getMessage());
-        }
+        return userRepository.save(user);
     }
 
     @Override
-    public boolean verifyOtp(String email, String otp) {
+    public void changePassword(String email, ChangePasswordRequestDto request) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado (Perfil)"));
 
-        if (user.getOtpCode() == null || user.getOtpExpiration() == null) {
-            return false;
+        // 1. Validar que la contraseña actual ingresada coincida con la de la BD
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("La contraseña actual es incorrecta.");
         }
 
-        // Validar que coincida y no haya expirado
-        return user.getOtpCode().equals(otp) &&
-                user.getOtpExpiration().isAfter(LocalDateTime.now());
-    }
-
-    @Override
-    public void resetPassword(String email, String otp, String newPassword) {
-        // 1. Validar OTP nuevamente por seguridad
-        if (!verifyOtp(email, otp)) {
-            throw new RuntimeException("OTP inválido o expirado");
+        // 2. Validar que la nueva contraseña y la confirmación coincidan
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
+            throw new RuntimeException("La nueva contraseña y la confirmación no coinciden.");
         }
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        // 2. Actualizar contraseña
-        user.setPassword(passwordEncoder.encode(newPassword));
-
-        // 3. Limpiar el OTP usado
-        user.setOtpCode(null);
-        user.setOtpExpiration(null);
-
+        // 3. Encriptar y guardar la nueva contraseña
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
 }

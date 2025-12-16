@@ -1,4 +1,4 @@
-package com.gabriel.pos_system.repository;
+package com.gabriel.pos_system.infrastructure.persistence;
 
 import java.util.Optional;
 
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
-import com.gabriel.pos_system.model.User;
+import com.gabriel.pos_system.domain.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

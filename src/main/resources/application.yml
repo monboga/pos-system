@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: pos-system
+  web:
+    locale: es-MX
+  
+  # Configuración JPA Común
+  jpa:
+    open-in-view: false # Buena práctica para APIs, evita consultas fuera de transacción
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  # Configuración de Correo (Toma los valores del .env)
+  mail:
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# Configuración de Swagger / OpenAPI (Preparación)
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true

@@ -1,4 +1,4 @@
-package com.gabriel.pos_system.dto;
+package com.gabriel.pos_system.application.dto.auth;
 
 public class UserDto {
     private Long id;

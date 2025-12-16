@@ -11,22 +11,22 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.gabriel.pos_system.domain.model.Role;
+import com.gabriel.pos_system.domain.model.User;
+import com.gabriel.pos_system.infrastructure.persistence.RoleRepository;
+import com.gabriel.pos_system.infrastructure.persistence.UserRepository;
 import com.gabriel.pos_system.model.ClaveProdServSat;
 import com.gabriel.pos_system.model.ImpuestoSat;
 import com.gabriel.pos_system.model.MedidaLocal;
 import com.gabriel.pos_system.model.MedidaSat;
 import com.gabriel.pos_system.model.ObjetoImpSat;
 import com.gabriel.pos_system.model.RegimenFiscal;
-import com.gabriel.pos_system.model.Role;
-import com.gabriel.pos_system.model.User;
 import com.gabriel.pos_system.repository.ClaveProdServSatRepository;
 import com.gabriel.pos_system.repository.ImpuestoSatRepository;
 import com.gabriel.pos_system.repository.MedidaLocalRepository;
 import com.gabriel.pos_system.repository.MedidaSatRepository;
 import com.gabriel.pos_system.repository.ObjetoImpSatRepository;
 import com.gabriel.pos_system.repository.RegimenFiscalRepository;
-import com.gabriel.pos_system.repository.RoleRepository;
-import com.gabriel.pos_system.repository.UserRepository;
 
 import jakarta.annotation.PostConstruct;
 
@@ -46,23 +46,35 @@ public class PosSystemApplication {
 	CommandLineRunner commandLineRunner(RoleRepository roleRepository, UserRepository userRepository,
 			PasswordEncoder passwordEncoder) {
 		return args -> {
-			// No ejecutar si ya existen roles para evitar duplicados
+			// Verificar si existen roles
 			if (roleRepository.findByName("ROLE_ADMIN").isPresent()) {
 				return;
 			}
 
-			// Crear Roles
-			Role adminRole = roleRepository.save(new Role("ROLE_ADMIN", "Administrador"));
-			roleRepository.save(new Role("ROLE_USER", "Usuario"));
+			// --- CORRECCIÓN: Usar Builder en lugar de new Role(...) ---
+			Role adminRole = Role.builder()
+					.name("ROLE_ADMIN")
+					.friendlyName("Administrador")
+					.build();
 
-			// Crear Usuario Administrador por defecto
-			User admin = new User();
-			admin.setFirstName("ALBA");
-			admin.setLastName("MX");
-			admin.setEmail("alba.mx.pos@gmail.com");
-			admin.setPassword(passwordEncoder.encode("4lb4mx2024!"));
-			admin.setStatus(1);
-			admin.setRoles(Set.of(adminRole));
+			roleRepository.save(adminRole);
+
+			Role userRole = Role.builder()
+					.name("ROLE_USER")
+					.friendlyName("Usuario")
+					.build();
+
+			roleRepository.save(userRole);
+
+			// --- CORRECCIÓN: Usar Builder para User ---
+			User admin = User.builder()
+					.firstName("ALBA")
+					.lastName("MX")
+					.email("alba.mx.pos@gmail.com")
+					.password(passwordEncoder.encode("4lb4mx2024!")) // Contraseña segura
+					.status(1)
+					.roles(Set.of(adminRole))
+					.build();
 
 			userRepository.save(admin);
 		};

@@ -1,4 +1,4 @@
-package com.gabriel.pos_system.repository;
+package com.gabriel.pos_system.infrastructure.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gabriel.pos_system.dto.UserDto;
-import com.gabriel.pos_system.model.Role;
-import com.gabriel.pos_system.model.User;
-import com.gabriel.pos_system.repository.RoleRepository;
-import com.gabriel.pos_system.service.UserService;
+import com.gabriel.pos_system.application.dto.auth.UserDto;
+import com.gabriel.pos_system.application.service.UserService;
+import com.gabriel.pos_system.domain.model.Role;
+import com.gabriel.pos_system.domain.model.User;
+import com.gabriel.pos_system.infrastructure.persistence.RoleRepository;
 
 @Controller
 public class UserController {

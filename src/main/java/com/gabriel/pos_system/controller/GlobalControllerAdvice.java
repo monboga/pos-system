@@ -5,8 +5,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.gabriel.pos_system.domain.model.User;
 import com.gabriel.pos_system.model.Business;
-import com.gabriel.pos_system.model.User;
 import com.gabriel.pos_system.service.BusinessService;
 
 @ControllerAdvice

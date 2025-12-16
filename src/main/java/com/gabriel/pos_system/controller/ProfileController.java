@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.gabriel.pos_system.model.User;
-import com.gabriel.pos_system.service.UserService;
+import com.gabriel.pos_system.application.service.UserService;
+import com.gabriel.pos_system.domain.model.User;
 
 @Controller
 public class ProfileController {

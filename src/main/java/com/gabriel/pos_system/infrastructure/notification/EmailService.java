@@ -1,4 +1,4 @@
-package com.gabriel.pos_system.service;
+package com.gabriel.pos_system.infrastructure.notification;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.gabriel.pos_system.infrastructure.persistence.BusinessRepository;
 import com.gabriel.pos_system.model.Business;
-import com.gabriel.pos_system.repository.BusinessRepository;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

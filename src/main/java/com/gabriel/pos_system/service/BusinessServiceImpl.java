@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gabriel.pos_system.dto.BusinessDto;
+import com.gabriel.pos_system.infrastructure.persistence.BusinessRepository;
 import com.gabriel.pos_system.model.Business;
 import com.gabriel.pos_system.model.RegimenFiscal;
-import com.gabriel.pos_system.repository.BusinessRepository;
 import com.gabriel.pos_system.repository.RegimenFiscalRepository;
 
 @Service

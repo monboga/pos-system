@@ -1,11 +1,11 @@
-package com.gabriel.pos_system.repository;
+package com.gabriel.pos_system.infrastructure.persistence;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.gabriel.pos_system.model.Role;
+import com.gabriel.pos_system.domain.model.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {

@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.gabriel.pos_system.repository.UserRepository;
+import com.gabriel.pos_system.infrastructure.persistence.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

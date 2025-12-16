@@ -1,0 +1,26 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  
+  datasource:
+    # En producción, estas variables pueden venir del .env del servidor o inyectadas por Docker/K8s
+    url: ${DB_URL_PROD} 
+    username: ${DB_USERNAME_PROD}
+    password: ${DB_PASSWORD_PROD}
+  mail:
+    username: ${EMAIL_USERNAME_PROD}
+    password: ${EMAIL_PASSWORD_PROD}
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate # ¡Importante! Nunca usar 'update' en prod para evitar daños accidentales al esquema
+    properties:
+      hibernate:
+        format_sql: false
+
+logging:
+  level:
+    com.gabriel.pos_system: INFO
+    org.springframework.web: ERROR

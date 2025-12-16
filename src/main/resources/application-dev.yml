@@ -1,0 +1,27 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+  datasource:
+    url: ${DB_URL_DEV}
+    username: ${DB_USERNAME_DEV}
+    password: ${DB_PASSWORD_DEV}
+
+  mail:
+    username: ${EMAIL_USERNAME_DEV}
+    password: ${EMAIL_PASSWORD_DEV}
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update # O 'create-drop' si quieres limpiar la BD al reiniciar
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+logging:
+  level:
+    com.gabriel.pos_system: DEBUG
+    org.springframework.web: DEBUG

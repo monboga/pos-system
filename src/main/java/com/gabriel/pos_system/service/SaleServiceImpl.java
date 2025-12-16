@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.gabriel.pos_system.domain.model.User;
 import com.gabriel.pos_system.dto.CartItemDto;
 import com.gabriel.pos_system.dto.SaleDto;
 import com.gabriel.pos_system.dto.SaleReportDetailViewDto;
@@ -24,7 +25,6 @@ import com.gabriel.pos_system.model.Client;
 import com.gabriel.pos_system.model.Product;
 import com.gabriel.pos_system.model.Sale;
 import com.gabriel.pos_system.model.SaleDetail;
-import com.gabriel.pos_system.model.User;
 import com.gabriel.pos_system.repository.ClientRepository;
 import com.gabriel.pos_system.repository.ProductRepository;
 import com.gabriel.pos_system.repository.SaleRepository;

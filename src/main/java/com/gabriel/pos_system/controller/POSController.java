@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.gabriel.pos_system.domain.model.User;
 import com.gabriel.pos_system.dto.SaleDto;
 import com.gabriel.pos_system.model.Sale;
-import com.gabriel.pos_system.model.User;
 import com.gabriel.pos_system.repository.CategoryRepository;
 import com.gabriel.pos_system.repository.ClientRepository;
 import com.gabriel.pos_system.repository.ProductRepository;

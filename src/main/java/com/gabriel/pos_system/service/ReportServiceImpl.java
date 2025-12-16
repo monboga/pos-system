@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.pos_system.dto.SaleTicketDetailDto;
+import com.gabriel.pos_system.infrastructure.persistence.BusinessRepository;
 import com.gabriel.pos_system.model.Business;
 import com.gabriel.pos_system.model.Sale;
-import com.gabriel.pos_system.repository.BusinessRepository;
 import com.gabriel.pos_system.repository.SaleRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
